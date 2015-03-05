@@ -11,6 +11,9 @@ def build(params):
                 "release": "realpath_to_release_x32_lib",  # can be also a list
             },
         },
-        "headers": "first headers folder"  # could be a list
+        "headers": "first headers folder",  # could be a list
+        "cmake_before": "",
+        "cmake_after":  "",
+        "compilation_keys": []
     }
 

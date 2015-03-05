@@ -1,13 +1,16 @@
 import os, glob
 import subprocess
+import collections
 
 
 class Cmake:
-    def __init__(self, sources_dir, build_dir, cmake_version):
+    def __init__(self, sources_dir, build_dir, cmake_version, dependencies,project_name):
         self._sourcesDir = sources_dir
         self._buildDir = build_dir
         self._cmakeVersion = cmake_version
         self._additionalFlags = {}
+        self.dependencies = dependencies
+        self.project_name = project_name
 
     @staticmethod
     def find_sources(sources_dir, relative_path=False):
@@ -22,6 +25,10 @@ class Cmake:
     def set(var_name, var_value, file_handler):
         file_handler.writelines("set({0} {1}){2}".format(var_name, var_value, os.linesep))
 
+    @staticmethod
+    def add_static_library(file_handler, lib_location):
+        file_handler.writelines("target_link_libraries(main {0}){1}".format(lib_location, os.linesep))
+
     def set_flag(self, flag_name, flag_value):
         self._additionalFlags[flag_name] = flag_value
 
@@ -29,25 +36,46 @@ class Cmake:
         format_flag = lambda f_name, f_val: "-{0}={1}".format(f_name, f_val)
         return " ".join([format_flag(flag, value) for flag, value in self._additionalFlags.iteritems()])
 
+    @staticmethod
+    def join_by_newline_if_list(var):
+            return os.linesep.join(var) if isinstance(var, list) else var
+
+    @staticmethod
+    def file_new_line(file_handler):
+        file_handler.writelines(os.linesep)
+
+    def build_deps(self, file_handler):
+        for dep_name, dep_config in self.dependencies.iteritems():
+            cmake_before_string = self.join_by_newline_if_list(dep_config['cmake_before'])
+            cmake_before_string = cmake_before_string.format(project_name=self.project_name)
+            file_handler.writelines(cmake_before_string)
+            self.file_new_line(file_handler)
+
+            cmake_after_string = self.join_by_newline_if_list(dep_config['cmake_after'])
+            cmake_after_string = cmake_after_string.format(project_name=self.project_name)
+            file_handler.writelines(cmake_after_string)
+            self.file_new_line(file_handler)
+
     def build(self):
-        f = open(self._sourcesDir + '/CMakeLists.txt', 'w+')
-        f.writelines("cmake_minimum_required(VERSION {0}){1}".format(self._cmakeVersion, os.linesep))
-        self.set("CMAKE_RUNTIME_OUTPUT_DIRECTORY", "bin", f)
+        cmake_file = open(self._sourcesDir + '/CMakeLists.txt', 'w+')
+        cmake_file.writelines("cmake_minimum_required(VERSION {0}){1}".format(self._cmakeVersion, os.linesep))
+        self.set("CMAKE_RUNTIME_OUTPUT_DIRECTORY", "bin", cmake_file)
         main_project_files = self.find_sources(self._sourcesDir)
-        self.set("SOURCES_FILES", " ".join(main_project_files), f)
-        f.close()
+        self.set("SOURCES_FILES", " ".join(main_project_files), cmake_file)
+        cmake_file.writelines("add_executable("+self.project_name+" ${SOURCES_FILES})"+os.linesep)
+        self.build_deps(cmake_file)
+        cmake_file.close()
 
     def run(self):
 
-        source_directory = os.path.relpath(self._sourcesDir, "build")
         current_working_dir = os.getcwd()
-
         # changing working directory for change cmake output dir
-        if not os.path.exists(self._buildDir):
-            os.mkdir(self._buildDir, 666)
-        os.chdir(self._buildDir)
+        os.chdir(self._sourcesDir)
 
-        subprocess.call(['cmake', self.get_flags_string(), source_directory])
+        if os.path.isfile('CMakeCache.txt'):
+            os.remove('CMakeCache.txt')
+
+        subprocess.call(['cmake', self.get_flags_string()])
 
         # return to previous dir
         os.chdir(current_working_dir)
