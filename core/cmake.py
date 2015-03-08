@@ -25,9 +25,14 @@ class Cmake:
     def set(var_name, var_value, file_handler):
         file_handler.writelines("set({0} {1}){2}".format(var_name, var_value, os.linesep))
 
+    def add_static_library(self, file_handler, lib_location, modificator=""):
+        lib_location = os.path.abspath(lib_location).replace('\\', '/')
+        file_handler.writelines("target_link_libraries({3} {2} \"{0}\"){1}".format(lib_location, os.linesep, modificator, self.project_name))
+
     @staticmethod
-    def add_static_library(file_handler, lib_location):
-        file_handler.writelines("target_link_libraries(main {0}){1}".format(lib_location, os.linesep))
+    def add_headers_location(file_handler, location):
+        location = os.path.abspath(location).replace('\\', '/')
+        file_handler.writelines("include_directories(\"{0}\"){1}".format(location, os.linesep))
 
     def set_flag(self, flag_name, flag_value):
         self._additionalFlags[flag_name] = flag_value
@@ -37,8 +42,8 @@ class Cmake:
         return " ".join([format_flag(flag, value) for flag, value in self._additionalFlags.iteritems()])
 
     @staticmethod
-    def join_by_newline_if_list(var):
-        return os.linesep.join(var) if isinstance(var, list) else var
+    def join_if_list(var, symbol=os.linesep):
+        return symbol.join(var) if isinstance(var, list) else var
 
     @staticmethod
     def file_new_line(file_handler):
@@ -46,12 +51,35 @@ class Cmake:
 
     def build_deps(self, file_handler):
         for dep_name, dep_config in self.dependencies.iteritems():
-            cmake_before_string = self.join_by_newline_if_list(dep_config['cmake_before'])
+            cmake_before_string = self.join_if_list(dep_config['cmake_before'])
             cmake_before_string = cmake_before_string.format(project_name=self.project_name)
             file_handler.writelines(cmake_before_string)
             self.file_new_line(file_handler)
 
-            cmake_after_string = self.join_by_newline_if_list(dep_config['cmake_after'])
+            debug_libs = dep_config['libs'][config.buildArchitecture]['debug']
+
+            if isinstance(debug_libs, list):
+                for lib in debug_libs:
+                    self.add_static_library(file_handler, lib, 'debug')
+            elif debug_libs is not "":
+                self.add_static_library(file_handler, debug_libs, 'debug')
+
+            release_libs = dep_config['libs'][config.buildArchitecture]['release']
+
+            if isinstance(release_libs, list):
+                for lib in release_libs:
+                    self.add_static_library(file_handler, lib, 'optimized ')
+            elif release_libs is not "":
+                self.add_static_library(file_handler, release_libs, 'optimized ')
+
+            if isinstance(dep_config['headers'], list):
+                for location in dep_config['headers']:
+                    self.add_headers_location(file_handler, location)
+            elif dep_config['headers'] is not "":
+                self.add_headers_location(file_handler, dep_config['headers'])
+
+
+            cmake_after_string = self.join_if_list(dep_config['cmake_after'])
             cmake_after_string = cmake_after_string.format(project_name=self.project_name)
             file_handler.writelines(cmake_after_string)
             self.file_new_line(file_handler)
@@ -59,6 +87,7 @@ class Cmake:
     def build(self):
         cmake_file = open(self._sourcesDir + '/CMakeLists.txt', 'w+')
         cmake_file.writelines("cmake_minimum_required(VERSION {0}){1}".format(self._cmakeVersion, os.linesep))
+        cmake_file.writelines('project({0}){1}'.format(self.project_name, os.linesep))
         self.set("CMAKE_RUNTIME_OUTPUT_DIRECTORY", "bin", cmake_file)
         main_project_files = self.find_sources(self._sourcesDir)
         self.set("SOURCES_FILES", " ".join(main_project_files), cmake_file)

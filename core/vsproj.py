@@ -43,30 +43,28 @@ class Vcproj:
         "MD": "MultiThreadedDLL",
         "MDd": "MultiThreadedDebugDLL",
     }
-    set_variables_locations = {
-        "x64": "/VC/vcvarsall.bat",
-        "Win32": "/VC/vcvarsall.bat"
-    }
-    # TODO xml_root when calling
+
     def __init__(self, file_location):
         self.file_loc = os.path.abspath(file_location)
         self.xml_root = minidom.parse(file_location)
 
     def build(self, configurations=False, archs=False, output=False, rebuild=False):
         if not configurations:
-            configurations=self.get_configurations_list()
+            configurations = self.get_configurations_list()
         if not archs:
-            archs=self.get_arch_list()
+            archs = self.get_arch_list()
         vs_path = config.directories["visualStudioDir"]
 
         commands = []
         build_command = "msbuild"
         build_command += " /t:Rebuild " if rebuild else ""
-        build_command += " /p:OutDir='{0}' ".format(output) if output else ""
-        build_command += "/p:Configuration={configuration} /p:Platform={platform} \""+self.file_loc+"\""
+        if output is not False:
+            output += "/{configuration}/{platform}/"
+            build_command += " /p:OutDir=\"{0}\" ".format(os.path.abspath(output))
+        build_command += "/p:Configuration={configuration} /p:Platform={platform} \"" + self.file_loc + "\""
         for arc_index, arch in enumerate(archs):
             arch = str(arch)
-            commands.append('call "{vs_path}/{bat_dir}" x86_amd64'.format(vs_path=os.path.abspath(vs_path), bat_dir=self.set_variables_locations[arch]))
+            commands.append('call "{vs_path}/VC/vcvarsall.bat" x86_amd64'.format(vs_path=os.path.abspath(vs_path)))
             for conf_index, configuration in enumerate(configurations):
                 commands.append(build_command.format(configuration=configuration, platform=arch))
         bat_file = open("build_glew.bat", 'w')
