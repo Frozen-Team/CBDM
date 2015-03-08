@@ -1,16 +1,16 @@
 import os, glob
 import subprocess
-import collections
+import config
 
 
 class Cmake:
-    def __init__(self, sources_dir, build_dir, cmake_version, dependencies,project_name):
-        self._sourcesDir = sources_dir
-        self._buildDir = build_dir
-        self._cmakeVersion = cmake_version
+    def __init__(self, dependencies):
+        self._sourcesDir = config.directories["solutionDir"]
+        self._buildDir = config.directories["buildDir"]
+        self._cmakeVersion = config.cmakeVersion
         self._additionalFlags = {}
         self.dependencies = dependencies
-        self.project_name = project_name
+        self.project_name = config.projectName
 
     @staticmethod
     def find_sources(sources_dir, relative_path=False):
@@ -38,7 +38,7 @@ class Cmake:
 
     @staticmethod
     def join_by_newline_if_list(var):
-            return os.linesep.join(var) if isinstance(var, list) else var
+        return os.linesep.join(var) if isinstance(var, list) else var
 
     @staticmethod
     def file_new_line(file_handler):
@@ -62,7 +62,7 @@ class Cmake:
         self.set("CMAKE_RUNTIME_OUTPUT_DIRECTORY", "bin", cmake_file)
         main_project_files = self.find_sources(self._sourcesDir)
         self.set("SOURCES_FILES", " ".join(main_project_files), cmake_file)
-        cmake_file.writelines("add_executable("+self.project_name+" ${SOURCES_FILES})"+os.linesep)
+        cmake_file.writelines("add_executable(" + self.project_name + " ${SOURCES_FILES})" + os.linesep)
         self.build_deps(cmake_file)
         cmake_file.close()
 

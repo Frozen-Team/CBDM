@@ -1,4 +1,3 @@
-
 def build(params):
     return {
         "cmake_before": ["find_package(OpenGL)",
@@ -11,5 +10,6 @@ def build(params):
                     '    MESSAGE("OpenGL environment missing")',
                     'endif (OPENGL_FOUND)']
     }
+
 
 
