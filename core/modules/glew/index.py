@@ -1,10 +1,13 @@
 import os
 import platform
 import shutil
+import core.modules.glew.config as m_config
+from core.git import Repo
 from core.vsproj import Vcproj
 
 module_dir = os.path.dirname(os.path.realpath(__file__))
 project_dir = os.getcwd()
+sources_dir = module_dir+'/'+m_config.sources_path
 
 
 def readonly_handler(func, path, execinfo):
@@ -13,26 +16,19 @@ def readonly_handler(func, path, execinfo):
 
 
 def load_glew(version, path, rebuild):
-    os.chdir(module_dir)
+    repo = Repo(sources_dir, 'logs/glew_git.txt')
     if os.path.exists(path):
-        if rebuild:
+        if rebuild or not repo.is_repo():
             shutil.rmtree(path, ignore_errors=False, onerror=readonly_handler)
-        else:
-            _fix_vcproj(path + '/build/vc12/glew_static.vcxproj')
-            os.chdir(project_dir)
-            return True
-    os.system('git clone git://git.frozen-team.com/Glew.git ' + path + "&")
-    os.chmod(path, 7777)
-    os.chdir(module_dir + '/' + path)
-    os.system('git checkout glew-' + version)
-    _fix_vcproj('build/vc12/glew_static.vcxproj')
-    os.chdir(project_dir)
+    repo.clone('git://git.frozen-team.com/Glew.git')
+    repo.checkout('glew-{0}'.format(version))
+    __fix_vcproj()
 
 
-def _fix_vcproj(file_name):
+def __fix_vcproj():
     if not platform.system() == "Windows":
         return
-    file = Vcproj(file_name)
+    file = Vcproj(module_dir+'/'+m_config.vis_studio_project_path)
     config = file.get_configuration("Debug")
     config.set_runtime_librarie(Vcproj.runtimeLibraries["MDd"])
     config.save()
@@ -45,9 +41,9 @@ def compile_glew(sources_dir, params):
     if platform.system() == "Windows":
         os.chdir(module_dir)
         build_path = os.path.abspath(params['build_path'])
-        project = Vcproj(os.path.abspath(sources_dir + '/build/vc12/glew_static.vcxproj'))
-        project.build(output=build_path)
         os.chdir(project_dir)
+        project = Vcproj(module_dir+'/'+m_config.vis_studio_project_path)
+        project.build(output=build_path, log_file='logs/glew_build.txt')
         return {
             "libs": {
                 "x64": {

@@ -2,10 +2,11 @@
 import config
 from core.cmake import Cmake
 from core.dependencies import Dependencies
-Deps = Dependencies(config.dependencies)
-Deps.build_dependencies()
+dependencies = Dependencies(config.dependencies)
+dependencies.build_dependencies()
 
-cmake = Cmake(Deps.modules_results)
 
-cmake.build()
+
+cmake = Cmake(config.directories["solutionDir"], dependencies.modules_results)
+cmake.save()
 cmake.run()

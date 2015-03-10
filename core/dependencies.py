@@ -1,21 +1,8 @@
 import os
 import sys
 import importlib
-
-default_dependency_struct = {"libs": {
-                                         "x64": {
-                                             "debug": "",  # can be also a list
-                                             "release": "",  # can be also a list
-                                         },
-                                         "x32": {
-                                             "debug": "",  # can be also a list
-                                             "release": "",  # can be also a list
-                                         }
-                                     },
-                             "headers": "",  # could be a list
-                             "cmake_before": "",
-                             "cmake_after": ""
-                             }
+import core.default_structures as struct
+import core.sys_config as cconfig
 
 
 class Dependencies:
@@ -25,15 +12,10 @@ class Dependencies:
 
     def _get_module_params(self, module_name):
         params = self.dependencies[module_name]
-        new_params = {
-            "version": 0,
-            "build_path": os.path.realpath("core/modules/" + module_name + '/build/'),
-            "rebuild": False
-        }
-
+        new_params = struct.module_config.copy()
+        new_params['build_path'] = new_params["build_path"].format(module_name=module_name)
         if isinstance(params, str):
             new_params["version"] = params
-
         if type(params) == type(dict()):
             new_params.update(params)
         return new_params
@@ -41,7 +23,7 @@ class Dependencies:
     def _build_dependency(self, depend_name):
         module_index = os.path.realpath("core/modules/" + depend_name + "/index.py")
         if not os.path.isfile(module_index):
-            print('Module {0} wasn\'t found ({1})'.format(depend_name, module_index))
+            print(cconfig.no_module_error.format(module_name=depend_name, full_path=module_index))
             sys.exit(1)
         module = importlib.import_module("core.modules.{0}.index".format(depend_name))
 
@@ -49,10 +31,12 @@ class Dependencies:
 
         depend_result = module.build(reorganized_module_config)
         if type(depend_result) == type(dict()):
-            _depend_result = default_dependency_struct.copy()
+            _depend_result = struct.default_dependency_struct.copy()
             _depend_result.update(depend_result)
             self.modules_results[depend_name] = _depend_result
 
     def build_dependencies(self):
-        for name in self.dependencies:
+        dependencies_count = len(self.dependencies)
+        for i, name in enumerate(self.dependencies):
+            print(cconfig.percents_output.format(i / dependencies_count))
             self._build_dependency(name)

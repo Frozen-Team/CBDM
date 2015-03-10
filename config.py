@@ -10,7 +10,7 @@ buildArchitecture = "x64"  # x86 | x32
 dependencies = {
     "glew": {
         "version": "1.12.0",
-        'rebuild': True
+        # 'rebuild': True
     }
     # "glfw": {
     #     "version": "3.1"

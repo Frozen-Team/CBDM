@@ -1,11 +1,18 @@
-import os, glob
+import os
+import glob
 import subprocess
+import sys
 import config
+import shutil
 
 
 class Cmake:
-    def __init__(self, dependencies):
-        self._sourcesDir = config.directories["solutionDir"]
+    def __init__(self, dir, dependencies):
+
+        if shutil.which('cmake') is None:
+            raise Exception("CMAKE IS NOT INSTALLED ON SYSTEM")
+            sys.exit(1)
+        self._sourcesDir = dir
         self._buildDir = config.directories["buildDir"]
         self._cmakeVersion = config.cmakeVersion
         self._additionalFlags = {}
@@ -27,7 +34,9 @@ class Cmake:
 
     def add_static_library(self, file_handler, lib_location, modificator=""):
         lib_location = os.path.abspath(lib_location).replace('\\', '/')
-        file_handler.writelines("target_link_libraries({3} {2} \"{0}\"){1}".format(lib_location, os.linesep, modificator, self.project_name))
+        file_handler.writelines(
+            "target_link_libraries({3} {2} \"{0}\"){1}".format(lib_location, os.linesep, modificator,
+                                                               self.project_name))
 
     @staticmethod
     def add_headers_location(file_handler, location):
@@ -39,7 +48,7 @@ class Cmake:
 
     def get_flags_string(self):
         format_flag = lambda f_name, f_val: "-{0}={1}".format(f_name, f_val)
-        return " ".join([format_flag(flag, value) for flag, value in self._additionalFlags.iteritems()])
+        return " ".join([format_flag(flag, value) for flag, value in self._additionalFlags.items()])
 
     @staticmethod
     def join_if_list(var, symbol=os.linesep):
@@ -50,14 +59,15 @@ class Cmake:
         file_handler.writelines(os.linesep)
 
     def build_deps(self, file_handler):
-        for dep_name, dep_config in self.dependencies.iteritems():
+        for dep_name, dep_config in self.dependencies.items():
+            # INSERT CMAKE BEFORE
             cmake_before_string = self.join_if_list(dep_config['cmake_before'])
             cmake_before_string = cmake_before_string.format(project_name=self.project_name)
             file_handler.writelines(cmake_before_string)
             self.file_new_line(file_handler)
 
+            # INSERT DEBUG LIBS
             debug_libs = dep_config['libs'][config.buildArchitecture]['debug']
-
             if isinstance(debug_libs, list):
                 for lib in debug_libs:
                     self.add_static_library(file_handler, lib, 'debug')
@@ -66,25 +76,27 @@ class Cmake:
 
             release_libs = dep_config['libs'][config.buildArchitecture]['release']
 
+            # INSERT RELEASE LIBS
             if isinstance(release_libs, list):
                 for lib in release_libs:
                     self.add_static_library(file_handler, lib, 'optimized ')
             elif release_libs is not "":
                 self.add_static_library(file_handler, release_libs, 'optimized ')
 
+            # INSERT HEADERS LIBS
             if isinstance(dep_config['headers'], list):
                 for location in dep_config['headers']:
                     self.add_headers_location(file_handler, location)
             elif dep_config['headers'] is not "":
                 self.add_headers_location(file_handler, dep_config['headers'])
 
-
+            # INSERT CMAKE AFTER
             cmake_after_string = self.join_if_list(dep_config['cmake_after'])
             cmake_after_string = cmake_after_string.format(project_name=self.project_name)
             file_handler.writelines(cmake_after_string)
             self.file_new_line(file_handler)
 
-    def build(self):
+    def save(self):
         cmake_file = open(self._sourcesDir + '/CMakeLists.txt', 'w+')
         cmake_file.writelines("cmake_minimum_required(VERSION {0}){1}".format(self._cmakeVersion, os.linesep))
         cmake_file.writelines('project({0}){1}'.format(self.project_name, os.linesep))

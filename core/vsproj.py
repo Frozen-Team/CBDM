@@ -1,5 +1,6 @@
 from xml.dom import minidom
 import re, os
+import subprocess
 import config
 
 
@@ -48,29 +49,31 @@ class Vcproj:
         self.file_loc = os.path.abspath(file_location)
         self.xml_root = minidom.parse(file_location)
 
-    def build(self, configurations=False, archs=False, output=False, rebuild=False):
+    def build(self, configurations=False, archs=False, output=False, rebuild=False, log_file=False):
         if not configurations:
             configurations = self.get_configurations_list()
         if not archs:
             archs = self.get_arch_list()
         vs_path = config.directories["visualStudioDir"]
 
-        commands = []
+        commands = ["@echo off"]
         build_command = "msbuild"
         build_command += " /t:Rebuild " if rebuild else ""
         if output is not False:
             output += "/{configuration}/{platform}/"
             build_command += " /p:OutDir=\"{0}\" ".format(os.path.abspath(output))
-        build_command += "/p:Configuration={configuration} /p:Platform={platform} \"" + self.file_loc + "\""
+        build_command += "/p:Configuration=\"{configuration}\" /p:Platform=\"{platform}\" \"" + self.file_loc + "\""
         for arc_index, arch in enumerate(archs):
-            arch = str(arch)
             commands.append('call "{vs_path}/VC/vcvarsall.bat" x86_amd64'.format(vs_path=os.path.abspath(vs_path)))
             for conf_index, configuration in enumerate(configurations):
                 commands.append(build_command.format(configuration=configuration, platform=arch))
-        bat_file = open("build_glew.bat", 'w')
+        bat_file = open('build.bat', 'w')
         bat_file.writelines(os.linesep.join(commands))
         bat_file.close()
-        os.system("call build_glew.bat")
+        output = open(str(log_file), 'w') if log_file else open(os.devnull, 'w')
+        subprocess.call('call build.bat', stderr=output, stdout=output, shell=True)
+        os.system('call build.bat')
+        os.remove('build.bat')
 
 
     def get_configuration(self, configuration_name):
