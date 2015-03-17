@@ -1,16 +1,29 @@
 import core.sys_config as cconfig
 import os
+
 default_dependency_struct = {"libs": {
-    "x64": {
-        "debug": "",  # can be also a list
-        "release": "",  # can be also a list
+    "linux": {
+        "x64": {
+            "debug": [],
+            "release": [],
+        },
+        "x86": {
+            "debug": [],
+            "release": [],
+        }
     },
-    "x32": {
-        "debug": "",  # can be also a list
-        "release": "",  # can be also a list
+    'windows': {
+        "x64": {
+            "debug": [],
+            "release": [],
+        },
+        "x86": {
+            "debug": [],
+            "release": [],
+        }
     }
 },
-                             "headers": "",  # could be a list
+                             "headers": [],
                              "cmake_before": "",
                              "cmake_after": ""
 }

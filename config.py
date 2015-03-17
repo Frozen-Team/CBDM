@@ -6,12 +6,17 @@ directories = {
 }
 projectName = "FrozenEngine"
 cmakeVersion = "3.1.3"
+cmakeGenerator = "Visual Studio 12 2013"
 buildArchitecture = "x64"  # x86 | x32
 dependencies = {
-    "glew": {
+    # "skeleton": {
+    #     "version": "1.12.0",
+    #     'rebuild': True
+    # },
+    "skeleton": {
         "version": "1.12.0",
-        # 'rebuild': True
-    }
+        'rebuild': False
+    },
     # "glfw": {
     #     "version": "3.1"
     # }

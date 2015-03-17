@@ -1,4 +1,3 @@
-__author__ = 'Ярослав'
 import os
 import subprocess
 import re

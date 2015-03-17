@@ -16,13 +16,14 @@ def readonly_handler(func, path, execinfo):
 
 
 def load_glew(version, path, rebuild):
-    repo = Repo(sources_dir, 'logs/glew_git.txt')
+    repo = Repo(sources_dir, m_config.log_clone_file)
     if os.path.exists(path):
         if rebuild or not repo.is_repo():
             shutil.rmtree(path, ignore_errors=False, onerror=readonly_handler)
-    repo.clone('git://git.frozen-team.com/Glew.git')
-    repo.checkout('glew-{0}'.format(version))
-    __fix_vcproj()
+    else:
+        repo.clone(m_config.repo)
+        repo.checkout(m_config.version_branch.format(v=version))
+        __fix_vcproj()
 
 
 def __fix_vcproj():
@@ -43,7 +44,7 @@ def compile_glew(sources_dir, params):
         build_path = os.path.abspath(params['build_path'])
         os.chdir(project_dir)
         project = Vcproj(module_dir+'/'+m_config.vis_studio_project_path)
-        project.build(output=build_path, log_file='logs/glew_build.txt')
+        project.build(output=build_path, log_file=m_config.log_build_project)
         return {
             "libs": {
                 "x64": {
