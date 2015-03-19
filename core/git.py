@@ -16,16 +16,18 @@ class Repo:
         self.log_std = open(log_file, 'w') if log_file else open(os.devnull)
 
     def is_repo(self):
-        return os.path.exists(self.directory + '\\.git')
+        return os.path.exists(self.directory + os.path.sep + '.git')
 
     def get_branches(self):
         if not self.is_repo():
             raise Exception("Not a repository(" + os.path.abspath(self.directory) + ")")
             sys.exit(1)
-        branches_str = subprocess.check_output(['git', 'branch'], cwd=self.directory, shell=True).decode()
-        result = re.findall('([a-zA-Z0-9./=-]+?)\\n', branches_str)
-        tags_str = subprocess.check_output(['git', 'tag'], cwd=self.directory, shell=True).decode()
-        result.extend(re.findall('([a-zA-Z0-9./=-]+?)\\n', tags_str))
+        process = subprocess.Popen(['git branch'], cwd=self.directory, shell=True, stdout=subprocess.PIPE)
+        out, err = process.communicate()
+        result = re.findall('([a-zA-Z0-9./=-]+?)\\n', out.decode())
+        process = subprocess.Popen(['git tag'], cwd=self.directory, shell=True, stdout=subprocess.PIPE)
+        out, err = process.communicate()
+        result.extend(re.findall('([a-zA-Z0-9./=-]+?)\\n', out.decode()))
         return result
 
     def branch_exists(self, branch_name):

@@ -41,6 +41,19 @@ class TasksManager:
         module_name = s_config.modules_py_mod_location.format(file=file_name, module_name=self.module_name)
         return importlib.import_module(module_name)
 
+    def __prepare_task_params(self, task_params, module_params):
+        result = {}
+        format_dict = {"module_name": self.module_name}
+        for key, val in module_params.items():
+            if isinstance(val, str):
+                format_dict[key] = val
+        for key, task_param in task_params.items():
+            if isinstance(task_param, str):
+                result[key] = task_param.format(**format_dict)
+            else:
+                result[key] = task_param
+        return result
+
     def run_tasks(self):
         project_location = os.getcwd()
         os.chdir(self.module_location)
@@ -56,9 +69,7 @@ class TasksManager:
                 raise Exception(exc_error)
                 sys.exit(10)
             f_task = getattr(self.additional_tasks, task['task']) if user_task else getattr(Tasks, task['task'])
-            f_task(self.module_name, task, self.configs, self.results)
-
-
+            f_task(self.module_name, self.__prepare_task_params(task, self.configs), self.configs, self.results)
 
         os.chdir(project_location)
 
