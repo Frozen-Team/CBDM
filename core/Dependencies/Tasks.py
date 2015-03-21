@@ -137,13 +137,13 @@ def make_install(module_name, task_params, module_params, result):
         prev_wd = os.getcwd()
         makefile_pth = os.path.dirname(check_param(module_name, task_params, 'directory'))
         os.chdir(makefile_pth)
-        subprocess.Popen(['sudo make install'], shell=True).communicate()
+        subprocess.Popen(['gksudo make install'], shell=True).communicate()
         os.chdir(prev_wd)
 
 
 def install_distro_dependencies(distro, dependencies):
     package_manager = {"Ubuntu": 'apt-get'}
-    sbprocess = subprocess.Popen('echo "lewejers" | sudo -S apt-get install -y '+" ".join(dependencies), shell=True)
+    sbprocess = subprocess.Popen('gksudo -S apt-get install -y '+" ".join(dependencies), shell=True)
     sbprocess.communicate(subprocess.PIPE)
 
 def make(module_name, task_params, module_params, result):
