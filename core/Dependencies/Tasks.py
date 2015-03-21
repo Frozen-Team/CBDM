@@ -1,3 +1,4 @@
+from glob import glob
 from shutil import which, rmtree
 import sys
 from urllib.request import urlopen, urlretrieve
@@ -56,15 +57,26 @@ def git_checkout(module_name, task_params, module_params, result):
 
 
 def add_library(module_name, task_params, module_params, result):
-    check_param(module_name, task_params, 'config')
-    check_param(module_name, task_params, 'library_location')
-    params = task_params['config']
-    result['libs'][params[0]][params[1]][params[2]].append(task_params['library_location'])
+    cfg = check_param(module_name, task_params, 'config')
+    lib_location = check_param(module_name, task_params, 'library_location')
+    abs_lib_location = os.path.abspath(lib_location)
+    result['libs'][cfg[0]][cfg[1]][cfg[2]].append(abs_lib_location)
 
 
 def add_location(module_name, task_params, module_params, result):
-    check_param(module_name, task_params, 'location')
-    result['headers'].append(task_params['location'])
+    location = check_param(module_name, task_params, 'location')
+    abs_location = os.path.abspath(location)
+    result['headers'].append(abs_location)
+
+
+def remove_file_by_mask(module_name, task_params, module_params, result):
+    mask = check_param(module_name, task_params, 'mask')
+    files_to_delete = glob(mask)
+    for file in files_to_delete:
+        if os.path.isfile(file):
+            os.remove(file)
+        else:
+            rmtree(file, ignore_errors=False, onerror=readonly_handler)
 
 
 def download_file(module_name, task_params, module_params, result):
@@ -75,7 +87,7 @@ def download_file(module_name, task_params, module_params, result):
 
 def unzip(module_name, task_params, module_params, result):
     location = check_param(module_name, task_params, 'file_location')
-    destination = check_param(module_name, task_params, 'destination', 'extracted_zip')
+    destination = check_param(module_name, task_params, 'destination', '')
     with ZipFile(location, 'r') as archive:
         archive.extractall(destination)
 

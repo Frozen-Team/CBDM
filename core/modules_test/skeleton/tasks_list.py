@@ -13,7 +13,7 @@ tasks = [
 
     {"task": "add_library", "config": ("linux", "x86", "debug"), "library_location": "/Debug/x64/glew32sd.lib"},
     {"task": "add_location", "location": "/Debug/x64/glew32sd.lib"},
-
+    {"task": 'remove_file_by_mask', 'mask': '*.c'},
     # {"task": "download_file", "url": "http://nodejs.org/dist/v0.12.0/node-v0.12.0.tar.gz", "destination": "node.tar.gz"},
     # {"task": "download_file", "url": "https://sourceforge.net/projects/glew/files/glew/1.12.0/glew-1.12.0.zip/download",
     #  "destination": "test.zip"},

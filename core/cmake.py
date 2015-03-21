@@ -4,6 +4,7 @@ import subprocess
 import sys
 import config
 import shutil
+import platform
 
 
 class Cmake:
@@ -66,15 +67,16 @@ class Cmake:
             file_handler.writelines(cmake_before_string)
             self.file_new_line(file_handler)
 
+            proj_platform = platform.system().lower ()
             # INSERT DEBUG LIBS
-            debug_libs = dep_config['libs'][config.buildArchitecture]['debug']
+            debug_libs = dep_config['libs'][proj_platform][config.buildArchitecture]['debug']
             if isinstance(debug_libs, list):
                 for lib in debug_libs:
                     self.add_static_library(file_handler, lib, 'debug')
             elif debug_libs is not "":
                 self.add_static_library(file_handler, debug_libs, 'debug')
 
-            release_libs = dep_config['libs'][config.buildArchitecture]['release']
+            release_libs = dep_config['libs'][proj_platform][config.buildArchitecture]['release']
 
             # INSERT RELEASE LIBS
             if isinstance(release_libs, list):
@@ -102,8 +104,9 @@ class Cmake:
         cmake_file.writelines('project({0}){1}'.format(self.project_name, os.linesep))
         self.set("CMAKE_RUNTIME_OUTPUT_DIRECTORY", "bin", cmake_file)
         main_project_files = self.find_sources(self._sourcesDir)
-        self.set("SOURCES_FILES", " ".join(main_project_files), cmake_file)
-        cmake_file.writelines("add_executable(" + self.project_name + " ${SOURCES_FILES})" + os.linesep)
+        if len(main_project_files) > 0:
+            self.set("SOURCES_FILES", " ".join(main_project_files), cmake_file)
+            cmake_file.writelines("add_executable(" + self.project_name + " ${SOURCES_FILES})" + os.linesep)
         self.build_deps(cmake_file)
         cmake_file.close()
 

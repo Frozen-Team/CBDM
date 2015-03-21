@@ -1,6 +1,5 @@
 directories = {
-    "solutionDir": "../src/FrozenEngine",
-    "libDir": "../src/third_party/",
+    "solutionDir": "src/FrozenEngine",
     "buildDir": "../build",
     "visualStudioDir": "D:/Applications/VS 2013/"
 }
@@ -13,10 +12,14 @@ dependencies = {
     #     "version": "1.12.0",
     #     'rebuild': True
     # },
-    "glew": {
-        "version": "1.12.0",
+    # "glew": {
+    #     "version": "1.12.0",
+    #     'rebuild': False
+    # },
+    "eigen": {
+        "version": "3.2.4",
         'rebuild': False
-    },
+    }
     # "glfw": {
     #     "version": "3.1"
     # }

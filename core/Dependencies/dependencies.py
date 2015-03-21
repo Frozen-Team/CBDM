@@ -31,4 +31,3 @@ class Dependencies:
         for i, name in enumerate(self.dependencies):
             print(cconfig.percents_output.format(i / dependencies_count))
             self.__build_dependency(name)
-        sys.exit(0)
