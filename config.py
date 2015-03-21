@@ -13,7 +13,7 @@ dependencies = {
     #     "version": "1.12.0",
     #     'rebuild': True
     # },
-    "skeleton": {
+    "glew": {
         "version": "1.12.0",
         'rebuild': False
     },
