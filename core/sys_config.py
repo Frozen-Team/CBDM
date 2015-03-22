@@ -2,8 +2,8 @@ import os
 percents_output = "<<||{0}||>>"
 
 # Modules settings
-modules_location = "core{sep}modules_test{sep}{{module_name}}{sep}".format(sep=os.path.sep)
-modules_py_mod_location = 'core.modules_test.{module_name}.{file}'
+modules_location = "core{sep}modules{sep}{{module_name}}{sep}".format(sep=os.path.sep)
+modules_py_mod_location = 'core.modules.{module_name}.{file}'
 
 additional_tasks_file = "tasks"
 tasks_list_file = "tasks_list"
