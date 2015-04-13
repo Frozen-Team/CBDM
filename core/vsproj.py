@@ -17,9 +17,19 @@ class VcprojConfiguration():
     def get_architecture(self, arch):
         return VcprojConfiguration(self.file_loc, self.xml_root, arch, self.conf_name)
 
-    def set_runtime_librarie(self, config):
+    # TODO
+    def set_platform_toolset(self, platform_toolset):
+        found_elements = []
+        for root_item in self.xml_root.getElementsByTagName("PropertyGroup"):
+            found_elements.append(root_item)
+        for item in found_elements:
+            elements = item.getElementsByTagName('PlatformToolset')
+            if not len(elements) == 0:
+                elements[0].childNodes[0].nodeValue = platform_toolset
+
+    def set_runtime_library(self, runtime_config):
         for item in self._get_items():
-            item.getElementsByTagName('RuntimeLibrary')[0].childNodes[0].nodeValue = config
+            item.getElementsByTagName('RuntimeLibrary')[0].childNodes[0].nodeValue = runtime_config
 
     def save(self):
         self.xml_root.writexml(open(self.file_loc, 'w'), )
@@ -37,7 +47,7 @@ class VcprojConfiguration():
         return result
 
 
-class Vcproj:
+class Builder:
     runtimeLibraries = {
         "MT": "MultiThreaded",
         "MTd": "MultiThreadedDebug",
@@ -72,9 +82,8 @@ class Vcproj:
         bat_file.close()
         output = open(str(log_file), 'w') if log_file else open(os.devnull, 'w')
         subprocess.call('call build.bat', stderr=output, stdout=output, shell=True)
-        os.system('call build.bat')
+        os.system('call build.bat >build.log')
         os.remove('build.bat')
-
 
     def get_configuration(self, configuration_name):
         return VcprojConfiguration(self.file_loc, self.xml_root, conf_name=configuration_name)

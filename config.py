@@ -1,28 +1,122 @@
+import os
+
 directories = {
-    "solutionDir": "src/FrozenEngine",
-    "buildDir": "../build",
-    "visualStudioDir": "D:/Applications/VS 2013/"
+    "solutionDir": "D:/Development/Script/Solution",
+    "downloadDir": "Download",
+    "libFolder": "Lib",
+    "buildDir": "Build",
+    "visualStudioDir": "C:/Program Files (x86)/Microsoft Visual Studio 12.0",
+    "tools_path": os.path.abspath(".") + "/Tools"
 }
 projectName = "FrozenEngine"
 cmakeVersion = "3.1.3"
 cmakeGenerator = "Visual Studio 12 2013"
 buildArchitecture = "x64"  # x86 | x32
 dependencies = {
+
+    # DONE
+    # "cleanup": {},
+
+    # DONE
+    # "7z": {},
+
+    # DONE
+    # "cmake": {
+    #     "version": "3.2.1"
+    # },
+
+    # DONE
+    # "qt": {
+    #     "version": "5.4.1-0",
+    #     'rebuild': True
+    # },
+
+    # DONE
+    # "glew": {
+    #     "version": "1.12.0",
+    #     'rebuild': True
+    # },
+
+    # DONE
+    # "FMOD": {
+    #     "version": "10600",
+    #     'rebuild': True
+    # },
+
+    # DONE
+    # "eigen": {
+    #     "version": "3.2.4",
+    #     'rebuild': True
+    # },
+
+    # DONE
+    # "glfw": {
+    #     "version": "3.1.1"
+    #     'rebuild': True
+    # },
+
+    # DONE
+    # "cppformat": {
+    #     "version": "1.1.0",
+    #     'rebuild': True
+    # },
+
+    # DONE
+    # "spdlog": {
+    #     "version": "master",
+    #     'rebuild': True
+    # },
+
+    # DONE
+    # "easyloggingpp": {
+    #     "version": "v9.80",
+    #     'rebuild': True
+    # },
+
+    # DONE
+    # "freeimage": {
+    #     "version": "3170",
+    #     'rebuild': True
+    # },
+
+    # Use from FreeImage
+    # "zlib"
+
+    # DONE
+    # "freetype": {
+    #     "version": "2.5.5",
+    #     'rebuild': True
+    # }
+
+    # DONE
+    # "glm": {
+    #     "version": "0.9.6.3",
+    #     'rebuild': True
+    # }
+
+    "fbxsdk": {
+        "version": "20151",
+        'rebuild': True
+    }
+
+
+    # FBX
+    # boost
+    # v8
+    # sqlite
+
+    # assimp
+    # GLraw
+
+
+
+
     # "skeleton": {
     #     "version": "1.12.0",
     #     'rebuild': True
     # },
-    # "glew": {
-    #     "version": "1.12.0",
-    #     'rebuild': False
-    # },
-    "eigen": {
-        "version": "3.2.4",
-        'rebuild': False
-    }
-    # "glfw": {
-    #     "version": "3.1"
-    # }
+
+
     # 'module_skeleton': {
     # "version": "version",
     # "build_path": "build_pat",

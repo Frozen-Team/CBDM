@@ -22,10 +22,10 @@ class Repo:
         if not self.is_repo():
             raise Exception("Not a repository(" + os.path.abspath(self.directory) + ")")
             sys.exit(1)
-        process = subprocess.Popen(['git branch'], cwd=self.directory, shell=True, stdout=subprocess.PIPE)
+        process = subprocess.Popen(['git', 'branch'], cwd=self.directory, shell=True, stdout=subprocess.PIPE)
         out, err = process.communicate()
         result = re.findall('([a-zA-Z0-9./=-]+?)\\n', out.decode())
-        process = subprocess.Popen(['git tag'], cwd=self.directory, shell=True, stdout=subprocess.PIPE)
+        process = subprocess.Popen(['git', 'tag'], cwd=self.directory, shell=True, stdout=subprocess.PIPE)
         out, err = process.communicate()
         result.extend(re.findall('([a-zA-Z0-9./=-]+?)\\n', out.decode()))
         return result

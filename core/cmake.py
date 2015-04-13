@@ -67,7 +67,7 @@ class Cmake:
             file_handler.writelines(cmake_before_string)
             self.file_new_line(file_handler)
 
-            proj_platform = platform.system().lower ()
+            proj_platform = platform.system().lower()
             # INSERT DEBUG LIBS
             debug_libs = dep_config['libs'][proj_platform][config.buildArchitecture]['debug']
             if isinstance(debug_libs, list):
