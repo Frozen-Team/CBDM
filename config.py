@@ -94,19 +94,27 @@ dependencies = {
     #     'rebuild': True
     # }
 
-    "fbxsdk": {
-        "version": "20151",
+    # DONE
+    # "fbxsdk": {
+    #     "version": "20151",
+    #     'rebuild': True
+    # }
+
+    # DONE
+    # "boost": {
+    #     "version": "1_57_0",
+    #     'rebuild': True
+    # }
+
+    "v8": {
+        "version": "4.4.16",
         'rebuild': True
     }
 
-
-    # FBX
-    # boost
-    # v8
     # sqlite
-
     # assimp
     # GLraw
+    # freetype-gl
 
 
 

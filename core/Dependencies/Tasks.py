@@ -13,6 +13,11 @@ from core.modules.cmake.tasks_list import cmake_exe_path
 import core.sys_config as s_config
 import platform
 from core.vsproj import Builder
+from subprocess import check_call
+if sys.hexversion > 0x03000000:
+    import winreg
+else:
+    import _winreg as winreg
 
 if sys.platform.startswith('win'):
     shell = True
@@ -206,9 +211,11 @@ def make(module_name, task_params, module_params, result):
             project = Builder(vcxproj_pth)
             debug_conf = project.get_configuration("Debug")
             debug_conf.set_runtime_library("MultiThreadedDebugDLL")
+            debug_conf.set_platform_toolset("v120")
             debug_conf.save()
             release_conf = project.get_configuration("Release")
             release_conf.set_runtime_library("MultiThreadedDLL")
+            release_conf.set_platform_toolset("v120")
             release_conf.save()
             project.build()
 
@@ -244,3 +251,6 @@ def cmake_generate(module_name, task_params, module_params, result):
             sys.exit(1)
         subprocess.Popen([cmake_exe_path, "-G", generator, "-B" + destination_dir, "-H" + sources_dir],
                          stderr=subprocess.STDOUT, shell=shell).communicate()
+
+
+# def rename(module_name, task_params, module_params, result):

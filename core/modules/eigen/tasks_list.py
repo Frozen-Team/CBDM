@@ -10,6 +10,6 @@ tasks = [
     {"task": 'remove_file_by_mask', 'mask': 'eigen_sources'},
     {"task": 'remove_file_by_mask', 'mask': 'eigen-eigen-*'},
     {"task": "unzip", "file_location": eigen_file_path, "destination": directories["libFolder"] + "/"},
-    {'task': 'rename_sources_dir', 'user_task': True},
+    {'task': 'rename_eigen', 'user_task': True},
     # {"task": "add_location", "location": "eigen_sources/Eigen/src/"},
 ]
