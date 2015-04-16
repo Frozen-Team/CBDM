@@ -12,7 +12,7 @@ import os
 from core.modules.cmake.tasks_list import cmake_exe_path
 import core.sys_config as s_config
 import platform
-from core.vsproj import Builder
+from core.vcxproj import Builder
 from subprocess import check_call
 if sys.hexversion > 0x03000000:
     import winreg

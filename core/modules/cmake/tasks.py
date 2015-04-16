@@ -1,6 +1,7 @@
 from glob import glob
 import os
 import sys
+import shutil
 from config import directories
 
 
@@ -17,4 +18,4 @@ def rename_cmake_folder(module_name, task_params, module_params, result):
         sys.exit(5)
     to_dir = os.path.join(lib_folder, "cmake")
     sources_dir = sources_dir[0]
-    os.rename(sources_dir, to_dir)
+    shutil.move(sources_dir, to_dir)

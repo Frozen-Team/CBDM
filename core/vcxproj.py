@@ -4,7 +4,7 @@ import subprocess
 import config
 
 
-class VcprojConfiguration():
+class VcxprojConfiguration():
     def __init__(self, file_location, xml_root, arch=False, conf_name=False):
         self.file_loc = file_location
         self.xml_root = xml_root
@@ -12,12 +12,12 @@ class VcprojConfiguration():
         self.conf_name = conf_name
 
     def get_configuration(self, configuration_name):
-        return VcprojConfiguration(self.file_loc, self.xml_root, self.arch, configuration_name)
+        return VcxprojConfiguration(self.file_loc, self.xml_root, self.arch, configuration_name)
 
     def get_architecture(self, arch):
-        return VcprojConfiguration(self.file_loc, self.xml_root, arch, self.conf_name)
+        return VcxprojConfiguration(self.file_loc, self.xml_root, arch, self.conf_name)
 
-    # TODO
+
     def set_platform_toolset(self, platform_toolset):
         found_elements = []
         for root_item in self.xml_root.getElementsByTagName("PropertyGroup"):
@@ -86,10 +86,10 @@ class Builder:
         os.remove('build.bat')
 
     def get_configuration(self, configuration_name):
-        return VcprojConfiguration(self.file_loc, self.xml_root, conf_name=configuration_name)
+        return VcxprojConfiguration(self.file_loc, self.xml_root, conf_name=configuration_name)
 
     def get_architecture(self, arch):
-        return VcprojConfiguration(self.file_loc, self.xml_root, arch=arch)
+        return VcxprojConfiguration(self.file_loc, self.xml_root, arch=arch)
 
     def get_configurations_list(self):
         result = set()

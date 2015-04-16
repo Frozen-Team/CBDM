@@ -14,16 +14,14 @@ cmakeGenerator = "Visual Studio 12 2013"
 buildArchitecture = "x64"  # x86 | x32
 dependencies = {
 
-    # DONE
-    # "cleanup": {},
+    "cleanup": {},
 
-    # DONE
-    # "7z": {},
+    "7z": {},
 
-    # DONE
-    # "cmake": {
-    #     "version": "3.2.1"
-    # },
+    "cmake": {
+        "version": "3.2.1",
+        'rebuild': True
+    },
 
     # DONE
     # "qt": {
@@ -106,10 +104,10 @@ dependencies = {
     #     'rebuild': True
     # }
 
-    "v8": {
-        "version": "4.4.16",
-        'rebuild': True
-    }
+    # "v8": {
+    #     "version": "4.4.16",
+    #     'rebuild': True
+    # }
 
     # sqlite
     # assimp

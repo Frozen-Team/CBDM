@@ -74,7 +74,7 @@ class LibraryModule:
             except:
                 json_data = {}
             json_data[var] = value
-            with open('ModuleCache', 'r+') as cache_file_write:
+            with open('ModuleCache', 'w+') as cache_file_write:
                 cache_file_write.write(json.dumps(json_data))
 
     @staticmethod
@@ -88,15 +88,21 @@ class LibraryModule:
             return json_data
 
     def run_tasks(self):
+        print("###### Start building library  '{0}' ####".format(self.module_name))
         project_location = os.getcwd()
         os.chdir(self.module_location)
         cache = LibraryModule.__get_cache()
         need_rebuild = 'rebuild' in self.module_configs and self.module_configs['rebuild']
-        if need_rebuild or not cache.builded:
+        already_builded = 'builded' in cache and cache['builded']
+        if need_rebuild or not already_builded:
             if hasattr(self.tasks_list, 'build_tasks'):
                 for task in self.tasks_list.build_tasks:
                     self.__run_task(task)
+
+            print("###### Library was successfully builded #### ")
             LibraryModule.__set_cache('builded', True)
+        elif already_builded and not need_rebuild:
+            print("###### Library has been builded... Skipping #### ")
 
         if hasattr(self.tasks_list, 'integration_tasks'):
             for task in self.tasks_list.integration_tasks:
@@ -110,7 +116,7 @@ class LibraryModule:
 
         is_user_task = "user_task" in task and task['user_task']
         if is_user_task:
-            task_exist = self.additional_tasks & hasattr(self.additional_tasks, task_name)
+            task_exist = bool(self.additional_tasks) & hasattr(self.additional_tasks, task_name)
         else:
             task_exist = hasattr(Tasks, task_name)
 

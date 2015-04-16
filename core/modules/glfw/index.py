@@ -3,7 +3,7 @@ import platform
 import shutil
 import core.modules.glfw.config as m_config
 from core.git import Repo
-from core.vsproj import Builder
+from core.vcxproj import Builder
 
 module_dir = os.path.dirname(os.path.realpath(__file__))
 project_dir = os.getcwd()
