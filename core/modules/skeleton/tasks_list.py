@@ -1,6 +1,6 @@
 repository_dir = "sources"
-tasks = [
-    {"task": "test", "user_task": True},
+build_tasks = [
+    {"task": "test", "user_task": True, 'platform': "windows"},
     {"task": "check_dependencies", "programs": ['git', '7z'], "params": ("version", 'rebuild')},
     {"task": "git_clone", "repository": "git://git.frozen-team.com/Glew.git", "sources_dir": repository_dir},
     {"task": "git_checkout", "sources_dir": repository_dir, "branch": "glew-{version}"},
@@ -24,3 +24,6 @@ tasks = [
     # {"task": "unzip", "file_location": "test.zip", "destination": None},
     # {"task": "un_7_zip", "file_location": "test.7z", "destination": "test-7z/test/test/test"},
 ]
+integration_tasks = {
+    {"task": "test", "user_task": True, 'platform': "windows"},
+}

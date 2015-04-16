@@ -3,7 +3,7 @@ from config import directories
 
 fbxsdk_path = os.path.join(directories["downloadDir"], 'fbx.exe')
 libFolder = directories["libFolder"] + "/"
-tasks = [
+build_tasks = [
     {"task": "check_dependencies", "params": ("version", 'rebuild')},
     {"task": "download_file", "destination": fbxsdk_path,
      "url": "http://images.autodesk.com/adsk/files/fbx{version}_fbxsdk_vs2013_win.exe"},

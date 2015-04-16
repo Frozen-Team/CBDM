@@ -5,7 +5,7 @@ qt_x86_path = os.path.join(directories["downloadDir"], 'qt_x86.7z')
 qt_x64_path = os.path.join(directories["downloadDir"], 'qt_x64.7z')
 qt_vs_addin_path = os.path.join(directories["downloadDir"], 'qt_vs_addin.exe')
 libFolder = directories["libFolder"] + "/"
-tasks = [
+build_tasks = [
     {"task": "check_dependencies", "programs": ['git'], "params": ("version", 'rebuild')},
     {"task": "download_file", "destination": qt_vs_addin_path,
      "url": "http://download.qt.io/official_releases/vsaddin/qt-vs-addin-1.2.4-opensource.exe"},

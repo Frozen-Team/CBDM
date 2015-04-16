@@ -1,7 +1,7 @@
 from config import directories
 
 easyloggingpp_path = directories["libFolder"] + "/"
-tasks = [
+build_tasks = [
     {"task": "check_dependencies", "programs": ['git'], "params": ("version", 'rebuild')},
     {"task": "git_clone", "repository": "https://github.com/easylogging/easyloggingpp.git", "sources_dir":
         easyloggingpp_path},
