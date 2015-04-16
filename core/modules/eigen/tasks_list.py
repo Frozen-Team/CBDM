@@ -3,7 +3,7 @@ from config import directories
 
 repository_dir = "sources"
 eigen_file_path = os.path.join(directories["downloadDir"], 'eigen.zip')
-tasks = [
+build_tasks = [
     {"task": "check_dependencies", "programs": ['git'], "params": ("version", 'rebuild')},
     {"task": "download_file", "destination": eigen_file_path,
      "url": "http://bitbucket.org/eigen/eigen/get/{version}.zip"},

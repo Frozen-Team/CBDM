@@ -3,7 +3,7 @@ from config import directories
 
 repository_dir = "sources"
 glew_path = os.path.join(directories["downloadDir"], 'glew.zip')
-tasks = [
+build_tasks = [
     {"task": "check_dependencies", "programs": ['git'], "params": ("version", 'rebuild')},
     {"task": "download_file",
      "destination": glew_path,

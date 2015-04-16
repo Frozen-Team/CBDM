@@ -3,7 +3,7 @@ from config import directories
 
 freetype_path = os.path.join(directories["downloadDir"], 'freetype.zip')
 freetype_vcxproj = "Lib/freetype-{version}/builds/windows/vc2010/freetype.vcxproj"
-tasks = [
+build_tasks = [
     {"task": "check_dependencies", "params": ("version", 'rebuild')},
     {"task": "download_file",
      "destination": freetype_path,

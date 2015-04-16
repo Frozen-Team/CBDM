@@ -61,3 +61,4 @@ target/
 Tools/cmake/
 Download
 Lib
+.idea

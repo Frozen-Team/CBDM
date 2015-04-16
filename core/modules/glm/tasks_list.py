@@ -2,7 +2,7 @@ import os
 from config import directories
 
 glm_path = os.path.join(directories["downloadDir"], 'glm.zip')
-tasks = [
+build_tasks = [
     {"task": "check_dependencies", "params": ("version", 'rebuild')},
     {"task": "download_file",
      "destination": glm_path,

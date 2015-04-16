@@ -1,7 +1,7 @@
 import os
 import sys
 import importlib
-from core.Dependencies.task_manager import TasksManager
+from core.Dependencies.library_module import LibraryModule
 import core.default_structures as struct
 import core.sys_config as cconfig
 
@@ -13,7 +13,7 @@ class Dependencies:
 
     def __get_module_params(self, module_name):
         params = self.dependencies[module_name]
-        new_params = struct.module_config.copy()
+        new_params = struct.library_module_config.copy()
         new_params['build_path'] = new_params["build_path"].format(module_name=module_name)
         if isinstance(params, str):
             new_params["version"] = params
@@ -22,9 +22,9 @@ class Dependencies:
         return new_params
 
     def __build_dependency(self, depend_name):
-        task_manager = TasksManager(depend_name, self.__get_module_params(depend_name))
-        task_manager.run_tasks()
-        self.modules_results[depend_name] = task_manager.get_results()
+        library_module = LibraryModule(depend_name, self.__get_module_params(depend_name))
+        library_module.run_tasks()
+        self.modules_results[depend_name] = library_module.get_results()
 
     def build_dependencies(self):
         dependencies_count = len(self.dependencies)

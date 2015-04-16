@@ -1,7 +1,7 @@
 from config import directories
 
 cppformat_path = directories["libFolder"] + "/"
-tasks = [
+build_tasks = [
     {"task": "check_dependencies", "programs": ['git'], "params": ("version", 'rebuild')},
     {"task": "git_clone", "repository": "https://github.com/cppformat/cppformat.git", "sources_dir": cppformat_path},
     {"task": "git_checkout", "sources_dir": cppformat_path, "branch": "{version}"},

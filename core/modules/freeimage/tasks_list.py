@@ -3,7 +3,7 @@ from config import directories
 
 repository_dir = "sources"
 freeimage_path = os.path.join(directories["downloadDir"], 'freeimage.zip')
-tasks = [
+build_tasks = [
     {"task": "check_dependencies", "programs": ['git'], "params": ("version", 'rebuild')},
     {"task": "download_file",
      "destination": freeimage_path,
