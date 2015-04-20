@@ -1,4 +1,6 @@
 # encoding: utf8
+import os
+import sys
 import config
 # from core.cmake import Cmake
 from core.Dependencies.dependencies import Dependencies

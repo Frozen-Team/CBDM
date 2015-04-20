@@ -67,42 +67,42 @@ class LibraryModule:
 
     @staticmethod
     def __set_cache(var, value):
-        with open('ModuleCache', 'r+') as cache_file:
-            try:
+        try:
+            with open('ModuleCache', 'r+') as cache_file:
                 file = cache_file.read()
                 json_data = json.loads(file)
-            except:
-                json_data = {}
-            json_data[var] = value
-            with open('ModuleCache', 'w+') as cache_file_write:
-                cache_file_write.write(json.dumps(json_data))
+        except:
+            json_data = {}
+        json_data[var] = value
+        with open('ModuleCache', 'w+') as cache_file_write:
+            cache_file_write.write(json.dumps(json_data))
 
     @staticmethod
     def __get_cache():
-        with open('ModuleCache', 'r+') as cache_file:
-            try:
+        try:
+            with open('ModuleCache', 'r+') as cache_file:
                 file = cache_file.read()
                 json_data = json.loads(file)
-            except:
-                json_data = {}
-            return json_data
+        except:
+            json_data = {}
+        return json_data
 
     def run_tasks(self):
-        print("###### Start building library  '{0}' ####".format(self.module_name))
+        print("###### Working on '{0}' ####".format(self.module_name))
         project_location = os.getcwd()
         os.chdir(self.module_location)
         cache = LibraryModule.__get_cache()
         need_rebuild = 'rebuild' in self.module_configs and self.module_configs['rebuild']
-        already_builded = 'builded' in cache and cache['builded']
-        if need_rebuild or not already_builded:
+        already_built = 'built' in cache and cache['built']
+        if need_rebuild or not already_built:
             if hasattr(self.tasks_list, 'build_tasks'):
                 for task in self.tasks_list.build_tasks:
                     self.__run_task(task)
 
-            print("###### Library was successfully builded #### ")
-            LibraryModule.__set_cache('builded', True)
-        elif already_builded and not need_rebuild:
-            print("###### Library has been builded... Skipping #### ")
+            print("###### Library has been processed successfully #### ")
+            LibraryModule.__set_cache('built', True)
+        elif already_built and not need_rebuild:
+            print("###### Library has been processed... Skipping #### ")
 
         if hasattr(self.tasks_list, 'integration_tasks'):
             for task in self.tasks_list.integration_tasks:

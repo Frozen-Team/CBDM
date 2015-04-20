@@ -58,7 +58,8 @@ docs/_build/
 target/
 
 # ignore cmake tool
-Tools/cmake/
+Tools
 Download
 Lib
+ModuleCache
 .idea
