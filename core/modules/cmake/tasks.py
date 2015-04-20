@@ -18,4 +18,6 @@ def rename_cmake_folder(module_name, task_params, module_params, result):
         sys.exit(5)
     to_dir = os.path.join(lib_folder, "cmake")
     sources_dir = sources_dir[0]
+    if os.path.exists(to_dir):
+        shutil.rmtree(to_dir)
     shutil.move(sources_dir, to_dir)

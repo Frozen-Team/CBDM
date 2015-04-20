@@ -28,7 +28,7 @@ default_dependency_struct = {"libs": {
                              "cmake_after": ""
 }
 library_module_config = {
-    "version": 0,
+    "version": '0',
     "build_path": os.path.realpath(cconfig.default_modules_build_path),
     "rebuild": False
 }

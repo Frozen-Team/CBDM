@@ -67,6 +67,9 @@ class LibraryModule:
 
     @staticmethod
     def __set_cache(var, value):
+        if not os.path.isfile('ModuleCache'):
+            with open('ModuleCache', 'w+') as new_file:
+                new_file.write("")
         with open('ModuleCache', 'r+') as cache_file:
             try:
                 file = cache_file.read()
@@ -79,13 +82,13 @@ class LibraryModule:
 
     @staticmethod
     def __get_cache():
-        with open('ModuleCache', 'r+') as cache_file:
-            try:
+        try:
+            with open('ModuleCache', 'r+') as cache_file:
                 file = cache_file.read()
                 json_data = json.loads(file)
-            except:
-                json_data = {}
-            return json_data
+        except:
+            json_data = {}
+        return json_data
 
     def run_tasks(self):
         print("###### Start building library  '{0}' ####".format(self.module_name))
@@ -115,6 +118,8 @@ class LibraryModule:
         task_name = task['task']
 
         is_user_task = "user_task" in task and task['user_task']
+        task_description = task['description'] if "description" in task else False
+
         if is_user_task:
             task_exist = bool(self.additional_tasks) & hasattr(self.additional_tasks, task_name)
         else:
@@ -124,6 +129,8 @@ class LibraryModule:
             exception_error = s_config.no_task_error.format(task_name=task_name, module_name=self.module_name)
             raise Exception(exception_error)
             sys.exit(10)
+        if (task_description):
+            print('Running task: ' + task_description)
         if is_user_task:
             task_function = getattr(self.additional_tasks, task_name)
         else:

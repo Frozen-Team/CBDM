@@ -103,6 +103,30 @@ def remove_file_by_mask(module_name, task_params, module_params, result):
             rmtree(file, ignore_errors=False, onerror=readonly_handler)
 
 
+def rename_folder_by_mask(module_name, task_params, module_params, result):
+    mask = check_param(module_name, task_params, 'mask')
+    override = check_param(module_name, task_params, 'override', False)
+    destination = check_param(module_name, task_params, 'destination')
+
+    folders = glob(mask)
+    folders_count = len(folders)
+    if folders_count < 1:
+        raise Exception('No mask folder')
+        sys.exit(15)
+    if folders_count > 1:
+        raise Exception('More than one mask folder exists')
+        sys.exit(15)
+
+    if os.path.isdir(destination):
+        if override:
+            shutil.rmtree(destination, ignore_errors=False, onerror=readonly_handler)
+        else:
+            raise Exception('Destination folder exists')
+            sys.exit(15)
+
+    shutil.move(folders[0], destination)
+
+
 def move_files(module_name, task_params, module_params, result):
     from_path = check_param(module_name, task_params, 'from_path')
     to_path = check_param(module_name, task_params, 'to_path')
