@@ -91,21 +91,21 @@ class LibraryModule:
         return json_data
 
     def run_tasks(self):
-        print("###### Start building library  '{0}' ####".format(self.module_name))
+        print("###### Working on '{0}' ####".format(self.module_name))
         project_location = os.getcwd()
         os.chdir(self.module_location)
         cache = LibraryModule.__get_cache()
         need_rebuild = 'rebuild' in self.module_configs and self.module_configs['rebuild']
-        already_builded = 'builded' in cache and cache['builded']
-        if need_rebuild or not already_builded:
+        already_built = 'built' in cache and cache['built']
+        if need_rebuild or not already_built:
             if hasattr(self.tasks_list, 'build_tasks'):
                 for task in self.tasks_list.build_tasks:
                     self.__run_task(task)
 
-            print("###### Library was successfully builded #### ")
-            LibraryModule.__set_cache('builded', True)
-        elif already_builded and not need_rebuild:
-            print("###### Library has been builded... Skipping #### ")
+            print("###### Library was successfully built #### ")
+            LibraryModule.__set_cache('built', True)
+        elif already_built and not need_rebuild:
+            print("###### Library has been processed... Skipping #### ")
 
         if hasattr(self.tasks_list, 'integration_tasks'):
             for task in self.tasks_list.integration_tasks:
@@ -129,7 +129,7 @@ class LibraryModule:
             exception_error = s_config.no_task_error.format(task_name=task_name, module_name=self.module_name)
             raise Exception(exception_error)
             sys.exit(10)
-        if (task_description):
+        if task_description:
             print('Running task: ' + task_description)
         if is_user_task:
             task_function = getattr(self.additional_tasks, task_name)

@@ -10,16 +10,15 @@ def generate_v8_project(module_name, task_params, module_params, result):
     os.chdir(depot_tools_path)
     os.environ["PATH"] += ";" + depot_tools_path
 
-    gyp_setup_log = open("gyp_setup.log", "w")
-    # subprocess.call(["D:/Development/CppDepManager/core/modules/v8/Tools/depot_tools/python276_bin/python.exe", "build/gyp/setup.py"], stderr=gyp_setup_log, stdout=gyp_setup_log, shell=True)
+    # gyp_setup_log = open("gyp_setup.log", "w")
+    #
+    # subprocess.call(["fetch", "v8"], stderr=gyp_setup_log, stdout=gyp_setup_log, shell=True)
+    #
+    # gyp_setup_log.close()
 
-    subprocess.call(["fetch", "v8"], stderr=gyp_setup_log, stdout=gyp_setup_log, shell=True)
-
-    gyp_setup_log.close()
-
-    # gclient_log_file = open("gclient.log", "w")
-    # subprocess.call(["gclient", "sync"], stderr=gclient_log_file, stdout=gclient_log_file, shell=True)
-    # gclient_log_file.close()
+    gclient_log_file = open("gclient.log", "w")
+    subprocess.call(["third_party/python_26/python.exe", "build\gyp_v8", "-Dtarget_arch=x64"], stderr=gclient_log_file, stdout=gclient_log_file, shell=True)
+    gclient_log_file.close()
 
 
 

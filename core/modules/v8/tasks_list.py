@@ -4,7 +4,7 @@ from config import directories
 v8_path = directories["libFolder"] + "/"
 download_path = os.path.join(directories["downloadDir"], 'depot_tools.zip')
 gyp_path = directories["libFolder"] + "/build/gyp"
-tasks = [
+build_tasks = [
     {"task": "check_dependencies", "programs": ['git'], "params": ("version", 'rebuild')},
     # {"task": "git_clone", "repository": "https://chromium.googlesource.com/chromium/tools/depot_tools.git",
     #  "sources_dir": v8_path},
