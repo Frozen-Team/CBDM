@@ -21,3 +21,7 @@ def rename_cmake_folder(module_name, task_params, module_params, result):
     if os.path.exists(to_dir):
         shutil.rmtree(to_dir)
     shutil.move(sources_dir, to_dir)
+
+
+def set_bin_to_result(module_name, task_params, module_params, result):
+    result['path'] = directories['tools_path'] + '/cmake/bin/cmake.exe'

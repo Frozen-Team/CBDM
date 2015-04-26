@@ -1,6 +1,8 @@
 from xml.dom import minidom
-import re, os
+import re
+import os
 import subprocess
+
 import config
 
 
@@ -65,7 +67,8 @@ class Builder:
         if not archs:
             archs = self.get_arch_list()
         vs_path = config.directories["visualStudioDir"]
-
+        if not os.path.isdir(vs_path):
+            raise Exception('Bad Visual Studio Dir')
         commands = ["@echo off"]
         build_command = "msbuild"
         build_command += " /t:Rebuild " if rebuild else ""

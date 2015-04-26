@@ -6,13 +6,15 @@ from urllib.request import urlretrieve
 from zipfile import ZipFile
 import subprocess
 import shutil
+import os
+import platform
+
 from config import directories, cmakeGenerator
 from core.git import Repo
-import os
 from core.modules.cmake.tasks_list import cmake_exe_path
 import core.sys_config as s_config
-import platform
 from core.vcxproj import Builder
+
 
 if sys.platform.startswith('win'):
     shell = True
@@ -61,11 +63,11 @@ def check_dependencies(module_name, task_params, module_params, result):
 
 
 def git_clone(module_name, task_params, module_params, result):
+    repository = check_param(module_name, task_params, 'repository')
     repo_dir = check_param(module_name, task_params, 'sources_dir', '')
     repository = Repo(repo_dir, module_name + '.log')
     if repository.is_repo() and module_params['rebuild']:
         rmtree(repo_dir, ignore_errors=False, onerror=readonly_handler)
-    repository.clone(task_params["repository"])
 
 
 def git_checkout(module_name, task_params, module_params, result):
@@ -79,6 +81,7 @@ def add_library(module_name, task_params, module_params, result):
     cfg = check_param(module_name, task_params, 'config')
     lib_location = check_param(module_name, task_params, 'library_location')
     abs_lib_location = os.path.abspath(lib_location)
+
     result['libs'][cfg[0]][cfg[1]][cfg[2]].append(abs_lib_location)
 
 

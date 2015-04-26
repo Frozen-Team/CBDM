@@ -8,9 +8,12 @@ build_tasks = [
     {"task": "download_file", "destination": cmake_path,
      "url": "http://www.cmake.org/files/v3.2/cmake-{version}-win32-x86.zip",
      'description': 'Downloading cmake'
-     },
+    },
     {"task": "unzip", "file_location": cmake_path, "destination": directories["tools_path"] + "/",
      'description': 'Unzip cmake'},
     {'task': 'rename_cmake_folder', 'user_task': True, 'description': 'Rename cmake folder'},
     # {"task": "add_location", "location": "eigen_sources/Eigen/src/"},
+]
+integration_tasks = [
+    {'task': 'set_bin_to_result', 'user_task': True}
 ]
