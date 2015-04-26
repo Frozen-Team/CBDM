@@ -66,11 +66,11 @@ def check_dependencies(module_name, task_params, module_params, result):
 
 
 def git_clone(module_name, task_params, module_params, result):
+    repository = check_param(module_name, task_params, 'repository')
     repo_dir = check_param(module_name, task_params, 'sources_dir', '')
     repository = Repo(repo_dir, module_name + '.log')
     if repository.is_repo() and module_params['rebuild']:
         rmtree(repo_dir, ignore_errors=False, onerror=readonly_handler)
-    repository.clone(task_params["repository"])
 
 
 def git_checkout(module_name, task_params, module_params, result):

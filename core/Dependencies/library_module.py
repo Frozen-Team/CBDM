@@ -6,13 +6,15 @@ import core.default_structures as structs
 import core.Dependencies.Tasks as Tasks
 import platform
 import json
+import config
+
 
 
 class LibraryModule:
     def __init__(self, module_name, configs):
+        project_location = config.directories['project_path']
         self.module_name = module_name
-
-        self.module_location = s_config.modules_location.format(module_name=module_name)
+        self.module_location = project_location+s_config.modules_location.format(module_name=module_name)
         self.full_module_location = os.path.abspath(self.module_location)
         self.__check_if_module_exists()
 

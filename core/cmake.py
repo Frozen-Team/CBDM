@@ -5,20 +5,26 @@ import sys
 import config
 import shutil
 import platform
+from core.Dependencies.library_module import LibraryModule
+
+cmake_program = ''
 
 
 class Cmake:
     def __init__(self, dir, dependencies):
-
-        if shutil.which('cmake') is None:
-            raise Exception("CMAKE IS NOT INSTALLED ON SYSTEM")
-            sys.exit(1)
+        self.cmake_path = Cmake.install_cmake()
         self._sourcesDir = dir
         self._buildDir = config.directories["buildDir"]
         self._cmakeVersion = config.cmakeVersion
         self._additionalFlags = {}
         self.dependencies = dependencies
         self.project_name = config.projectName
+
+    @staticmethod
+    def install_cmake():
+        install_module = LibraryModule('cmake', {'rebuild': False})
+        install_module.run_tasks()
+        return install_module.get_results()['path']
 
     @staticmethod
     def find_sources(sources_dir, relative_path=False):
@@ -119,7 +125,7 @@ class Cmake:
         if os.path.isfile('CMakeCache.txt'):
             os.remove('CMakeCache.txt')
 
-        subprocess.call(['cmake', self.get_flags_string()])
+        subprocess.call([self.cmake_path, self.get_flags_string()])
 
         # return to previous dir
         os.chdir(current_working_dir)

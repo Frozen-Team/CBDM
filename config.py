@@ -6,7 +6,8 @@ directories = {
     "libFolder": "Lib",
     "buildDir": "Build",
     "visualStudioDir": "C:/Program Files (x86)/Microsoft Visual Studio 12.0",
-    "tools_path": os.path.abspath("Tools")
+    "tools_path": os.path.abspath("Tools")+os.path.sep,
+    'project_path': os.path.abspath('.')+os.path.sep
 }
 
 projectName = "FrozenEngine"
