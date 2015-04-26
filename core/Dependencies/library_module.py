@@ -1,13 +1,12 @@
 import importlib
 import os
 import sys
-import core.sys_config as s_config
-import core.default_structures as structs
-import core.Dependencies.Tasks as Tasks
 import platform
 import json
-import config
 
+import core.sys_config as s_config
+import core.default_structures as structs
+import config
 
 
 class LibraryModule:
@@ -18,6 +17,7 @@ class LibraryModule:
         self.full_module_location = os.path.abspath(self.module_location)
         self.__check_if_module_exists()
 
+        self.system_tasks = LibraryModule.load_tasks()
         self.tasks_list = self.__load_module_file(s_config.tasks_list_file, True)
         self.additional_tasks = self.__load_module_file(s_config.additional_tasks_file, False)
 
@@ -83,6 +83,10 @@ class LibraryModule:
                 cache_file_write.write(json.dumps(json_data))
 
     @staticmethod
+    def load_tasks():
+        return importlib.import_module('core.Dependencies.Tasks')
+
+    @staticmethod
     def __get_cache():
         try:
             with open('ModuleCache', 'r+') as cache_file:
@@ -125,7 +129,7 @@ class LibraryModule:
         if is_user_task:
             task_exist = bool(self.additional_tasks) & hasattr(self.additional_tasks, task_name)
         else:
-            task_exist = hasattr(Tasks, task_name)
+            task_exist = hasattr(self.system_tasks, task_name)
 
         if not task_exist:
             exception_error = s_config.no_task_error.format(task_name=task_name, module_name=self.module_name)
@@ -136,7 +140,7 @@ class LibraryModule:
         if is_user_task:
             task_function = getattr(self.additional_tasks, task_name)
         else:
-            task_function = getattr(Tasks, task_name)
+            task_function = getattr(self.system_tasks, task_name)
 
         task_params = self.__prepare_task_params(task, self.module_configs)
         task_function(self.module_name, task_params, self.module_configs, self.results)

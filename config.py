@@ -109,10 +109,10 @@ dependencies = {
     #     'rebuild': True
     # }
 
-    # "v8": {
-    #     "version": "4.4.16",
-    #     'rebuild': True
-    # }
+    "v8": {
+        "version": "4.4.16",
+        'rebuild': True
+    }
 
     # sqlite
     # assimp
