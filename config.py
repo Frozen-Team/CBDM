@@ -26,10 +26,10 @@ dependencies = {
     # },
 
     # DONE
-    # "sqlite": {
-    #     'rebuild': True,
-    #     'version': '3080900'
-    # },
+    "sqlite": {
+        'rebuild': True,
+        'version': '3080900'
+    },
 
     # DONE
     # "cmake": {
@@ -45,10 +45,10 @@ dependencies = {
     # },
 
     # DONE
-    "glew": {
-        "version": "1.12.0",
-        'rebuild': True
-    },
+    # "glew": {
+    #     "version": "1.12.0",
+    #     'rebuild': True
+    # },
 
     # DONE
     # "FMOD": {

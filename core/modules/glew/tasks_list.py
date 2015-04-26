@@ -5,7 +5,7 @@ from core.default_structures import cleanup_extensions
 
 
 sources_dir = "sources"
-glew_path = os.path.join(directories["downloadDir"], 'glew.zip')
+archive_path = 'glew.zip'
 build_directory = os.path.join(directories['buildDir'], 'glew')
 lib_directory = os.path.join(build_directory, 'lib')
 headers_dir = os.path.join(build_directory, 'headers')
@@ -13,12 +13,12 @@ headers_dir = os.path.join(build_directory, 'headers')
 build_tasks = [
     {"task": "check_dependencies", "params": ("version", 'rebuild')},
     {"task": "download_file",
-     "destination": glew_path,
+     "destination": archive_path,
      "url": "https://sourceforge.net/projects/glew/files/glew/{version}/glew-{version}.zip/download",
      'description': "Downloading..."},
-    {"task": "unzip", "file_location": glew_path, "destination": sources_dir,
+    {"task": "unzip", "file_location": archive_path, "destination": sources_dir,
      'description': "Unzip..."},
-    {"task": 'remove_file_by_mask', "mask": glew_path,
+    {"task": 'remove_file_by_mask', "mask": archive_path,
      'description': "Removing archive..."},
     {"task": "make",
      "output_dir": lib_directory,
