@@ -293,4 +293,8 @@ def rdfff(module_name, task_params, module_params, result):
         for filename in filenames:
             file_name, file_extension = os.path.splitext(filename)
             if file_extension in extensions:
-                os.remove(os.path.join(root, filename))
+                try:
+                    os.chmod(os.path.join(root, filename), 0x777)
+                    os.remove(os.path.join(root, filename))
+                except OSError as exc:
+                    pass

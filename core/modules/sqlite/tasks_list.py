@@ -28,7 +28,7 @@ build_tasks = [
     {"task": "move_files_to_dir_by_mask", 'overwrite': True, 'destination_dir': headers_dir,
      'mask': os.path.join(sources_dir, '*.h'),
      'description': "Copy includes..."},
-    {"task": "rdfff", "directory": 'sources', "extensions": cleanup_extensions["c++"],
+    {"task": "rdfff", "directory": sources_dir, "extensions": cleanup_extensions["c++"],
      'description': 'Cleaning up trash..'}
 ]
 

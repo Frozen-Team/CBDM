@@ -26,10 +26,10 @@ dependencies = {
     # },
 
     # DONE
-    "sqlite": {
-        'rebuild': True,
-        'version': '3080900'
-    },
+    # "sqlite": {
+    #     'rebuild': True,
+    #     'version': '3080900'
+    # },
 
     # DONE
     # "cmake": {
@@ -63,10 +63,10 @@ dependencies = {
     # },
 
     # DONE
-    # "glfw": {
-    #     "version": "3.1.1",
-    #     'rebuild': True
-    # },
+    "glfw": {
+        "version": "3.1.1",
+        'rebuild': True
+    },
 
     # DONE
     # "cppformat": {
