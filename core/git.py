@@ -7,7 +7,7 @@ import core.Dependencies.library_module as l_m
 
 
 class Repo:
-    program_builded = False
+    program_built = False
     program_path = ''
 
     def __init__(self, directory, log_file=None):
@@ -18,10 +18,10 @@ class Repo:
 
     @staticmethod
     def install_git():
-        if not Repo.program_builded:
+        if not Repo.program_built:
             install_module = l_m.LibraryModule('git', {'rebuild': False})
             install_module.run_tasks()
-            Repo.program_builded = True
+            Repo.program_built = True
             Repo.program_path = install_module.get_results()['path']
         return Repo.program_path
 
@@ -47,8 +47,8 @@ class Repo:
         if os.path.exists(self.rel_dir):
             print("Repository folder already exists({0})".format(self.directory))
             return
-        clone_command = [self.git_path, 'clone', repository, '"{0}"'.format(self.rel_dir)]
-        subprocess.call(" ".join(clone_command), stdout=self.log_std, stderr=self.log_std, shell=True)
+        clone_command = [self.git_path, 'clone', repository, '{0}'.format(self.rel_dir)]
+        subprocess.call(clone_command, stdout=self.log_std, stderr=self.log_std, shell=True)
 
     def checkout(self, branch):
         if not self.branch_exists(branch):

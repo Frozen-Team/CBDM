@@ -6,7 +6,8 @@ directories = {
     "libFolder": "Lib",
     "buildDir": "Build",
     "visualStudioDir": "C:/Program Files (x86)/Microsoft Visual Studio 12.0",
-    "tools_path": os.path.abspath("Tools")
+    "tools_path": os.path.abspath("Tools"),
+    "project_dir": os.getcwd()
 }
 
 projectName = "FrozenEngine"
@@ -19,8 +20,18 @@ dependencies = {
     # 'index': 0
     # },
 
-    #"git": {'rebuild': True},
-    # "sqlite": {'rebuild': True, 'version': '3080900'},
+    # DONE
+    # "git": {
+    # 'rebuild': True
+    # },
+
+    # DONE
+    # "sqlite": {
+    #     'rebuild': True,
+    #     'version': '3080900'
+    # },
+
+    # DONE
     # "cmake": {
     #     'index': 0,
     #     "version": "3.2.1",
@@ -53,7 +64,7 @@ dependencies = {
 
     # DONE
     # "glfw": {
-    #     "version": "3.1.1"
+    #     "version": "3.1.1",
     #     'rebuild': True
     # },
 
@@ -108,10 +119,10 @@ dependencies = {
     #     'rebuild': True
     # }
 
-    "v8": {
-        "version": "4.4.16",
-        'rebuild': True
-    }
+    # "v8": {
+    #     "version": "4.4.16",
+    #     'rebuild': True
+    # }
 
     # sqlite
     # assimp

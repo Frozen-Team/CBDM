@@ -1,4 +1,5 @@
 from errno import EEXIST
+import fnmatch
 from glob import glob
 from shutil import which, rmtree
 import sys
@@ -15,11 +16,7 @@ from core.modules.cmake.tasks_list import cmake_exe_path
 import core.sys_config as s_config
 from core.vcxproj import Builder
 
-
-if sys.platform.startswith('win'):
-    shell = True
-else:
-    shell = False
+shell = True if sys.platform.startswith('win') else False
 
 
 def require_dir(path):
@@ -65,15 +62,16 @@ def check_dependencies(module_name, task_params, module_params, result):
 def git_clone(module_name, task_params, module_params, result):
     repository = check_param(module_name, task_params, 'repository')
     repo_dir = check_param(module_name, task_params, 'sources_dir', '')
-    repository = Repo(repo_dir, module_name + '.log')
+    repository = Repo(repo_dir, module_name + '_git.log')
     if repository.is_repo() and module_params['rebuild']:
         rmtree(repo_dir, ignore_errors=False, onerror=readonly_handler)
+    repository.clone(task_params["repository"])
 
 
 def git_checkout(module_name, task_params, module_params, result):
     check_param(module_name, task_params, 'branch')
     repo_dir = check_param(module_name, task_params, 'sources_dir', '')
-    repository = Repo(repo_dir, module_name + '.log')
+    repository = Repo(repo_dir, module_name + '_git.log')
     repository.checkout(task_params['branch'])
 
 
@@ -81,7 +79,6 @@ def add_library(module_name, task_params, module_params, result):
     cfg = check_param(module_name, task_params, 'config')
     lib_location = check_param(module_name, task_params, 'library_location')
     abs_lib_location = os.path.abspath(lib_location)
-
     result['libs'][cfg[0]][cfg[1]][cfg[2]].append(abs_lib_location)
 
 
@@ -170,7 +167,7 @@ def un_7_zip(module_name, task_params, module_params, result):
     destination = check_param(module_name, task_params, 'destination', 'extracted_7zip')
     require_dir(destination)
     # archiver_loc = which('7z')
-    archiver_loc = directories["tools_path"] + "/7za.exe"
+    archiver_loc = directories["tools_path"] + "{}7za.exe".format(os.path.sep)
     if not os.path.exists(destination):
         os.makedirs(destination)
     if archiver_loc is None:
@@ -210,6 +207,7 @@ def install_distro_dependencies(distro, dependencies):
 
 def make(module_name, task_params, module_params, result):
     system = platform.system()
+    build_dir = check_param(module_name, task_params, 'output_dir', False)
     if system == 'Linux':
         prev_wd = os.getcwd()
         makefile_pth = check_param(module_name, task_params, 'makefile')
@@ -230,18 +228,10 @@ def make(module_name, task_params, module_params, result):
         if system == 'Windows':
             vcxproj_pth = check_param(module_name, task_params, 'vcxproj_file')
             project = Builder(vcxproj_pth)
-            debug_conf = project.get_configuration("Debug")
-            debug_conf.set_runtime_library("MultiThreadedDebugDLL")
-            debug_conf.set_platform_toolset("v120")
-            debug_conf.save()
-            release_conf = project.get_configuration("Release")
-            release_conf.set_runtime_library("MultiThreadedDLL")
-            release_conf.set_platform_toolset("v120")
-            release_conf.save()
-            project.build()
+            project.build(False, False, build_dir)
 
 
-def check_runtime_library(module_name, task_params, module_params, result):
+def set_vcxproj_runtime_library(module_name, task_params, module_params, result):
     system = platform.system()
     if system == 'Windows':
         vcxproj_pth = check_param(module_name, task_params, 'vcxproj_file')
@@ -274,4 +264,15 @@ def cmake_generate(module_name, task_params, module_params, result):
                          stderr=subprocess.STDOUT, shell=shell).communicate()
 
 
-# def rename(module_name, task_params, module_params, result):
+def recursively_delete_files_from_folder(module_name, task_params, module_params, result):
+    directory = check_param(module_name, task_params, 'directory')
+    extensions = check_param(module_name, task_params, 'extensions')
+    if not isinstance(extensions, enumerate):
+        raise Exception("Extensions should be array")
+        sys.exit(1)
+    extensions = []
+    for root, dirnames, filenames in os.walk(directory):
+        for filename in filenames:
+            file_name, file_extension = os.path.splitext(filename)
+            if file_extension in extensions:
+                os.remove(filename)

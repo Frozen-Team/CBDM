@@ -8,5 +8,5 @@ build_tasks = [
      "description": "Extracting..."},
 ]
 integration_tasks = [
-    {'task': 'add_path_to_git', 'user_taske': True}
+    {'task': 'add_path_to_git', 'user_task': True}
 ]

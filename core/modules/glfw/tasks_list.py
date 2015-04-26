@@ -1,17 +1,21 @@
 import os
 from config import directories
 
-repository_dir = "sources"
-glew_path = os.path.join(directories["downloadDir"], 'glew.zip')
+glfw_path = directories["libFolder"] + os.path.sep
+glfw_zip_path = os.path.join(directories["downloadDir"], 'glfw.zip')
+glfw_vcxproj = os.path.join(glfw_path, "src", "glfw.vcxproj")
 build_tasks = [
     {"task": "check_dependencies", "programs": ['git'], "params": ("version", 'rebuild')},
-    {"task": "git_clone", "repository": "https://github.com/glfw/glfw.git", "sources_dir": repository_dir},
-    {"task": "git_checkout", "sources_dir": repository_dir, "branch": "glew-{version}"},
-    {"task": "configure", "directory": "glew-{version}/", "params": {"a": 1, "b": 2}},
+    {"task": "git_clone", "repository": "https://github.com/glfw/glfw.git", "sources_dir": glfw_path,
+     'description': 'Cloning glfw...'},
+    {"task": "git_checkout", "sources_dir": glfw_path, "branch": "{version}", 'description': 'Checkout...'},
+    {"task": "run_cmake_and_build",  "sources_dir": glfw_path, "output": directories["buildDir"],
+     "architecture": "x86", "user_task": True, 'description': 'Generating solution...'},
+
+    {"task": "set_vcxproj_runtime_library", "vcxproj_file": glfw_vcxproj, 'description': 'Setting runtime library...'},
     {"task": "make",
-     "output_dir": 'build',
-     "vcxproj_file": "glew-{version}/vc12/glew_static.vcxproj",
-     "makefile": "glew-{version}/Makefile"},
-    {"task": "make_install", "directory": "glew-{version}/", "params": {"a": 1, "b": 2}},
+     "output_dir": glfw_path + 'build',
+     "vcxproj_file": glfw_vcxproj, 'description': 'Building...'
+     },
 ]
 

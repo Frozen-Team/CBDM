@@ -7,11 +7,11 @@ import json
 import core.sys_config as s_config
 import core.default_structures as structs
 import config
+project_location = os.getcwd() + os.path.sep
 
 
 class LibraryModule:
     def __init__(self, module_name, configs):
-        project_location = config.directories['project_path']
         self.module_name = module_name
         self.module_location = project_location+s_config.modules_location.format(module_name=module_name)
         self.full_module_location = os.path.abspath(self.module_location)

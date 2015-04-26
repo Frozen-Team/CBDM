@@ -11,10 +11,10 @@ cmake_program = ''
 
 
 class Cmake:
-    cmake_builded = False
+    cmake_built = False
     cmake_path = ''
 
-    def __init__(self, project_directory, dependencies, project_type='executable'):
+    def __init__(self, project_directory, dependencies={}, project_type='executable'):
         self.cmake_path = Cmake.install_cmake()
         self._sourcesDir = project_directory
         self._buildDir = config.directories["buildDir"]
@@ -26,16 +26,20 @@ class Cmake:
         self.project_type = project_type
         self.generator_name = config.cmakeGenerator
         self.architecture = config.buildArchitecture
+        self.build_directory = ''
 
     def set_project_name(self, name):
         self.project_name = name
 
+    def set_build_dir(self, directory):
+        self.build_directory = directory
+
     @staticmethod
     def install_cmake():
-        if not Cmake.cmake_builded:
+        if not Cmake.cmake_built:
             install_module = LibraryModule('cmake', {'rebuild': False, 'version': config.cmakeVersion})
             install_module.run_tasks()
-            Cmake.cmake_builded = True
+            Cmake.cmake_built = True
             Cmake.cmake_path = install_module.get_results()['path']
         return Cmake.cmake_path
 
@@ -72,7 +76,7 @@ class Cmake:
         self._additionalFlags[flag_name] = flag_value
 
     def get_flags_string(self):
-        format_flag = lambda f_name, f_val: "-{0}={1}".format(f_name, f_val)
+        format_flag = lambda f_name, f_val: "-{0} {1}".format(f_name, f_val)
         return " ".join([format_flag(flag, value) for flag, value in self._additionalFlags.items()])
 
     @staticmethod
@@ -90,6 +94,7 @@ class Cmake:
         self.architecture = arch
 
     def get_generator_name(self):
+        # TODO: think about linux please :(
         gen_arch = ' Win64' if self.architecture == 'x64' else ''
         return self.generator_name + gen_arch
 
@@ -147,14 +152,16 @@ class Cmake:
 
     def run(self):
         generator = self.get_generator_name()
-        current_working_dir = os.getcwd()
-        # changing working directory for change cmake output dir
-        os.chdir(self._sourcesDir)
+        with open("cmake.log", "w") as cmake_log:
+            current_working_dir = os.getcwd()
+            # changing working directory for change cmake output dir
+            os.chdir(self._sourcesDir)
 
-        if os.path.isfile('CMakeCache.txt'):
-            os.remove('CMakeCache.txt')
-
-        subprocess.call([self.cmake_path, '-G', generator, self.get_flags_string()])
+            if os.path.isfile('CMakeCache.txt'):
+                os.remove('CMakeCache.txt')
+            build_dir_flag = '-B '+self.build_directory if bool(self.build_directory) else ''
+            subprocess.call([self.cmake_path, '-G', generator, build_dir_flag,  self.get_flags_string()], stderr=cmake_log,
+                            stdout=cmake_log)
 
         # return to previous dir
         os.chdir(current_working_dir)
