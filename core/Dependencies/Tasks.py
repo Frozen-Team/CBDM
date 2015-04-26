@@ -2,7 +2,7 @@ from errno import EEXIST
 from glob import glob
 from shutil import which, rmtree
 import sys
-from urllib.request import urlopen, urlretrieve
+from urllib.request import urlretrieve
 from zipfile import ZipFile
 import subprocess
 import shutil
@@ -13,11 +13,6 @@ from core.modules.cmake.tasks_list import cmake_exe_path
 import core.sys_config as s_config
 import platform
 from core.vcxproj import Builder
-from subprocess import check_call
-if sys.hexversion > 0x03000000:
-    import winreg
-else:
-    import _winreg as winreg
 
 if sys.platform.startswith('win'):
     shell = True
@@ -137,11 +132,10 @@ def move_files(module_name, task_params, module_params, result):
 
 
 def download_file(module_name, task_params, module_params, result):
-    check_param(module_name, task_params, 'url')
-    check_param(module_name, task_params, 'destination')
-    destination = task_params['destination']
+    url_path = check_param(module_name, task_params, 'url')
+    destination = check_param(module_name, task_params, 'destination')
     require_dir(destination)
-    urlretrieve(task_params['url'], destination)
+    urlretrieve(url_path, destination)
 
 
 def unzip(module_name, task_params, module_params, result):

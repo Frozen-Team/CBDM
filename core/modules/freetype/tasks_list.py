@@ -8,7 +8,7 @@ build_tasks = [
     {"task": "download_file",
      "destination": freetype_path,
      "url": "http://download.savannah.gnu.org/releases/freetype/freetype-{version}.tar.gz"},
-    {"task": "un_7_zip", "file_location": freetype_path, "destination": 'Download'},
+    {"task": "un_7_zip", "file_location": freetype_path, "destination": directories["downloadDir"]},
     {"task": "un_7_zip", "file_location": directories["downloadDir"] + "/freetype", "destination": 'Lib'},
     {"task": "check_runtime_library", "vcxproj_file": freetype_vcxproj},
     {"task": "make",
