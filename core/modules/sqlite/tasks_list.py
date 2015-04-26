@@ -1,5 +1,8 @@
 import os
+
 from config import directories
+from core.default_structures import cleanup_extensions
+
 
 sqlite_lib_path = directories["libFolder"] + os.path.sep
 sqlite_zip_path = os.path.join(directories["downloadDir"], 'sqlite.zip')
@@ -15,6 +18,8 @@ build_tasks = [
      "location": sqlite_lib_path, 'description': 'Building x32 lib'},
     {"task": "create_cmake_file", 'sources_dir': './' + sqlite_lib_path, 'architecture': 'x64', 'user_task': True,
      "location": sqlite_lib_path, 'description': 'Building x64 lib'},
+    {"task": "rdfff", "directory": 'sources', "extensions": cleanup_extensions["c++"],
+     'description': 'Cleaning up trash..'}
 ]
 integration_tasks = [
     {'task': 'add_library', 'config': ('windows', 'x86', 'release'), 'library_location':

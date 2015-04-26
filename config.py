@@ -4,8 +4,8 @@ directories = {
     "solutionDir": "D:/Development/Script/Solution",
     "downloadDir": "Download",
     "libFolder": "Lib",
-    "buildDir": "Build",
-    "visualStudioDir": "C:/Program Files (x86)/Microsoft Visual Studio 12.0",
+    "buildDir": os.path.abspath("Build"),
+    "visualStudioDir": "H:\Applications\Visual Studio 13",
     "tools_path": os.path.abspath("Tools"),
     "project_dir": os.getcwd()
 }

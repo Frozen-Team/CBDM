@@ -1,5 +1,4 @@
 from errno import EEXIST
-import fnmatch
 from glob import glob
 from shutil import which, rmtree
 import sys
@@ -15,6 +14,7 @@ from core.git import Repo
 from core.modules.cmake.tasks_list import cmake_exe_path
 import core.sys_config as s_config
 from core.vcxproj import Builder
+
 
 shell = True if sys.platform.startswith('win') else False
 
@@ -86,6 +86,25 @@ def add_location(module_name, task_params, module_params, result):
     location = check_param(module_name, task_params, 'location')
     abs_location = os.path.abspath(location)
     result['headers'].append(abs_location)
+
+
+def move_files_to_dir_by_mask(module_name, task_params, module_params, result):
+    mask = check_param(module_name, task_params, 'mask')
+    directory = check_param(module_name, task_params, 'destination_dir')
+    overwrite = check_param(module_name, task_params, 'overwrite', False)
+    files = glob(mask)
+
+    if not os.path.isdir(directory):
+        os.makedirs(directory, 0x777)
+    for file in files:
+        new_filename = os.path.join(directory, os.path.basename(file))
+        if os.path.isfile(new_filename):
+            if overwrite:
+                os.remove(new_filename)
+            else:
+                raise Exception("File already in directory " + new_filename)
+                sys.exit(15)
+        os.rename(file, new_filename)
 
 
 def remove_file_by_mask(module_name, task_params, module_params, result):
