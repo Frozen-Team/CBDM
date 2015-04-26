@@ -5,23 +5,23 @@ directories = {
     "downloadDir": "Download",
     "libFolder": "Lib",
     "buildDir": "Build",
-    "visualStudioDir": "C:/Program Files (x86)/Microsoft Visual Studio 12.0",
+    "visualStudioDir": "H:\Applications\Visual Studio 13",
     "tools_path": os.path.abspath("Tools")+os.path.sep,
     'project_path': os.path.abspath('.')+os.path.sep
 }
 
 projectName = "FrozenEngine"
-cmakeVersion = "3.1.3"
+cmakeVersion = "3.2.1"
 cmakeGenerator = "Visual Studio 12 2013"
-buildArchitecture = "x64"  # x86 | x32
+buildArchitecture = "x32"  # x64 | x32
 dependencies = {
     #
     # "cleanup": {
     # 'index': 0
     # },
 
-    #"git": {'rebuild': True},
-    "sqlite": {'rebuild': True, 'version': '3080900'},
+    # "git": {'rebuild': True},
+    "sqlite": {'rebuild': False, 'version': '3080900'},
     # "cmake": {
     #     'index': 0,
     #     "version": "3.2.1",

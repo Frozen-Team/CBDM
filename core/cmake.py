@@ -1,37 +1,55 @@
 import os
 import glob
 import subprocess
-import sys
-import config
-import shutil
 import platform
+
+import config
 from core.Dependencies.library_module import LibraryModule
+
 
 cmake_program = ''
 
 
 class Cmake:
-    def __init__(self, dir, dependencies):
+    cmake_builded = False
+    cmake_path = ''
+
+    def __init__(self, project_directory, dependencies, project_type='executable'):
         self.cmake_path = Cmake.install_cmake()
-        self._sourcesDir = dir
+        self._sourcesDir = project_directory
         self._buildDir = config.directories["buildDir"]
         self._cmakeVersion = config.cmakeVersion
         self._additionalFlags = {}
         self.dependencies = dependencies
         self.project_name = config.projectName
+        project_type = 'executable' if project_type not in ['executable', 'library'] else project_type
+        self.project_type = project_type
+        self.generator_name = config.cmakeGenerator
+        self.architecture = config.buildArchitecture
+
+    def set_project_name(self, name):
+        self.project_name = name
 
     @staticmethod
     def install_cmake():
-        install_module = LibraryModule('cmake', {'rebuild': False})
-        install_module.run_tasks()
-        return install_module.get_results()['path']
+        if not Cmake.cmake_builded:
+            install_module = LibraryModule('cmake', {'rebuild': False, 'version': config.cmakeVersion})
+            install_module.run_tasks()
+            Cmake.cmake_builded = True
+            Cmake.cmake_path = install_module.get_results()['path']
+        return Cmake.cmake_path
 
     @staticmethod
-    def find_sources(sources_dir, relative_path=False):
+    def find_sources(sources_dir, relative_path=False, extensions=False):
         if not relative_path:
             relative_path = sources_dir
-        files = glob.glob(sources_dir + "/*.h")
-        files.extend(glob.glob(sources_dir + "/*.cpp"))
+        if not extensions:
+            extensions = ['cpp', 'h', 'c']
+        if isinstance(extensions, str):
+            extensions = [extensions]
+        files = []
+        for ext in extensions:
+            files.extend(glob.glob(sources_dir + "/*." + ext))
         full_path_files = [os.path.relpath(file_name, relative_path) for file_name in files]
         return full_path_files
 
@@ -64,6 +82,16 @@ class Cmake:
     @staticmethod
     def file_new_line(file_handler):
         file_handler.writelines(os.linesep)
+
+    def set_generator_name(self, generator_name):
+        self.generator_name = generator_name
+
+    def set_architecture(self, arch):
+        self.architecture = arch
+
+    def get_generator_name(self):
+        gen_arch = ' Win64' if self.architecture == 'x64' else ''
+        return self.generator_name + gen_arch
 
     def build_deps(self, file_handler):
         for dep_name, dep_config in self.dependencies.items():
@@ -112,12 +140,13 @@ class Cmake:
         main_project_files = self.find_sources(self._sourcesDir)
         if len(main_project_files) > 0:
             self.set("SOURCES_FILES", " ".join(main_project_files), cmake_file)
-            cmake_file.writelines("add_executable(" + self.project_name + " ${SOURCES_FILES})" + os.linesep)
+            cmake_file.writelines(
+                "add_" + self.project_type + "(" + self.project_name + " ${SOURCES_FILES})" + os.linesep)
         self.build_deps(cmake_file)
         cmake_file.close()
 
     def run(self):
-
+        generator = self.get_generator_name()
         current_working_dir = os.getcwd()
         # changing working directory for change cmake output dir
         os.chdir(self._sourcesDir)
@@ -125,7 +154,7 @@ class Cmake:
         if os.path.isfile('CMakeCache.txt'):
             os.remove('CMakeCache.txt')
 
-        subprocess.call([self.cmake_path, self.get_flags_string()])
+        subprocess.call([self.cmake_path, '-G', generator, self.get_flags_string()])
 
         # return to previous dir
         os.chdir(current_working_dir)
