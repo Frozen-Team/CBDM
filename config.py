@@ -20,7 +20,7 @@ dependencies = {
     # },
 
     #"git": {'rebuild': True},
-    "sqlite": {'rebuild': True, 'version': '3080900'},
+    # "sqlite": {'rebuild': True, 'version': '3080900'},
     # "cmake": {
     #     'index': 0,
     #     "version": "3.2.1",
@@ -108,10 +108,10 @@ dependencies = {
     #     'rebuild': True
     # }
 
-    # "v8": {
-    #     "version": "4.4.16",
-    #     'rebuild': True
-    # }
+    "v8": {
+        "version": "4.4.16",
+        'rebuild': True
+    }
 
     # sqlite
     # assimp
