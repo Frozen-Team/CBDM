@@ -1,5 +1,6 @@
 import os
 from config import directories
+from core.default_structures import cleanup_extensions
 
 repository_dir = "sources"
 glew_path = os.path.join(directories["downloadDir"], 'glew.zip')
@@ -20,5 +21,6 @@ build_tasks = [
          "SYSTEM": 'Windows',
          'GLEW_DEST': 'libs'
      }
-     }
+     },
+    {"task": "rdfff", "directory": "Lib", "extensions": cleanup_extensions["c++"], 'description': 'Cleaning up trash..'}
 ]

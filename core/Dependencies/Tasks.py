@@ -264,15 +264,14 @@ def cmake_generate(module_name, task_params, module_params, result):
                          stderr=subprocess.STDOUT, shell=shell).communicate()
 
 
-def recursively_delete_files_from_folder(module_name, task_params, module_params, result):
+def rdfff(module_name, task_params, module_params, result):
     directory = check_param(module_name, task_params, 'directory')
     extensions = check_param(module_name, task_params, 'extensions')
-    if not isinstance(extensions, enumerate):
+    if not isinstance(extensions, list):
         raise Exception("Extensions should be array")
         sys.exit(1)
-    extensions = []
     for root, dirnames, filenames in os.walk(directory):
         for filename in filenames:
             file_name, file_extension = os.path.splitext(filename)
             if file_extension in extensions:
-                os.remove(filename)
+                os.remove(os.path.join(root, filename))

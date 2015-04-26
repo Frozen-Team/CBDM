@@ -45,10 +45,10 @@ dependencies = {
     # },
 
     # DONE
-    # "glew": {
-    #     "version": "1.12.0",
-    #     'rebuild': True
-    # },
+    "glew": {
+        "version": "1.12.0",
+        'rebuild': True
+    },
 
     # DONE
     # "FMOD": {
