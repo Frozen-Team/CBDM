@@ -34,6 +34,7 @@ def move_files_to_dir_by_mask(mask, destination, overwrite=False):
 def remove(mask):
     files_to_delete = glob(mask)
     for file in files_to_delete:
+        print('Removing ' + file)
         if os.path.isfile(file):
             os.remove(file)
         elif os.path.isdir(file):
@@ -58,7 +59,7 @@ def rename(mask, new_name, overwrite=False):
     create_path_to(new_name)
 
     if os.path.isdir(file):
-        move(file[0], new_name)
+        move(file, new_name)
     elif os.path.isfile(file):
         os.rename(file, new_name)
 
@@ -70,15 +71,53 @@ def move_files(from_path, to_path):
         move(full_from_path, to_path)
 
 
-def clear(directory, extensions):
-    if not isinstance(extensions, list):
-        raise Exception("Extensions should be array")
-    for root, dirnames, filenames in os.walk(directory):
-        for filename in filenames:
-            file_name, file_extension = os.path.splitext(filename)
-            if file_extension in extensions:
-                try:
-                    os.chmod(os.path.join(root, filename), 0x777)
-                    os.remove(os.path.join(root, filename))
-                except OSError as exc:
-                    pass
+def clear(directory, extensions=[], except_extensions=[]):
+    with open("rm_files.log", "a") as log_file:
+        if not isinstance(extensions, list):
+            raise Exception("Extensions should be array")
+            sys.exit(1)
+        for root, dirnames, filenames in os.walk(directory):
+            for filename in filenames:
+                file_name, file_extension = os.path.splitext(filename)
+                if bool(extensions):
+                    if file_extension in extensions:
+                        try:
+                            if file_extension not in except_extensions:
+                                os.chmod(os.path.join(root, filename), 128)
+                                log_file.write(str('rm file: ' + filename + '\n'))
+                                os.remove(os.path.join(root, filename))
+                        except OSError as exc:
+                            log_file.write(str('Error rm file: ' + filename + '\n'))
+                            pass
+                elif bool(except_extensions):
+                    if file_extension not in extensions:
+                        try:
+                            os.chmod(os.path.join(root, filename), 128)
+                            log_file.write('rm file: ' + filename + '\n')
+                            os.remove(os.path.join(root, filename))
+                        except OSError as exc:
+                            log_file.write(str('Error rm file: ' + filename + '\n'))
+                            pass
+
+    remove_empty_folders(directory)
+
+
+def remove_empty_folders(from_directory):
+    def remove_empty_folders_system(path, log_file):
+        if not os.path.isdir(path):
+            return
+
+        files = os.listdir(path)
+        if len(files):
+            for file in files:
+                full_path = os.path.join(path, file)
+                if os.path.isdir(full_path):
+                    remove_empty_folders_system(full_path, log_file)
+
+        files = os.listdir(path)
+        if len(files) == 0:
+            log_file.write(str("rm empty folder:" + path + '\n'))
+            os.rmdir(path)
+
+    with open("rm_empty_folders.log", "a") as log_file:
+        remove_empty_folders_system(from_directory, log_file)

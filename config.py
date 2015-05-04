@@ -68,10 +68,10 @@ dependencies = {
     # },
 
     # DONE
-    "cppformat": {
-        "version": "1.1.0",
-        'rebuild': True
-    },
+    # "cppformat": {
+    #     "version": "1.1.0",
+    #     'rebuild': True
+    # },
 
     # DONE
     # "spdlog": {
@@ -80,10 +80,10 @@ dependencies = {
     # },
 
     # DONE
-    # "easyloggingpp": {
-    #     "version": "v9.80",
-    #     'rebuild': True
-    # },
+    "easyloggingpp": {
+        "version": "v9.80",
+        'rebuild': True
+    },
 
     # DONE
     # "freeimage": {
