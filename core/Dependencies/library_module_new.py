@@ -1,20 +1,18 @@
 import importlib
 import os
-import sys
-import platform
 import json
-from core.TemporaryDir import TemporaryDir
 
+from core.TemporaryDir import TemporaryDir
 import core.sys_config as s_config
 import core.default_structures as structs
-import config
+
 
 project_location = os.getcwd() + os.path.sep
 
 
 class LibraryModule:
-    current_working_module = ''
     current_working_module_results = {}
+
     def __init__(self, module_name, configs):
         self.module_name = module_name
         self.module_location = project_location + s_config.modules_location.format(module_name=module_name)
@@ -23,8 +21,8 @@ class LibraryModule:
 
         self.tasks_list = self.__load_module_file(s_config.tasks_list_file, True)
 
-        self.results = structs.default_dependency_struct.copy()
         self.module_configs = configs
+        LibraryModule.flush_results()
 
     def __check_if_module_exists(self):
         if not os.path.exists(self.module_location):
@@ -108,3 +106,7 @@ class LibraryModule:
 
         TemporaryDir.leave()
         return LibraryModule.current_working_module_results
+
+    @staticmethod
+    def flush_results():
+        LibraryModule.current_working_module_results = structs.default_dependency_struct.copy()

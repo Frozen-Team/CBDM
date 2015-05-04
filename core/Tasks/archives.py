@@ -2,6 +2,7 @@ import os
 from shutil import which
 from zipfile import ZipFile
 import subprocess
+from core import sys_config
 from core.tools.seven_z import SevenZ
 
 __author__ = 'saturn4er'
@@ -12,7 +13,7 @@ def extract_zip(archive, destination=''):
     fs.create_path_to(destination)
     print('Extract by zip: %s -> %s' % (archive, destination))
     with ZipFile(archive, 'r') as archive:
-        archive.extractall(destination)
+        archive.extractall(destination,)
 
 
 def extract_7_zip(archive, destination=False):
@@ -30,7 +31,14 @@ def extract_tar(archive, destination=False):
     if archiver_loc is None:
         raise Exception("TAR IS NOT INSTALLED ON SYSTEM")
         sys.exit(1)
-    exec_command = [archiver_loc, '-xzf', archive]
+    exec_command = [archiver_loc, '-xzvf', archive]
+    log_filename = os.path.join(sys_config.log_folder, 'untar.log')
+    fs.create_path_to(log_filename)
     if destination:
         exec_command.append('-C "{}"'.format(destination))
-    subprocess.Popen(" ".join(exec_command), shell=True).communicate()
+    with open(log_filename, 'w+') as log_file:
+        process = subprocess.Popen(" ".join(exec_command), shell=True, stdout=log_file, stderr=log_file)
+        process.communicate()
+        if process.returncode:
+            raise Exception("TAR EXTRACTION WAS FINISHED WITH CODE: " + str(process.returncode))
+            sys.exit(1)

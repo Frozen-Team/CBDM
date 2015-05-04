@@ -50,10 +50,10 @@ dependencies = {
     # },
 
     # DONE
-    # "FMOD": {
-    #     "version": "10600",
-    #     'rebuild': True
-    # },
+    "FMOD": {
+        "version": "10600",
+        'rebuild': True
+    },
 
     # DONE
     # "eigen": {
@@ -74,10 +74,10 @@ dependencies = {
     # },
 
     # DONE
-    "spdlog": {
-        "version": "master",
-        'rebuild': True
-    },
+    # "spdlog": {
+    #     "version": "master",
+    #     'rebuild': True
+    # },
 
     # DONE
     # "easyloggingpp": {

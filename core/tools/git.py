@@ -4,6 +4,7 @@ import re
 import sys
 
 import core.Dependencies.library_module_new as l_m
+from core.Tasks import fs
 
 
 class Repo:
@@ -14,6 +15,7 @@ class Repo:
         self.git_path = Repo.install_git()
         self.directory = os.path.abspath(directory)
         self.rel_dir = directory
+        fs.create_path_to(log_file)
         self.log_std = open(log_file, 'w') if log_file else open(os.devnull)
 
     @staticmethod

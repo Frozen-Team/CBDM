@@ -15,7 +15,8 @@ def build(module_params):
 
 
 def integration(module_params):
+    results = LibraryModule.current_working_module_results
     if is_linux():
-        LibraryModule.current_working_module_results['path'] = which('7z')
+        results['path'] = which('7z')
     elif is_windows():
-        LibraryModule.current_working_module_results['path'] = os.path.join(s_config.tools_directory, '7z.exe')
+        results['path'] = os.path.join(s_config.tools_directory, '7z.exe')

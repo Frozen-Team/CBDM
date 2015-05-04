@@ -1,6 +1,18 @@
 from shutil import which
+import config
 from core.Dependencies.library_module_new import LibraryModule
 import core.sys_config as s_config
+
+
+def require_module(module_name, conf=False):
+    if not conf:
+        conf = config.dependencies[module_name] if module_name in config.dependencies else {}
+
+    dependend_module = LibraryModule(module_name, conf)
+    dependend_module.prepare()
+    results = dependend_module.get_results()
+    LibraryModule.flush_results()
+    return results
 
 
 def check_dependencies(programs=False, params=False, module_params=False):
