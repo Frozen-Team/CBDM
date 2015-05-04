@@ -1,18 +1,18 @@
 import os
 
 directories = {
-    "solutionDir": "D:/Development/Script/Solution",
+    "solutionDir": "D:\Development\CppDepManager/Solution",
     "downloadDir": "Download",
     "libFolder": "Lib",
     "buildDir": os.path.abspath("Build"),
-    "visualStudioDir": "H:\Applications\Visual Studio 13",
+    "visualStudioDir": "C:\Program Files (x86)\Microsoft Visual Studio 12.0",
     "tools_path": os.path.abspath("Tools"),
     "project_dir": os.getcwd()
 }
 
 projectName = "FrozenEngine"
 cmakeVersion = "3.1.3"
-cmakeGenerator = "Unix Makefiles"
+cmakeGenerator = "Visual Studio 12"
 buildArchitecture = "x64"  # x86 | x32
 dependencies = {
 

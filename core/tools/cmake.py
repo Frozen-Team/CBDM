@@ -152,15 +152,9 @@ class Cmake:
     def run(self):
         generator = self.get_generator_name()
         with open("cmake.log", "w") as cmake_log:
-            current_working_dir = os.getcwd()
-            # changing working directory for change cmake output dir
-            os.chdir(self._sourcesDir)
-
             if os.path.isfile('CMakeCache.txt'):
                 os.remove('CMakeCache.txt')
-            build_dir_flag = '-B' + self.build_directory if bool(self.build_directory) else ''
-            command = [self.cmake_path, '-G', generator, build_dir_flag, self.get_flags_string()]
-            subprocess.call(command, stderr=cmake_log, stdout=cmake_log)
-
-        # return to previous dir
-        os.chdir(current_working_dir)
+            build_dir_flag = '-B' + os.path.abspath(self.build_directory if bool(self.build_directory) else '')
+            sources_dir_flag = '-H' + os.path.abspath(self._sourcesDir if bool(self._sourcesDir) else '')
+            subprocess.call([self.cmake_path, '-G', generator, self.get_flags_string(), build_dir_flag,
+                             sources_dir_flag], stderr=cmake_log, stdout=cmake_log)

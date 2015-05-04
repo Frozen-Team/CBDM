@@ -79,6 +79,7 @@ class Builder:
         for arc_index, arch in enumerate(archs):
             commands.append('call "{vs_path}/VC/vcvarsall.bat" x86_amd64'.format(vs_path=os.path.abspath(vs_path)))
             for conf_index, configuration in enumerate(configurations):
+                print('Building project {0}. Arch.: {1}. Conf.:{2}'.format(self.file_loc, arch, configuration))
                 commands.append(build_command.format(configuration=configuration, platform=arch))
         bat_file = open('build.bat', 'w')
         bat_file.writelines(os.linesep.join(commands))

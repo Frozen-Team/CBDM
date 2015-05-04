@@ -16,6 +16,7 @@ headers_dir = os.path.join(build_directory, 'include')
 def create_and_run_cmake_file(sources_dir, arch):
     cmake_file = Cmake(sources_dir, 'library')
     cmake_file.set_project_name('sqlite_' + arch)
+    cmake_file.set_build_dir(os.path.join(sources_dir, 'sqlite_' + arch))
     cmake_file.set_architecture(arch)
     cmake_file.save()
     cmake_file.run()
@@ -23,6 +24,7 @@ def create_and_run_cmake_file(sources_dir, arch):
 
 def build(module_params):
     check_dependencies(False, ['version'], module_params)
+    fs.remove(origin_dir)
     sqlite_url = 'http://www.sqlite.org/2015/sqlite-amalgamation-{0}.zip'.format(module_params['version'])
     net.download_file(sqlite_url, archive_path)
     archives.extract_zip(archive_path)
@@ -31,11 +33,12 @@ def build(module_params):
     create_and_run_cmake_file(origin_dir, 'x86')
     create_and_run_cmake_file(origin_dir, 'x64')
     if is_windows():
-        assembly.build_vcxproj(os.path.join(origin_dir, 'sqlite_x86.vcxproj'), ('Debug', 'Release'))
-        assembly.build_vcxproj(os.path.join(origin_dir, 'sqlite_x64.vcxproj'), ('Debug', 'Release'))
+        assembly.build_vcxproj(os.path.join(origin_dir, 'sqlite_x86', 'sqlite_x86.vcxproj'), False, ('Debug', 'Release'))
+        assembly.build_vcxproj(os.path.join(origin_dir, 'sqlite_x64', 'sqlite_x64.vcxproj'), False, ('Debug', 'Release'))
 
     fs.move_files_to_dir_by_mask(os.path.join(origin_dir, '*.h'), headers_dir, True)
     fs.clear(origin_dir, cleanup_extensions['c++'])
+    fs.clear(directories['downloadDir'], cleanup_extensions['c++'])
 
 
 def integration(module_params):
