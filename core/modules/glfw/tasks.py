@@ -1,6 +1,6 @@
 from config import directories
 from core.Dependencies import Tasks
-from core.cmake import Cmake
+from core.tools.cmake import Cmake
 
 
 def run_cmake_and_build(module_name, task_params, module_params, result):

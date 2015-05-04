@@ -1,16 +1,20 @@
 import os
+
 percents_output = "<<{0}>>"
 
+tools_directory = os.path.abspath('Tools')
+log_folder = 'log'
 # Modules settings
-modules_location = "core{sep}modules{sep}{{module_name}}{sep}".format(sep=os.path.sep)
+modules_location = os.path.join("core", "modules", "{module_name}")
 modules_py_mod_location = 'core.modules.{module_name}.{file}'
 
 additional_tasks_file = "tasks"
-tasks_list_file = "tasks_list"
+tasks_list_file_old = "tasks_list"
 
-default_modules_build_path = "core{sep}modules{sep}{{module_name}}{sep}build{sep}".format(sep=os.path.sep)
+tasks_list_file = "tasks_list_new"
 
-
+module_prepare_function = 'build'
+module_integration_function = 'integration'
 # errors
 
 no_file_error = 'File {file_name} wasn\'t found'

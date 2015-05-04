@@ -1,6 +1,6 @@
-from core.vcxproj import Builder
+from core.tools.vcxproj import Builder
 import core.Dependencies.Tasks as tasks
-from core.cmake import Cmake
+from core.tools.cmake import Cmake
 
 
 def create_cmake_file(module_name, task_params, module_params, result):

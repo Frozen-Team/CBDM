@@ -9,11 +9,12 @@ import shutil
 import os
 import platform
 
-from config import directories, cmakeGenerator
-from core.git import Repo
+from config import cmakeGenerator
+from core.Dependencies.library_module_new import LibraryModule
+from core.tools.git import Repo
 from core.modules.cmake.tasks_list import cmake_exe_path
 import core.sys_config as s_config
-from core.vcxproj import Builder
+from core.tools.vcxproj import Builder
 
 
 shell = True if sys.platform.startswith('win') else False
@@ -44,17 +45,18 @@ def readonly_handler(func, path, execinfo):
     func(path)
 
 
-def check_dependencies(module_name, task_params, module_params, result):
-    if 'programs' in task_params:
-        for program_name in task_params['programs']:
+def check_dependencies(programs=False, params=False, module_params=False):
+    module_name = LibraryModule.current_working_module
+    if bool(programs):
+        for program_name in programs:
             if which(program_name) is None:
                 error = s_config.no_external_program_error.format(program_name=program_name.upper())
                 raise Exception(error)
                 sys.exit(15)
-    if 'params' in task_params:
-        for param_name in task_params['params']:
-            if param_name not in module_params:
-                error = s_config.no_module_param_error.format(module_name=module_name, param_name=param_name)
+    if bool(params) and bool(module_params):
+        for param in params:
+            if param not in module_params:
+                error = s_config.no_module_param_error.format(module_name=module_name, param_name=param)
                 raise Exception(error)
                 sys.exit(15)
 
@@ -181,20 +183,11 @@ def untar(module_name, task_params, module_params, result):
     subprocess.Popen(" ".join(exec_command), shell=True).communicate()
 
 
-def un_7_zip(module_name, task_params, module_params, result):
+def un_7_zip(module_name, task_params, module_params, process):
     location = check_param(module_name, task_params, 'file_location')
     destination = check_param(module_name, task_params, 'destination', 'extracted_7zip')
-    require_dir(destination)
-    # archiver_loc = which('7z')
-    archiver_loc = directories["tools_path"] + "{}7za.exe".format(os.path.sep)
-    if not os.path.exists(destination):
-        os.makedirs(destination)
-    if archiver_loc is None:
-        raise Exception("7Z IS NOT INSTALLED ON SYSTEM")
-        sys.exit(1)
-    exec_command = ['"{}"'.format(archiver_loc), 'x', '"{}"'.format(location),
-                    '-o' + '"{}"'.format(destination), '-y', '>7z.log']
-    subprocess.Popen(" ".join(exec_command), shell=shell).communicate()
+    s_z_file = SevenZ(location)
+    s_z_file.extract(destination)
 
 
 def configure(module_name, task_params, module_params, result):

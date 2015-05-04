@@ -94,6 +94,9 @@ class Builder:
     def get_architecture(self, arch):
         return VcxprojConfiguration(self.file_loc, self.xml_root, arch=arch)
 
+    def get_all_configurations(self):
+        return VcxprojConfiguration(self.file_loc, self.xml_root)
+
     def get_configurations_list(self):
         result = set()
         for item in self.xml_root.getElementsByTagName('Configuration'):

@@ -16,7 +16,7 @@ from core.Dependencies.dependencies import Dependencies
 #     print(extensions)
 # recursively_delete_files_from_folder('.')
 
-dependencies = Dependencies(config.dependencies)
+dependencies = Dependencies()
 dependencies.build_dependencies()
 
 

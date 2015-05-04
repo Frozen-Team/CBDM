@@ -27,12 +27,6 @@ default_dependency_struct = {"libs": {
                              "cmake_before": "",
                              "cmake_after": ""
                              }
-library_module_config = {
-    "version": '0',
-    "build_path": os.path.realpath(cconfig.default_modules_build_path),
-    "rebuild": False
-}
-
 cleanup_extensions = {
     'c++': ['', '.py', '.pyc', '.sample', '.idx', '.pack', '.iml', '.xml', '.ini', '.zip', '.chm', '.exe', '.txt',
             '.log', '.bat', '.yml', '.mk', '.rst', '.cc', '.python', '.css', '.html', '.conf', '.bii', '.cmake',

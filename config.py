@@ -12,7 +12,7 @@ directories = {
 
 projectName = "FrozenEngine"
 cmakeVersion = "3.1.3"
-cmakeGenerator = "Visual Studio 12 2013"
+cmakeGenerator = "Unix Makefiles"
 buildArchitecture = "x64"  # x86 | x32
 dependencies = {
     #
@@ -27,13 +27,12 @@ dependencies = {
 
     # DONE
     # "sqlite": {
-    #     'rebuild': True,
+    # 'rebuild': True,
     #     'version': '3080900'
     # },
 
     # DONE
     # "cmake": {
-    #     'index': 0,
     #     "version": "3.2.1",
     #     'rebuild': True
     # },
@@ -63,16 +62,16 @@ dependencies = {
     # },
 
     # DONE
-    "glfw": {
-        "version": "3.1.1",
-        'rebuild': True
-    },
-
-    # DONE
-    # "cppformat": {
-    #     "version": "1.1.0",
+    # "glfw": {
+    #     "version": "3.1.1",
     #     'rebuild': True
     # },
+
+    # DONE
+    "cppformat": {
+        "version": "1.1.0",
+        'rebuild': True
+    },
 
     # DONE
     # "spdlog": {

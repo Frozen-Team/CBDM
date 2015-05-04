@@ -25,5 +25,5 @@ build_tasks = [
     # {"task": "un_7_zip", "file_location": "test.7z", "destination": "test-7z/test/test/test"},
 ]
 integration_tasks = {
-    {"task": "test", "user_task": True, 'platform': "windows"},
+    {"task": "test", "user_task": True, 'platform': "windows"}
 }

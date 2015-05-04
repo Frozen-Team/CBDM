@@ -7,3 +7,4 @@ build_tasks = [
      "url": "http://www.7-zip.org/a/7za920.zip"},
     {"task": "unzip", "file_location": p7z_arch_path, "destination": directories["tools_path"] + "/"},
 ]
+
