@@ -74,13 +74,13 @@ def move_files(from_path, to_path):
 
 def clear(directory, extensions=[], except_extensions=[]):
     with open("rm_files.log", "a") as log_file:
-        if not isinstance(extensions, list):
-            raise Exception("Extensions should be array")
-            sys.exit(1)
         for root, dirnames, filenames in os.walk(directory):
             for filename in filenames:
                 file_name, file_extension = os.path.splitext(filename)
                 if bool(extensions):
+                    if not isinstance(extensions, list):
+                        raise Exception("Extensions should be array")
+                        sys.exit(1)
                     if file_extension in extensions:
                         try:
                             if file_extension not in except_extensions:
@@ -91,7 +91,7 @@ def clear(directory, extensions=[], except_extensions=[]):
                             log_file.write(str('Error rm file: ' + filename + '\n'))
                             pass
                 elif bool(except_extensions):
-                    if file_extension not in extensions:
+                    if file_extension not in except_extensions:
                         try:
                             os.chmod(os.path.join(root, filename), 128)
                             log_file.write('rm file: ' + filename + '\n')

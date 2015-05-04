@@ -107,10 +107,10 @@ dependencies = {
     # }
 
     # DONE
-    "fbxsdk": {
-        "version": "20151",
-        'rebuild': True
-    }
+    # "fbxsdk": {
+    #     "version": "20151",
+    #     'rebuild': True
+    # }
 
     # DONE
     # "boost": {

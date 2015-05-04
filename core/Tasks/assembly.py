@@ -24,6 +24,7 @@ def configure(directory, params):
 
 
 def build_vcxproj(path_to_vcxproj, output_dir=False, configurations=False, architectures=False):
+    print('Building %s' % path_to_vcxproj)
     project = Builder(path_to_vcxproj)
     project.build(configurations, architectures, output_dir)
 
