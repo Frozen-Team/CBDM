@@ -26,7 +26,7 @@ def build(module_params):
     fs.remove(build_dir)
     fs.remove(os.path.join(origin_dir, 'api', '*', 'examples'))
     fs.rename(os.path.join(origin_dir, 'api'), build_dir, True)
-    # fs.remove(fmod_path)
+    fs.remove(fmod_path)
     fs.remove(origin_dir)
 
 
