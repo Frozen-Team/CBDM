@@ -44,10 +44,10 @@ dependencies = {
     # },
 
     # DONE
-    # "glew": {
-    #     "version": "1.12.0",
-    #     'rebuild': True
-    # },
+    "glew": {
+        "version": "1.12.0",
+        'rebuild': True
+    },
 
     # DONE
     # "FMOD": {
@@ -95,10 +95,10 @@ dependencies = {
     # "zlib"
 
     # DONE
-    "freetype": {
-        "version": "2.5.5",
-        'rebuild': True
-    }
+    # "freetype": {
+    #     "version": "2.5.5",
+    #     'rebuild': True
+    # }
 
 
     # DONE
