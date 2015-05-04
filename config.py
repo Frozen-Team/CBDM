@@ -15,21 +15,12 @@ cmakeVersion = "3.1.3"
 cmakeGenerator = "Unix Makefiles"
 buildArchitecture = "x64"  # x86 | x32
 dependencies = {
-    #
-    # "cleanup": {
-    # 'index': 0
-    # },
 
     # DONE
-    # "git": {
-    # 'rebuild': True
-    # },
-
-    # DONE
-    # "sqlite": {
-    # 'rebuild': True,
-    # 'version': '3080900'
-    # },
+    "sqlite": {
+    'rebuild': True,
+    'version': '3080900'
+    },
 
     # DONE
     # "cmake": {
@@ -49,11 +40,11 @@ dependencies = {
     #     'rebuild': True
     # },
 
-    # DONE
-    "FMOD": {
-        "version": "10600",
-        'rebuild': True
-    },
+    # Finished
+    # "FMOD": {
+    #     "version": "10600",
+    #     'rebuild': True
+    # },
 
     # DONE
     # "eigen": {
