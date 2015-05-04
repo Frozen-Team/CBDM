@@ -19,6 +19,8 @@ def build(module_params):
 
     glew_url = 'https://sourceforge.net/projects/glew/files/glew/{0}/glew-{0}.zip/download'.format(
         module_params['version'])
+    fs.remove(origin_dir)
+
     net.download_file(glew_url, archive_path)
 
     archives.extract_zip(archive_path)

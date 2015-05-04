@@ -44,10 +44,10 @@ dependencies = {
     # },
 
     # DONE
-    "glew": {
-        "version": "1.12.0",
-        'rebuild': True
-    },
+    # "glew": {
+    #     "version": "1.12.0",
+    #     'rebuild': True
+    # },
 
     # DONE
     # "FMOD": {
@@ -102,10 +102,10 @@ dependencies = {
 
 
     # DONE
-    # "glm": {
-    #     "version": "0.9.6.3",
-    #     'rebuild': True
-    # }
+    "glm": {
+        "version": "0.9.6.3",
+        'rebuild': True
+    }
 
     # DONE
     # "fbxsdk": {
