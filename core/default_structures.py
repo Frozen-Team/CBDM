@@ -1,32 +1,14 @@
 import core.sys_config as cconfig
 import os
 
-default_dependency_struct = {"libs": {
-    "linux": {
-        "x64": {
-            "debug": [],
-            "release": [],
-        },
-        "x86": {
-            "debug": [],
-            "release": [],
-        }
-    },
-    'windows': {
-        "x64": {
-            "debug": [],
-            "release": [],
-        },
-        "x86": {
-            "debug": [],
-            "release": [],
-        }
-    }
-},
-                             "headers": [],
-                             "cmake_before": "",
-                             "cmake_after": ""
-                             }
+
+default_dependency_struct = {
+    "link_directories": {},
+    "libs": {},
+    "headers": [],
+    "cmake_before": "",
+    "cmake_after": ""
+}
 cleanup_extensions = {
     'c++': ['', '.py', '.pyc', '.sample', '.idx', '.pack', '.iml', '.xml', '.ini', '.zip', '.chm', '.exe', '.txt',
             '.log', '.bat', '.yml', '.mk', '.rst', '.cc', '.python', '.css', '.html', '.conf', '.bii', '.cmake',

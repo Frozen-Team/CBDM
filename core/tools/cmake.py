@@ -4,7 +4,10 @@ import subprocess
 import platform
 
 import config
+from core import sys_config
 from core.Dependencies.library_module_new import LibraryModule
+from core.Tasks import fs
+from core.TemporaryDir import TemporaryDir
 
 
 cmake_program = ''
@@ -61,7 +64,6 @@ class Cmake:
         file_handler.writelines("set({0} {1}){2}".format(var_name, var_value, os.linesep))
 
     def add_static_library(self, file_handler, lib_location, modificator=""):
-        lib_location = os.path.abspath(lib_location).replace('\\', '/')
         file_handler.writelines(
             "target_link_libraries({3} {2} \"{0}\"){1}".format(lib_location, os.linesep, modificator,
                                                                self.project_name))
@@ -74,7 +76,7 @@ class Cmake:
     def set_flag(self, flag_name, flag_value):
         self._additionalFlags[flag_name] = flag_value
 
-    def get_flags_string(self):
+    def get_customs_flags_string(self):
         format_flag = lambda f_name, f_val: "-{0} {1}".format(f_name, f_val)
         return " ".join([format_flag(flag, value) for flag, value in self._additionalFlags.items()])
 
@@ -138,7 +140,7 @@ class Cmake:
             self.file_new_line(file_handler)
 
     def save(self):
-        cmake_file = open(self._sourcesDir + '/CMakeLists.txt', 'w+')
+        cmake_file = open(self._sourcesDir + '/CMakeLists.txt', 'a')
         cmake_file.writelines("cmake_minimum_required(VERSION {0}){1}".format(self._cmakeVersion, os.linesep))
         cmake_file.writelines('project({0}){1}'.format(self.project_name, os.linesep))
         self.set("CMAKE_RUNTIME_OUTPUT_DIRECTORY", "bin", cmake_file)
@@ -149,12 +151,38 @@ class Cmake:
                 "add_" + self.project_type + "(" + self.project_name + " ${SOURCES_FILES})" + os.linesep)
         cmake_file.close()
 
+    def get_exec_flags(self):
+        build_dir_flag = '-B"{}"'.format(self.build_directory) if bool(self.build_directory) else ''
+        generator_flag = '-G"{}"'.format(self.get_generator_name())
+        sources_dir_flag = '-H"{}"'.format(os.path.abspath(self._sourcesDir) if bool(self._sourcesDir) else '')
+        custom_flags = self.get_customs_flags_string()
+        return [generator_flag, build_dir_flag, custom_flags, sources_dir_flag]
+
     def run(self):
-        generator = self.get_generator_name()
-        with open("cmake.log", "w") as cmake_log:
+        # generator = self.get_generator_name()
+        # with open("cmake.log", "w") as cmake_log:
+        #     if os.path.isfile('CMakeCache.txt'):
+        #         os.remove('CMakeCache.txt')
+        #     build_dir_flag = '-B' + os.path.abspath(self.build_directory if bool(self.build_directory) else '')
+        #     sources_dir_flag = '-H' + os.path.abspath(self._sourcesDir if bool(self._sourcesDir) else '')
+        #     subprocess.call([self.cmake_path, '-G', generator, self.get_flags_string(), build_dir_flag,
+        #                      sources_dir_flag], stderr=cmake_log, stdout=cmake_log)
+        log_filename = os.path.join(sys_config.log_folder, 'cmake.log')
+        fs.create_path_to(log_filename)
+        with open(log_filename, "a") as cmake_log:
+
             if os.path.isfile('CMakeCache.txt'):
                 os.remove('CMakeCache.txt')
-            build_dir_flag = '-B' + os.path.abspath(self.build_directory if bool(self.build_directory) else '')
-            sources_dir_flag = '-H' + os.path.abspath(self._sourcesDir if bool(self._sourcesDir) else '')
-            subprocess.call([self.cmake_path, '-G', generator, self.get_flags_string(), build_dir_flag,
-                             sources_dir_flag], stderr=cmake_log, stdout=cmake_log)
+
+            command = [self.cmake_path]
+            command.extend(self.get_exec_flags())
+            if bool(self.build_directory):
+                os.makedirs(self.build_directory)
+
+            process = subprocess.Popen(" ".join(command), stdin=subprocess.PIPE, shell=True, stderr=cmake_log,
+                                       stdout=cmake_log)
+
+            process.communicate()
+            if process.returncode:
+                raise Exception('"CMAKE RUN" finished with result code' + str(process.returncode))
+                sys.exit(1)
