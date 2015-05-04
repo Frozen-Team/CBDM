@@ -28,7 +28,7 @@ dependencies = {
     # DONE
     # "sqlite": {
     # 'rebuild': True,
-    #     'version': '3080900'
+    # 'version': '3080900'
     # },
 
     # DONE
@@ -95,10 +95,11 @@ dependencies = {
     # "zlib"
 
     # DONE
-    # "freetype": {
-    #     "version": "2.5.5",
-    #     'rebuild': True
-    # }
+    "freetype": {
+        "version": "2.5.5",
+        'rebuild': True
+    }
+
 
     # DONE
     # "glm": {
