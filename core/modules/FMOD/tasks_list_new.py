@@ -20,8 +20,9 @@ def build(module_params):
     elif is_linux():
         url_to_installer = "http://www.fmod.org/download/fmodstudio/api/Linux/fmodstudioapi{}linux.tar.gz".format(
             version)
-        # net.download_file(url_to_installer, fmod_path)
+        net.download_file(url_to_installer, fmod_path)
         archives.extract_tar(fmod_path)
+        fs.remove(origin_dir)
         fs.rename('fmodstudioapi*', origin_dir, True)
     fs.remove(build_dir)
     fs.remove(os.path.join(origin_dir, 'api', '*', 'examples'))

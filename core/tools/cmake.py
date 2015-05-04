@@ -4,7 +4,10 @@ import subprocess
 import platform
 
 import config
+from core import sys_config
 from core.Dependencies.library_module_new import LibraryModule
+from core.Tasks import fs
+from core.TemporaryDir import TemporaryDir
 
 
 cmake_program = ''
@@ -61,7 +64,6 @@ class Cmake:
         file_handler.writelines("set({0} {1}){2}".format(var_name, var_value, os.linesep))
 
     def add_static_library(self, file_handler, lib_location, modificator=""):
-        lib_location = os.path.abspath(lib_location).replace('\\', '/')
         file_handler.writelines(
             "target_link_libraries({3} {2} \"{0}\"){1}".format(lib_location, os.linesep, modificator,
                                                                self.project_name))
@@ -74,7 +76,7 @@ class Cmake:
     def set_flag(self, flag_name, flag_value):
         self._additionalFlags[flag_name] = flag_value
 
-    def get_flags_string(self):
+    def get_customs_flags_string(self):
         format_flag = lambda f_name, f_val: "-{0} {1}".format(f_name, f_val)
         return " ".join([format_flag(flag, value) for flag, value in self._additionalFlags.items()])
 
@@ -149,18 +151,33 @@ class Cmake:
                 "add_" + self.project_type + "(" + self.project_name + " ${SOURCES_FILES})" + os.linesep)
         cmake_file.close()
 
+    def get_exec_flags(self):
+        build_dir_flag = '-B"{0}"'.format(self.build_directory) if bool(self.build_directory) else ''
+        generator_flag = '-G"{0}"'.format(self.get_generator_name())
+        custom_flags = self.get_customs_flags_string()
+        os.makedirs('test1')
+        return [generator_flag, build_dir_flag, custom_flags, '-H"./"']
+
     def run(self):
-        generator = self.get_generator_name()
-        with open("cmake.log", "w") as cmake_log:
-            current_working_dir = os.getcwd()
-            # changing working directory for change cmake output dir
-            os.chdir(self._sourcesDir)
+        log_filename = os.path.join(sys_config.log_folder, 'cmake.log')
+        fs.create_path_to(log_filename)
+        with open(log_filename, "w+") as cmake_log:
+            TemporaryDir.enter(self._sourcesDir)
 
             if os.path.isfile('CMakeCache.txt'):
                 os.remove('CMakeCache.txt')
-            build_dir_flag = '-B' + self.build_directory if bool(self.build_directory) else ''
-            command = [self.cmake_path, '-G', generator, build_dir_flag, self.get_flags_string()]
-            subprocess.call(command, stderr=cmake_log, stdout=cmake_log)
 
-        # return to previous dir
-        os.chdir(current_working_dir)
+            command = [self.cmake_path]
+            command.extend(self.get_exec_flags())
+            if bool(self.build_directory):
+                os.makedirs(self.build_directory)
+
+            process = subprocess.Popen(" ".join(command), stdin=subprocess.PIPE, shell=True, stderr=cmake_log,
+                                       stdout=cmake_log)
+
+            process.communicate()
+            if process.returncode:
+                raise Exception('"CMAKE RUN" finished with result code' + str(process.returncode))
+                sys.exit(1)
+
+        TemporaryDir.leave()
