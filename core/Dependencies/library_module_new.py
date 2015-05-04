@@ -77,13 +77,13 @@ class LibraryModule:
 
     def prepare(self):
         TemporaryDir.enter(self.full_module_location)
-        print("###### Preparing module '{0}' ####".format(self.module_name))
+        print("###### Processing module '{0}' ####".format(self.module_name))
         LibraryModule.current_working_module = self.module_name
         if self.module_need_rebuild():
             fnc = self.function_in_tasks_exist(s_config.module_prepare_function)
             if bool(fnc):
                 fnc(self.module_configs)
-                print("###### Library was successfully built #### ")
+                print("###### Library successfully processed #### ")
                 LibraryModule.__set_cache('built', True)
         else:
             print("###### Library has been processed... Skipping #### ")
