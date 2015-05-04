@@ -56,10 +56,10 @@ dependencies = {
     # },
 
     # DONE
-    "eigen": {
-        "version": "3.2.4",
-        'rebuild': True
-    },
+    # "eigen": {
+    #     "version": "3.2.4",
+    #     'rebuild': True
+    # },
 
     # DONE
     # "glfw": {
@@ -107,10 +107,10 @@ dependencies = {
     # }
 
     # DONE
-    # "fbxsdk": {
-    #     "version": "20151",
-    #     'rebuild': True
-    # }
+    "fbxsdk": {
+        "version": "20151",
+        'rebuild': True
+    }
 
     # DONE
     # "boost": {

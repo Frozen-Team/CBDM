@@ -2,8 +2,7 @@ import os
 
 from config import directories
 from core.default_structures import cleanup_extensions
-
-from core.Tasks import check_dependencies, fs, vcs, cmake, net, archives
+from core.Tasks import check_dependencies, fs, net, archives
 
 archive_path = 'eigen.zip'
 build_directory = os.path.join(directories['buildDir'], 'eigen')

@@ -15,13 +15,15 @@ def extract_zip(archive, destination=''):
         archive.extractall(destination)
 
 
-def extract_7_zip(archive, destination):
+def extract_7_zip(archive, destination=False):
+    if not bool(destination):
+        destination = './'
     print('Extract by 7z: %s -> %s' % (archive, destination))
     s_z_file = SevenZ(archive)
     s_z_file.extract(destination)
 
 
-def extract_tar(archive, destination):
+def extract_tar(archive, destination=False):
     archiver_loc = which('tar')
     if not os.path.exists(destination):
         os.makedirs(destination)
@@ -30,5 +32,5 @@ def extract_tar(archive, destination):
         sys.exit(1)
     exec_command = [archiver_loc, '-xzf', archive]
     if destination:
-        exec_command.extend('-C "{}"'.format(destination))
+        exec_command.append('-C "{}"'.format(destination))
     subprocess.Popen(" ".join(exec_command), shell=True).communicate()
