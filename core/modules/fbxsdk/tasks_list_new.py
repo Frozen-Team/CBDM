@@ -15,7 +15,7 @@ headers_dir = os.path.join(build_directory, 'headers')
 
 def build(module_params):
     # TODO: Looks like windows is working, promlems with linux version (extact .so from binary)
-    check_dependencies(False, ['version'])
+    check_dependencies(False, ['version'], module_params)
 
     fs.remove(origin_dir)
 

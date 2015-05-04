@@ -15,7 +15,7 @@ main_vcxproj = os.path.join(origin_dir, 'build', 'vc12', 'glew_static.vcxproj')
 
 
 def build(module_params):
-    check_dependencies(False, 'version')
+    check_dependencies(False, ['version'], module_params)
 
     glew_url = 'https://sourceforge.net/projects/glew/files/glew/{0}/glew-{0}.zip/download'.format(
         module_params['version'])

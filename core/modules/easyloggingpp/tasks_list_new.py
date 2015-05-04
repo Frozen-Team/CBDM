@@ -10,7 +10,7 @@ headers_dir = os.path.join(build_directory, 'include')
 
 
 def build(module_params):
-    check_dependencies(False, ('version'))
+    check_dependencies(False, ['version'], module_params)
     fs.remove(origin_dir)
     vcs.git_clone('https://github.com/easylogging/easyloggingpp.git', origin_dir)
     vcs.git_checkout(origin_dir, module_params['version'])

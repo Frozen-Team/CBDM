@@ -12,7 +12,7 @@ headers_dir = os.path.join(build_directory, 'include')
 
 
 def build(module_params):
-    check_dependencies(False, ['version'])
+    check_dependencies(False, ['version'], module_params)
     fs.remove(origin_dir)
     freeimage_url = 'http://downloads.sourceforge.net/freeimage/FreeImage{version}.zip'.format(
         version=module_params['version'])

@@ -9,7 +9,7 @@ headers_dir = os.path.join(build_directory, 'include')
 
 
 def build(module_params):
-    check_dependencies(False, 'version')
+    check_dependencies(False, ['version'], module_params)
     fs.remove(origin_dir)
     glm_url = "http://sourceforge.net/projects/ogl-math/files/glm-{0}/glm-{0}.zip/download".format(
         module_params['version'])

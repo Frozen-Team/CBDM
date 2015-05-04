@@ -16,7 +16,7 @@ headers_dir = os.path.join(build_directory, 'include')
 
 
 def build(module_params):
-    check_dependencies(False, ['version'])
+    check_dependencies(False, ['version'], module_params)
     freetype_url = "http://download.savannah.gnu.org/releases/freetype/freetype-{}.tar.gz".format(
         module_params['version'])
     net.download_file(freetype_url, path_tar_gz)
