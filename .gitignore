@@ -58,7 +58,8 @@ docs/_build/
 target/
 
 # ignore cmake tool
-Tools
+Tools/cmake
+Tools/git
 Download
 Origin
 ModuleCache
