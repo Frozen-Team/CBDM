@@ -74,10 +74,10 @@ dependencies = {
     # },
 
     # DONE
-    # "spdlog": {
-    #     "version": "master",
-    #     'rebuild': True
-    # },
+    "spdlog": {
+        "version": "master",
+        'rebuild': True
+    },
 
     # DONE
     # "easyloggingpp": {
@@ -102,10 +102,10 @@ dependencies = {
 
 
     # DONE
-    "glm": {
-        "version": "0.9.6.3",
-        'rebuild': True
-    }
+    # "glm": {
+    #     "version": "0.9.6.3",
+    #     'rebuild': True
+    # }
 
     # DONE
     # "fbxsdk": {

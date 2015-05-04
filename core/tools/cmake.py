@@ -147,7 +147,6 @@ class Cmake:
             self.set("SOURCES_FILES", " ".join(main_project_files), cmake_file)
             cmake_file.writelines(
                 "add_" + self.project_type + "(" + self.project_name + " ${SOURCES_FILES})" + os.linesep)
-        self.build_deps(cmake_file)
         cmake_file.close()
 
     def run(self):
