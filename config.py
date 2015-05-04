@@ -56,10 +56,10 @@ dependencies = {
     # },
 
     # DONE
-    # "eigen": {
-    #     "version": "3.2.4",
-    #     'rebuild': True
-    # },
+    "eigen": {
+        "version": "3.2.4",
+        'rebuild': True
+    },
 
     # DONE
     # "glfw": {
@@ -80,10 +80,10 @@ dependencies = {
     # },
 
     # DONE
-    "easyloggingpp": {
-        "version": "v9.80",
-        'rebuild': True
-    },
+    # "easyloggingpp": {
+    #     "version": "v9.80",
+    #     'rebuild': True
+    # },
 
     # DONE
     # "freeimage": {

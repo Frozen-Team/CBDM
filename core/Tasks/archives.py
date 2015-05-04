@@ -10,6 +10,7 @@ import core.Tasks.fs as fs
 
 def extract_zip(archive, destination=''):
     fs.create_path_to(destination)
+    print('Extract by zip: %s -> %s' % (archive, destination))
     with ZipFile(archive, 'r') as archive:
         archive.extractall(destination)
 

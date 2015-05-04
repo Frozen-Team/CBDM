@@ -7,6 +7,7 @@ __author__ = 'saturn4er'
 
 
 def git_clone(repo, repo_dir='', overwrite=True):
+    print('Cloning {repo} to {repo_dir}'.format(repo=repo, repo_dir=repo_dir))
     repository = Repo(repo_dir, LibraryModule.current_working_module + '_git.log')
     if repository.is_repo() and overwrite:
         rmtree(repo_dir, ignore_errors=False)

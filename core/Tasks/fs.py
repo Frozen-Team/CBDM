@@ -42,6 +42,7 @@ def remove(mask):
 
 
 def rename(mask, new_name, overwrite=False):
+
     file = glob(mask)
     files_count = len(file)
     if files_count < 1:
