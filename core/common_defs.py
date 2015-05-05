@@ -1,3 +1,4 @@
+import os
 import platform
 import subprocess
 
@@ -16,3 +17,12 @@ def is_windows():
 
 def is_linux():
     return platform.system() == "Linux"
+
+
+def load_message(name):
+    message_filename = os.path.join('core', 'messages', name)
+    if os.path.isfile(message_filename):
+        with open(message_filename, 'r') as message_file:
+            return message_file.read()
+    else:
+        return ''

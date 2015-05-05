@@ -1,0 +1,10 @@
+cbdm module [command] [args]
+
+command:
+    install          module_name...                             - Install module from repository
+    list                                                        - Show full list of installed modules
+    delete           module_name...                             - Delete module from system
+    exists           module_name...                             - Check and show if modules in system or not
+    is_builded       module_name...                             - Check if module was already built
+    build            module_nameconfig_key=config_value...      - Build module with params
+    show_results     module_name                                - Show module output
