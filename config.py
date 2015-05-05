@@ -1,11 +1,11 @@
 import os
 
 directories = {
-    "solutionDir": "D:/Development/Script/Solution",
+    "solutionDir": "D:\Development\CppDepManager/Solution",
     "downloadDir": "Download",
     "libFolder": "Lib",
     "buildDir": os.path.abspath("Build"),
-    "visualStudioDir": "H:\Applications\Visual Studio 13",
+    "visualStudioDir": "C:\Program Files (x86)\Microsoft Visual Studio 12.0",
     "tools_path": os.path.abspath("Tools"),
     "project_dir": os.getcwd()
 }
@@ -20,82 +20,75 @@ visual_studio_runtime_library = 'MD'
 
 dependencies = {
 
-    # DONE
-    "sqlite": {
-        'rebuild': True,
-        'version': '3080900'
-    },
+    # Finished
+    # "sqlite": {
+    #     'rebuild': True,
+    #     'version': '3080900'
+    # },
     #
-    # # DONE
-    # # "qt": {
-    # # "version": "5.4.1-0",
-    # # 'rebuild': True
-    # # },
-    #
-    # # DONE
+    # Finished
     # "glew": {
     #     "version": "1.12.0",
     #     'rebuild': True
     # },
     #
-    # # Finished
+    # Finished
     # "FMOD": {
     #     "version": "10600",
     #     'rebuild': True
     # },
     #
-    # # DONE
+    # Finished
     # "eigen": {
     #     "version": "3.2.4",
     #     'rebuild': True
     # },
     #
-    # # DONE
+    # Finished
     # "glfw": {
     #     "version": "3.1.1",
     #     'rebuild': True
     # },
     #
-    # # DONE
+    # Finished
     # "cppformat": {
     #     "version": "1.1.0",
     #     'rebuild': True
     # },
     #
-    # # DONE
+    # Finished
     # "spdlog": {
     #     "version": "master",
     #     'rebuild': True
     # },
     #
-    # # DONE
+    # Finished
     # "easyloggingpp": {
     #     "version": "v9.80",
     #     'rebuild': True
     # },
     #
-    # # DONE
-    # "freeimage": {
-    #     "version": "3170",
+    # Finished
+    # 'freeimage': {
+    #     'version': '3170',
     #     'rebuild': True
     # },
     #
-    # # DONE
+    # Finished
     # "freetype": {
     #     "version": "2.5.5",
     #     'rebuild': True
     # },
     #
-    #
-    # # DONE
+    # Finished
     # "glm": {
     #     "version": "0.9.6.3",
     #     'rebuild': True
     # },
     #
-    # # DONE
-    # "fbxsdk": {
-    #     "version": "20151",
+    # Finished
+    # 'fbxsdk': {
+    #     'version': '20151',
     #     'rebuild': True
     # },
 
@@ -109,4 +102,9 @@ dependencies = {
     # "version": "4.4.16",
     #     'rebuild': True
     # }
+    # DONE
+    # "qt": {
+    # "version": "5.4.1-0",
+    # 'rebuild': True
+    # },
 }

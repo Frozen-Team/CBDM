@@ -44,7 +44,6 @@ def remove(mask):
 
 
 def rename(mask, new_name, overwrite=False):
-
     file = glob(mask)
     files_count = len(file)
     if files_count < 1:
@@ -109,7 +108,8 @@ def clear(directory, extensions=[], except_extensions=[]):
 
 
 def remove_empty_folders(from_directory):
-    print('Removing empty folders from '+from_directory)
+    print('Removing empty folders from ' + from_directory)
+
     def remove_empty_folders_system(path, log_file):
         if not os.path.isdir(path):
             return
@@ -125,7 +125,8 @@ def remove_empty_folders(from_directory):
         if len(files) == 0:
             log_file.write(str("rm empty folder:" + path + '\n'))
             os.rmdir(path)
-    log_filename = os.path.join(sys_config.log_folder, 'rm_empty_folders')
+
+    log_filename = os.path.join(sys_config.log_folder, 'rm_empty_folders.log')
     create_path_to(log_filename)
-    with open(log_filename, "w+") as log_file:
+    with open(log_filename, "a") as log_file:
         remove_empty_folders_system(from_directory, log_file)

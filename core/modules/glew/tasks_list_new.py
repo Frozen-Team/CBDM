@@ -20,7 +20,6 @@ def build(module_params):
     fs.remove(origin_dir)
     glew_url = 'https://sourceforge.net/projects/glew/files/glew/{0}/glew-{0}.zip/download'.format(
         module_params['version'])
-    fs.remove(origin_dir)
 
     net.download_file(glew_url, archive_path)
 
@@ -40,9 +39,13 @@ def integration(module_params):
     cmake.add_location(headers_dir)
 
     # x86
-    cmake.add_library(('windows', 'x86', 'release'), os.path.join(build_directory + '/Release/Win32/glew32s.lib'))
-    cmake.add_library(('windows', 'x86', 'debug'), os.path.join(build_directory + '/Debug/Win32/glew32sd.lib'))
+    cmake.add_library(('windows', 'x86', 'release'),
+                      os.path.join(lib_directory, 'Release', 'Win32', 'glew32s.lib'))
+    cmake.add_library(('windows', 'x86', 'debug'),
+                      os.path.join(lib_directory, 'Debug', 'Win32', 'glew32sd.lib'))
     # x64
-    cmake.add_library(('windows', 'x64', 'release'), os.path.join(build_directory + '/Release/x64/glew32s.lib'))
-    cmake.add_library(('windows', 'x64', 'debug'), os.path.join(build_directory + '/Debug/x64/glew32sd.lib'))
+    cmake.add_library(('windows', 'x64', 'release'),
+                      os.path.join(lib_directory, 'Release', 'x64', 'glew32s.lib'))
+    cmake.add_library(('windows', 'x64', 'debug'),
+                      os.path.join(lib_directory, 'Debug', 'x64', 'glew32sd.lib'))
 

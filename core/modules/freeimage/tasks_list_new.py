@@ -45,7 +45,6 @@ def build(module_params):
         assembly.build_vcxproj(os.path.join(origin_dir, 'FreeImage.2013.vcxproj'), lib_directory)
 
     fs.rename(os.path.join(origin_dir, 'Source'), headers_dir, True)
-    fs.clear(headers_dir, False, ['.h'])
     fs.clear(origin_dir, cleanup_extensions['c++'])
 
 

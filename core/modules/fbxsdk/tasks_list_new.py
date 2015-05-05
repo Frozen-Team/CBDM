@@ -14,7 +14,7 @@ headers_dir = os.path.join(build_directory, 'headers')
 
 
 def build(module_params):
-    # TODO: Looks like windows is working, promlems with linux version (extact .so from binary)
+    # TODO: Looks like windows is working, problems with linux version (extract .so from binary)
     check_dependencies(False, ['version'], module_params)
 
     fs.remove(origin_dir)
@@ -36,17 +36,18 @@ def build(module_params):
 
 def integration(module_params):
     cmake.add_location(headers_dir)
-    # x86
-    cmake.add_library(('windows', 'x86', 'release'),
-                              os.path.join(lib_directory, 'x86', 'release', 'libfbxsdk.lib'))
-    cmake.add_library(('windows', 'x86', 'release'), os.path.join(lib_directory, 'x86', 'release', 'libfbxsdk-md.lib'))
+    if is_windows():
+        # x86
+        cmake.add_library(('windows', 'x86', 'release'),
+                          os.path.join(lib_directory, 'x86', 'release', 'libfbxsdk.lib'))
+        cmake.add_library(('windows', 'x86', 'release'), os.path.join(lib_directory, 'x86', 'release', 'libfbxsdk-md.lib'))
 
-    cmake.add_library(('windows', 'x86', 'debug'), os.path.join(lib_directory, 'x86', 'debug', 'libfbxsdk.lib'));
-    cmake.add_library(('windows', 'x86', 'debug'), os.path.join(lib_directory, 'x86', 'debug', 'libfbxsdk-md.lib'))
+        cmake.add_library(('windows', 'x86', 'debug'), os.path.join(lib_directory, 'x86', 'debug', 'libfbxsdk.lib'))
+        cmake.add_library(('windows', 'x86', 'debug'), os.path.join(lib_directory, 'x86', 'debug', 'libfbxsdk-md.lib'))
 
-    # x64
-    cmake.add_library(('windows', 'x64', 'release'), os.path.join(lib_directory, 'x64', 'release', 'libfbxsdk.lib'))
-    cmake.add_library(('windows', 'x64', 'release'), os.path.join(lib_directory, 'x64', 'release', 'libfbxsdk-md.lib'))
+        # x64
+        cmake.add_library(('windows', 'x64', 'release'), os.path.join(lib_directory, 'x64', 'release', 'libfbxsdk.lib'))
+        cmake.add_library(('windows', 'x64', 'release'), os.path.join(lib_directory, 'x64', 'release', 'libfbxsdk-md.lib'))
 
-    cmake.add_library(('windows', 'x64', 'debug'), os.path.join(lib_directory, 'x64', 'debug', 'libfbxsdk.lib'))
-    cmake.add_library(('windows', 'x64', 'debug'), os.path.join(lib_directory, 'x64', 'debug', 'libfbxsdk-md.lib'))
+        cmake.add_library(('windows', 'x64', 'debug'), os.path.join(lib_directory, 'x64', 'debug', 'libfbxsdk.lib'))
+        cmake.add_library(('windows', 'x64', 'debug'), os.path.join(lib_directory, 'x64', 'debug', 'libfbxsdk-md.lib'))

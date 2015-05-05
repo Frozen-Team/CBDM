@@ -61,6 +61,8 @@ target/
 Tools/cmake
 Tools/git
 Download
+log
+repositories.json
 Origin
 ModuleCache
 .idea
