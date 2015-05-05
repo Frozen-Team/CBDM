@@ -1,6 +1,7 @@
 import os
 
 from config import directories
+import config
 from core.common_defs import is_windows
 from core.default_structures import cleanup_extensions
 from core.Tasks import check_dependencies, fs, cmake, assembly, vcs
@@ -19,12 +20,13 @@ def build_arch(arch):
     cmake.run_cmake(origin_dir, arch, arch)
     vcxproj_path = os.path.join(origin_dir, arch, 'src', 'glfw.vcxproj')
     if is_windows():
-        assembly.set_vcxproj_platform_toolset(vcxproj_path, 'vc120')
-        assembly.set_vcxproj_runtime_library(vcxproj_path, 'MD')
+        assembly.set_vcxproj_platform_toolset(vcxproj_path, config.visual_studio_toolset)
+        assembly.set_vcxproj_runtime_library(vcxproj_path, config.visual_studio_runtime_library)
         assembly.build_vcxproj(vcxproj_path, lib_directory)
 
 
 def build(module_params):
+    fs.remove(origin_dir)
     check_dependencies(False, ['version'], module_params)
     vcs.git_clone('https://github.com/glfw/glfw.git', origin_dir)
     vcs.git_checkout(origin_dir, module_params['version'])

@@ -2,6 +2,8 @@ from shutil import rmtree, move
 from glob import glob
 import os
 
+from core import sys_config
+
 
 def create_path_to(file):
     new_file_dir = os.path.dirname(file)
@@ -73,7 +75,10 @@ def move_files(from_path, to_path):
 
 
 def clear(directory, extensions=[], except_extensions=[]):
-    with open("rm_files.log", "a") as log_file:
+    print('Clearing trash')
+    log_filename = os.path.join(sys_config.log_folder, 'clear')
+    create_path_to(log_filename)
+    with open(log_filename, "w+") as log_file:
         for root, dirnames, filenames in os.walk(directory):
             for filename in filenames:
                 file_name, file_extension = os.path.splitext(filename)
@@ -104,6 +109,7 @@ def clear(directory, extensions=[], except_extensions=[]):
 
 
 def remove_empty_folders(from_directory):
+    print('Removing empty folders from '+from_directory)
     def remove_empty_folders_system(path, log_file):
         if not os.path.isdir(path):
             return
@@ -119,6 +125,7 @@ def remove_empty_folders(from_directory):
         if len(files) == 0:
             log_file.write(str("rm empty folder:" + path + '\n'))
             os.rmdir(path)
-
-    with open("rm_empty_folders.log", "a") as log_file:
+    log_filename = os.path.join(sys_config.log_folder, 'rm_empty_folders')
+    create_path_to(log_filename)
+    with open(log_filename, "w+") as log_file:
         remove_empty_folders_system(from_directory, log_file)

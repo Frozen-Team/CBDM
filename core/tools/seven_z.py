@@ -1,7 +1,7 @@
 import os
 import subprocess
-from core import sys_config
 
+from core import sys_config
 from core.Dependencies.library_module_new import LibraryModule
 from core.Tasks import fs
 
@@ -27,7 +27,7 @@ class SevenZ:
                                                                                destination=destination)
         log_filename = os.path.join(sys_config.log_folder, '7z.log')
         fs.create_path_to(log_filename)
-        with open('7z.log', 'w+') as log_file:
+        with open(log_filename, 'w+') as log_file:
             process = subprocess.Popen(exec_command, shell=True, stdout=log_file, stderr=log_file)
             process.communicate()
             result_code = process.returncode

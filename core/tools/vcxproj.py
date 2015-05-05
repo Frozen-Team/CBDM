@@ -4,6 +4,7 @@ import os
 import subprocess
 
 import config
+from core import sys_config
 
 
 class VcxprojConfiguration():
@@ -62,6 +63,8 @@ class Builder:
         self.xml_root = minidom.parse(file_location)
 
     def build(self, configurations=False, archs=False, output=False, rebuild=False, log_file=False):
+
+        print('Building project {0}. Arch.: {1}. Conf.:{2}'.format(self.file_loc, archs, configurations))
         if not configurations:
             configurations = self.get_configurations_list()
         if not archs:
@@ -79,14 +82,16 @@ class Builder:
         for arc_index, arch in enumerate(archs):
             commands.append('call "{vs_path}/VC/vcvarsall.bat" x86_amd64'.format(vs_path=os.path.abspath(vs_path)))
             for conf_index, configuration in enumerate(configurations):
-                print('Building project {0}. Arch.: {1}. Conf.:{2}'.format(self.file_loc, arch, configuration))
                 commands.append(build_command.format(configuration=configuration, platform=arch))
         bat_file = open('build.bat', 'w')
         bat_file.writelines(os.linesep.join(commands))
         bat_file.close()
         output = open(str(log_file), 'w') if log_file else open(os.devnull, 'w')
-        subprocess.call('call build.bat', stderr=output, stdout=output, shell=True)
-        os.system('call build.bat >build.log')
+        process = subprocess.Popen('call build.bat', stderr=output, stdout=output, shell=True)
+        process.communicate()
+        log_filename = os.path.join(sys_config.log_folder, 'build.log')
+
+        os.system('call build.bat >'+log_filename)
         os.remove('build.bat')
 
     def get_configuration(self, configuration_name):

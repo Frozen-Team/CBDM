@@ -1,8 +1,11 @@
 import os
+
 from config import directories
+import config
 from core.common_defs import is_windows
 from core.default_structures import cleanup_extensions
 from core.Tasks import check_dependencies, fs, net, archives, cmake, assembly
+
 
 freeimage_path = 'freeimage.zip'
 origin_dir = 'Origin'
@@ -32,11 +35,12 @@ def build(module_params):
                          'Source/OpenEXR/OpenEXR.2013.vcxproj',
                          'Source/ZLib/ZLib.2013.vcxproj'
                          )
+    print('Be patient. Freeimage compiling for a long time.')
     if is_windows():
         for vcxproj_file in vcxproj_to_change:
             vcxproj_file = os.path.join(origin_dir, vcxproj_file)
-            assembly.set_vcxproj_platform_toolset(vcxproj_file, 'vc120')
-            assembly.set_vcxproj_runtime_library(vcxproj_file, 'MD')
+            assembly.set_vcxproj_platform_toolset(vcxproj_file, config.visual_studio_toolset)
+            assembly.set_vcxproj_runtime_library(vcxproj_file, config.visual_studio_runtime_library)
 
         assembly.build_vcxproj(os.path.join(origin_dir, 'FreeImage.2013.vcxproj'), lib_directory)
 

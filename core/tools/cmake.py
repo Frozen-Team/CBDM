@@ -154,19 +154,11 @@ class Cmake:
     def get_exec_flags(self):
         build_dir_flag = '-B"{}"'.format(self.build_directory) if bool(self.build_directory) else ''
         generator_flag = '-G"{}"'.format(self.get_generator_name())
-        sources_dir_flag = '-H"{}"'.format(os.path.abspath(self._sourcesDir) if bool(self._sourcesDir) else '')
+        sources_dir_flag = '-H"./"'
         custom_flags = self.get_customs_flags_string()
         return [generator_flag, build_dir_flag, custom_flags, sources_dir_flag]
 
     def run(self):
-        # generator = self.get_generator_name()
-        # with open("cmake.log", "w") as cmake_log:
-        #     if os.path.isfile('CMakeCache.txt'):
-        #         os.remove('CMakeCache.txt')
-        #     build_dir_flag = '-B' + os.path.abspath(self.build_directory if bool(self.build_directory) else '')
-        #     sources_dir_flag = '-H' + os.path.abspath(self._sourcesDir if bool(self._sourcesDir) else '')
-        #     subprocess.call([self.cmake_path, '-G', generator, self.get_flags_string(), build_dir_flag,
-        #                      sources_dir_flag], stderr=cmake_log, stdout=cmake_log)
         log_filename = os.path.join(sys_config.log_folder, 'cmake.log')
         fs.create_path_to(log_filename)
         with open(log_filename, "a") as cmake_log:
@@ -174,6 +166,7 @@ class Cmake:
             if os.path.isfile('CMakeCache.txt'):
                 os.remove('CMakeCache.txt')
 
+            TemporaryDir.enter(self._sourcesDir)
             command = [self.cmake_path]
             command.extend(self.get_exec_flags())
             if bool(self.build_directory):
@@ -184,5 +177,6 @@ class Cmake:
 
             process.communicate()
             if process.returncode:
-                raise Exception('"CMAKE RUN" finished with result code' + str(process.returncode))
+                raise Exception('"CMAKE RUN" finished with result code ' + str(process.returncode))
                 sys.exit(1)
+            TemporaryDir.leave()

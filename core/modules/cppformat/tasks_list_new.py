@@ -4,13 +4,13 @@ from config import directories
 from core.Tasks import check_dependencies, vcs, cmake, assembly, fs
 from core.common_defs import is_linux, is_windows
 from core.default_structures import cleanup_extensions
-
+import config
 
 sources_dir = "sources"
 build_directory = os.path.join(directories['buildDir'], 'cppformat')
 lib_directory = os.path.join(build_directory, 'lib')
 headers_dir = os.path.join(build_directory, 'headers')
-vcxproj_file = os.path.join(sources_dir, 'format.vcxproj')
+vcxproj_file = 'format.vcxproj'
 
 build_tasks = [
     {"task": "run_cmake_and_build", "sources_dir": sources_dir, "architecture": "x32",
@@ -34,23 +34,28 @@ build_tasks = [
 ]
 
 
-def build_lib():
+def build_lib(path):
     if is_linux():
-        assembly.make(sources_dir)
+        assembly.make(path)
     if is_windows():
-        assembly.set_vcxproj_runtime_library(vcxproj_file, 'MD')
-        assembly.set_vcxproj_platform_toolset(vcxproj_file, 'vc120')
-        assembly.build_vcxproj(vcxproj_file, lib_directory)
+        vcxproj_file_path = os.path.join(path, vcxproj_file)
+        assembly.set_vcxproj_runtime_library(vcxproj_file_path, config.visual_studio_runtime_library)
+        assembly.set_vcxproj_platform_toolset(vcxproj_file_path, config.visual_studio_toolset)
+        assembly.build_vcxproj(vcxproj_file_path, lib_directory)
 
 
 def build(module_params):
     check_dependencies(False, ['version'], module_params)
+    fs.remove('sources')
     vcs.git_clone("https://github.com/cppformat/cppformat.git", sources_dir, True)
     vcs.git_checkout(sources_dir, module_params['version'])
+
     cmake.run_cmake(sources_dir, 'x86', 'arch_x86')
-    build_lib()
+    build_lib(os.path.join(sources_dir, 'arch_x86'))
+
     cmake.run_cmake(sources_dir, 'x64', 'arch_x64')
-    build_lib()
+    build_lib(os.path.join(sources_dir, 'arch_x64'))
+
     fs.move_files_to_dir_by_mask(os.path.join(sources_dir, '*.h'), headers_dir, True)
 
 

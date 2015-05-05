@@ -1,11 +1,11 @@
 import os
 
 directories = {
-    "solutionDir": "D:\Development\CppDepManager/Solution",
+    "solutionDir": "D:/Development/Script/Solution",
     "downloadDir": "Download",
     "libFolder": "Lib",
     "buildDir": os.path.abspath("Build"),
-    "visualStudioDir": "C:\Program Files (x86)\Microsoft Visual Studio 12.0",
+    "visualStudioDir": "H:\Applications\Visual Studio 13",
     "tools_path": os.path.abspath("Tools"),
     "project_dir": os.getcwd()
 }
@@ -14,19 +14,17 @@ projectName = "FrozenEngine"
 cmakeVersion = "3.1.3"
 cmakeGenerator = "Visual Studio 12"
 buildArchitecture = "x64"  # x86 | x32
+
+visual_studio_toolset = 'v120'
+visual_studio_runtime_library = 'MD'
+
 dependencies = {
 
     # DONE
     "sqlite": {
-    'rebuild': True,
-    'version': '3080900'
+        'rebuild': True,
+        'version': '3080900'
     },
-
-    # DONE
-    # "cmake": {
-    #     "version": "3.2.1",
-    #     'rebuild': True
-    # },
 
     # DONE
     # "qt": {
@@ -35,83 +33,83 @@ dependencies = {
     # },
 
     # DONE
-    # "glew": {
-    #     "version": "1.12.0",
-    #     'rebuild': True
-    # },
+    "glew": {
+        "version": "1.12.0",
+        'rebuild': True
+    },
 
     # Finished
-    # "FMOD": {
-    #     "version": "10600",
-    #     'rebuild': True
-    # },
+    "FMOD": {
+        "version": "10600",
+        'rebuild': True
+    },
 
     # DONE
-    # "eigen": {
-    #     "version": "3.2.4",
-    #     'rebuild': True
-    # },
+    "eigen": {
+        "version": "3.2.4",
+        'rebuild': True
+    },
 
     # DONE
-    # "glfw": {
-    #     "version": "3.1.1",
-    #     'rebuild': True
-    # },
+    "glfw": {
+        "version": "3.1.1",
+        'rebuild': True
+    },
 
     # DONE
-    # "cppformat": {
-    #     "version": "1.1.0",
-    #     'rebuild': True
-    # },
+    "cppformat": {
+        "version": "1.1.0",
+        'rebuild': True
+    },
 
     # DONE
-    # "spdlog": {
-    #     "version": "master",
-    #     'rebuild': True
-    # },
+    "spdlog": {
+        "version": "master",
+        'rebuild': True
+    },
 
     # DONE
-    # "easyloggingpp": {
-    #     "version": "v9.80",
-    #     'rebuild': True
-    # },
+    "easyloggingpp": {
+        "version": "v9.80",
+        'rebuild': True
+    },
 
     # DONE
-    # "freeimage": {
-    #     "version": "3170",
-    #     'rebuild': True
-    # },
+    "freeimage": {
+        "version": "3170",
+        'rebuild': True
+    },
 
     # Use from FreeImage
     # "zlib"
 
     # DONE
-    # "freetype": {
-    #     "version": "2.5.5",
-    #     'rebuild': True
-    # }
+    "freetype": {
+        "version": "2.5.5",
+        'rebuild': True
+    },
 
 
     # DONE
-    # "glm": {
-    #     "version": "0.9.6.3",
-    #     'rebuild': True
-    # }
+    "glm": {
+        "version": "0.9.6.3",
+        'rebuild': True
+    },
 
     # DONE
-    # "fbxsdk": {
-    #     "version": "20151",
-    #     'rebuild': True
-    # }
+    "fbxsdk": {
+        "version": "20151",
+        'rebuild': True
+    },
 
     # DONE
     # "boost": {
-    #     "version": "1_57_0",
-    #     'rebuild': True
+    # "version": "1_57_0",
+    # 'rebuild': True
     # }
 
     # "v8": {
-    #     "version": "4.4.16",
+    # "version": "4.4.16",
     #     'rebuild': True
     # }
 
