@@ -75,10 +75,10 @@ def move_files(from_path, to_path):
 
 
 def clear(directory, extensions=[], except_extensions=[]):
-    print('Clearing trash')
-    log_filename = os.path.join(sys_config.log_folder, 'clear')
+    print('Cleaning up trash')
+    log_filename = os.path.join(sys_config.log_folder, 'clear.log')
     create_path_to(log_filename)
-    with open(log_filename, "w+") as log_file:
+    with open(log_filename, "a") as log_file:
         for root, dirnames, filenames in os.walk(directory):
             for filename in filenames:
                 file_name, file_extension = os.path.splitext(filename)
