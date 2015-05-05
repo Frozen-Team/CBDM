@@ -1,0 +1,5 @@
+cbdm repo [command] [args]
+
+command:
+    add                     repo_url                    [TODO]
+    remove                  repo_url                    [TODO]

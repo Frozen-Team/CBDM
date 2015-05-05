@@ -29,6 +29,14 @@ class LibraryModule:
             exc_str = s_config.no_module_error.format(module_name=self.module_name, full_path=self.full_module_location)
             raise Exception(exc_str)
 
+    @staticmethod
+    def module_exists(module_name):
+        return os.path.isdir(LibraryModule.get_module_location(module_name))
+
+    @staticmethod
+    def get_module_location(module_name):
+        return project_location + s_config.modules_location.format(module_name=module_name)
+
     def __check_if_module_file_exists(self, file_name, required):
         tasks_file_location = self.module_location + os.path.sep + file_name + '.py'
         if not os.path.isfile(tasks_file_location):
