@@ -25,82 +25,79 @@ dependencies = {
         'rebuild': True,
         'version': '3080900'
     },
-
-    # DONE
-    # "qt": {
-    # "version": "5.4.1-0",
-    # 'rebuild': True
+    #
+    # # DONE
+    # # "qt": {
+    # # "version": "5.4.1-0",
+    # # 'rebuild': True
+    # # },
+    #
+    # # DONE
+    # "glew": {
+    #     "version": "1.12.0",
+    #     'rebuild': True
     # },
-
-    # DONE
-    "glew": {
-        "version": "1.12.0",
-        'rebuild': True
-    },
-
-    # Finished
-    "FMOD": {
-        "version": "10600",
-        'rebuild': True
-    },
-
-    # DONE
-    "eigen": {
-        "version": "3.2.4",
-        'rebuild': True
-    },
-
-    # DONE
-    "glfw": {
-        "version": "3.1.1",
-        'rebuild': True
-    },
-
-    # DONE
-    "cppformat": {
-        "version": "1.1.0",
-        'rebuild': True
-    },
-
-    # DONE
-    "spdlog": {
-        "version": "master",
-        'rebuild': True
-    },
-
-    # DONE
-    "easyloggingpp": {
-        "version": "v9.80",
-        'rebuild': True
-    },
-
-    # DONE
-    "freeimage": {
-        "version": "3170",
-        'rebuild': True
-    },
-
-    # Use from FreeImage
-    # "zlib"
-
-    # DONE
-    "freetype": {
-        "version": "2.5.5",
-        'rebuild': True
-    },
-
-
-    # DONE
-    "glm": {
-        "version": "0.9.6.3",
-        'rebuild': True
-    },
-
-    # DONE
-    "fbxsdk": {
-        "version": "20151",
-        'rebuild': True
-    },
+    #
+    # # Finished
+    # "FMOD": {
+    #     "version": "10600",
+    #     'rebuild': True
+    # },
+    #
+    # # DONE
+    # "eigen": {
+    #     "version": "3.2.4",
+    #     'rebuild': True
+    # },
+    #
+    # # DONE
+    # "glfw": {
+    #     "version": "3.1.1",
+    #     'rebuild': True
+    # },
+    #
+    # # DONE
+    # "cppformat": {
+    #     "version": "1.1.0",
+    #     'rebuild': True
+    # },
+    #
+    # # DONE
+    # "spdlog": {
+    #     "version": "master",
+    #     'rebuild': True
+    # },
+    #
+    # # DONE
+    # "easyloggingpp": {
+    #     "version": "v9.80",
+    #     'rebuild': True
+    # },
+    #
+    # # DONE
+    # "freeimage": {
+    #     "version": "3170",
+    #     'rebuild': True
+    # },
+    #
+    # # DONE
+    # "freetype": {
+    #     "version": "2.5.5",
+    #     'rebuild': True
+    # },
+    #
+    #
+    # # DONE
+    # "glm": {
+    #     "version": "0.9.6.3",
+    #     'rebuild': True
+    # },
+    #
+    # # DONE
+    # "fbxsdk": {
+    #     "version": "20151",
+    #     'rebuild': True
+    # },
 
     # DONE
     # "boost": {
@@ -111,25 +108,5 @@ dependencies = {
     # "v8": {
     # "version": "4.4.16",
     #     'rebuild': True
-    # }
-
-    # sqlite
-    # assimp
-    # GLraw
-    # freetype-gl
-
-
-
-
-    # "skeleton": {
-    #     "version": "1.12.0",
-    #     'rebuild': True
-    # },
-
-
-    # 'module_skeleton': {
-    # "version": "version",
-    # "build_path": "build_pat",
-    # "rebuild": True
     # }
 }
