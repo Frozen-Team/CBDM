@@ -9,16 +9,17 @@ from core.Dependencies.dependencies import Dependencies
 
 
 help_message = defs.load_message('help')
-if len(sys.argv) < 2:
-    print(help_message)
-    sys.exit(1)
-command = sys.argv[1]
-if command == 'module':
-    modules.exec_command()
-    sys.exit(0)
-elif command == 'repos':
-    repos.exec_command()
-    sys.exit(0)
+if len(sys.argv) > 1:
+    command = sys.argv[1]
+    if command == 'module':
+        modules.exec_command()
+        sys.exit(0)
+    elif command == 'repos':
+        repos.exec_command()
+        sys.exit(0)
+    else:
+        print(help_message)
+        sys.exit(0)
 
 starts = int(time.time())
 dependencies = Dependencies()

@@ -20,6 +20,7 @@ vcxproj_pathes = (
     'src/options/ozz_options.vcxproj',
 )
 
+
 def vcxproj_change_mult(vcxproj_to_change):
     for vcxproj_file in vcxproj_to_change:
             vcxproj_file = os.path.join(origin_dir, vcxproj_file)
