@@ -1,41 +1,39 @@
 import importlib
 import os
-import sys
-import platform
 import json
 
+from core.TemporaryDir import TemporaryDir
 import core.sys_config as s_config
 import core.default_structures as structs
-import config
+
+
 project_location = os.getcwd() + os.path.sep
 
 
 class LibraryModule:
+    current_working_module_results = {}
+
     def __init__(self, module_name, configs):
         self.module_name = module_name
-        self.module_location = project_location+s_config.modules_location.format(module_name=module_name)
+        self.module_location = project_location + s_config.modules_location.format(module_name=module_name)
         self.full_module_location = os.path.abspath(self.module_location)
         self.__check_if_module_exists()
 
-        self.system_tasks = LibraryModule.load_tasks()
         self.tasks_list = self.__load_module_file(s_config.tasks_list_file, True)
-        self.additional_tasks = self.__load_module_file(s_config.additional_tasks_file, False)
 
-        self.results = structs.default_dependency_struct.copy()
         self.module_configs = configs
+        LibraryModule.flush_results()
 
     def __check_if_module_exists(self):
         if not os.path.exists(self.module_location):
             exc_str = s_config.no_module_error.format(module_name=self.module_name, full_path=self.full_module_location)
             raise Exception(exc_str)
-            sys.exit(5)
 
     def __check_if_module_file_exists(self, file_name, required):
         tasks_file_location = self.module_location + os.path.sep + file_name + '.py'
         if not os.path.isfile(tasks_file_location):
             if required:
                 raise Exception(s_config.no_file_error.format(file_name=tasks_file_location))
-                sys.exit(5)
             else:
                 return False
         return True
@@ -45,27 +43,6 @@ class LibraryModule:
             return False
         module_name = s_config.modules_py_mod_location.format(file=file_name, module_name=self.module_name)
         return importlib.import_module(module_name)
-
-    def __prepare_task_params(self, task_params, module_params):
-        """
-        Format task params using module config
-        For example:
-            Module config {"language":"ru"}
-            Task params {"task": "test_task", "some_param":"param_value_{language}"}
-            Result will be {"task": "test_task", "some_param":"param_value_ru"}
-        :return: Formatted task params
-        """
-        result = {}
-        format_dict = {"module_name": self.module_name}
-        for key, val in module_params.items():
-            if isinstance(val, str):
-                format_dict[key] = val
-        for key, task_param in task_params.items():
-            if isinstance(task_param, str):
-                result[key] = task_param.format(**format_dict)
-            else:
-                result[key] = task_param
-        return result
 
     @staticmethod
     def __set_cache(var, value):
@@ -83,10 +60,6 @@ class LibraryModule:
                 cache_file_write.write(json.dumps(json_data))
 
     @staticmethod
-    def load_tasks():
-        return importlib.import_module('core.Dependencies.Tasks')
-
-    @staticmethod
     def __get_cache():
         try:
             with open('ModuleCache', 'r+') as cache_file:
@@ -96,63 +69,44 @@ class LibraryModule:
             json_data = {}
         return json_data
 
-    def run_tasks(self):
-        print("###### Working on '{0}' ####".format(self.module_name))
-        project_location = os.getcwd()
-        os.chdir(self.module_location)
+    def module_need_rebuild(self):
         cache = LibraryModule.__get_cache()
         need_rebuild = 'rebuild' in self.module_configs and self.module_configs['rebuild']
         already_built = 'built' in cache and cache['built']
-        if need_rebuild or not already_built:
-            if hasattr(self.tasks_list, 'build_tasks'):
-                for task in self.tasks_list.build_tasks:
-                    self.__run_task(task)
+        return need_rebuild or not already_built
 
-            print("###### Library was successfully built #### ")
-            LibraryModule.__set_cache('built', True)
-        elif already_built and not need_rebuild:
+    def prepare(self):
+        TemporaryDir.enter(self.full_module_location)
+        print("###### Processing module '{0}' ####".format(self.module_name))
+        LibraryModule.current_working_module = self.module_name
+        if self.module_need_rebuild():
+            fnc = self.function_in_tasks_exist(s_config.module_prepare_function)
+            if bool(fnc):
+                fnc(self.module_configs)
+                print("###### Library successfully processed #### ")
+                LibraryModule.__set_cache('built', True)
+        else:
             print("###### Library has been processed... Skipping #### ")
+        TemporaryDir.leave()
 
-        if hasattr(self.tasks_list, 'integration_tasks'):
-            for task in self.tasks_list.integration_tasks:
-                self.__run_task(task)
-        os.chdir(project_location)
-
-    def __run_task(self, task):
-        if not LibraryModule.__validate_task(task):
+    def function_in_tasks_exist(self, file_name):
+        attr_exist = hasattr(self.tasks_list, file_name)
+        if not attr_exist:
             return False
-        task_name = task['task']
-
-        is_user_task = "user_task" in task and task['user_task']
-        task_description = task['description'] if "description" in task else False
-
-        if is_user_task:
-            task_exist = bool(self.additional_tasks) & hasattr(self.additional_tasks, task_name)
-        else:
-            task_exist = hasattr(self.system_tasks, task_name)
-
-        if not task_exist:
-            exception_error = s_config.no_task_error.format(task_name=task_name, module_name=self.module_name)
-            raise Exception(exception_error)
-            sys.exit(10)
-        if task_description:
-            print('Running task: ' + task_description)
-        if is_user_task:
-            task_function = getattr(self.additional_tasks, task_name)
-        else:
-            task_function = getattr(self.system_tasks, task_name)
-
-        task_params = self.__prepare_task_params(task, self.module_configs)
-        task_function(self.module_name, task_params, self.module_configs, self.results)
-
-    @staticmethod
-    def __validate_task(task):
-        if "task" not in task:
-            return False
-        if "platform" in task:
-            if task['platform'].lower() != platform.system().lower():
-                return False
-        return True
+        attr = getattr(self.tasks_list, file_name)
+        attr_is_func = hasattr(attr, '__call__')
+        return attr if attr_is_func else False
 
     def get_results(self):
-        return self.results
+        LibraryModule.current_working_module_results = structs.default_dependency_struct.copy()
+        TemporaryDir.enter(self.full_module_location)
+        fnc = self.function_in_tasks_exist(s_config.module_integration_function)
+        if bool(fnc):
+            fnc(self.module_configs)
+
+        TemporaryDir.leave()
+        return LibraryModule.current_working_module_results
+
+    @staticmethod
+    def flush_results():
+        LibraryModule.current_working_module_results = structs.default_dependency_struct.copy()

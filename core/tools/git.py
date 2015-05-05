@@ -3,7 +3,7 @@ import subprocess
 import re
 import sys
 
-import core.Dependencies.library_module_new as l_m
+import core.Dependencies.library_module as l_m
 from core.Tasks import fs
 
 

@@ -1,6 +1,8 @@
 import os
-from core.Dependencies.library_module_new import LibraryModule
+
+from core.Dependencies.library_module import LibraryModule
 from core.tools.cmake import Cmake
+
 
 __author__ = 'saturn4er'
 

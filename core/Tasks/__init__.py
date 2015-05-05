@@ -1,6 +1,7 @@
 from shutil import which
+
 import config
-from core.Dependencies.library_module_new import LibraryModule
+from core.Dependencies.library_module import LibraryModule
 import core.sys_config as s_config
 
 

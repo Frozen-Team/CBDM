@@ -1,10 +1,12 @@
 import os
 from shutil import which
-from core.Dependencies.library_module_new import LibraryModule
+
+from core.Dependencies.library_module import LibraryModule
 from core.common_defs import is_linux, is_windows
 import core.sys_config as s_config
 from config import directories
 from core.Tasks import check_dependencies, net, archives, fs, assembly
+
 
 cmake_path = 'cmake.zip'
 cmake_exe_path = s_config.tools_directory + "/cmake/bin/cmake.exe"

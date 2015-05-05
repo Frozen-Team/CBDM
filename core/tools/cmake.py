@@ -5,7 +5,7 @@ import platform
 
 import config
 from core import sys_config
-from core.Dependencies.library_module_new import LibraryModule
+from core.Dependencies.library_module import LibraryModule
 from core.Tasks import fs
 from core.TemporaryDir import TemporaryDir
 

@@ -1,4 +1,4 @@
-from core.Dependencies.library_module_new import LibraryModule
+from core.Dependencies.library_module import LibraryModule
 import config
 import core.sys_config as s_config
 
