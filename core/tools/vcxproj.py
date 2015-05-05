@@ -63,12 +63,11 @@ class Builder:
         self.xml_root = minidom.parse(file_location)
 
     def build(self, configurations=False, archs=False, output=False, rebuild=False, log_file=False):
-
-        print('Building project {0}. Arch.: {1}. Conf.:{2}'.format(self.file_loc, archs, configurations))
         if not configurations:
             configurations = self.get_configurations_list()
         if not archs:
             archs = self.get_arch_list()
+        print('Building project {0}. Arch.: {1}. Conf.:{2}'.format(self.file_loc, archs, configurations))
         vs_path = config.directories["visualStudioDir"]
         if not os.path.isdir(vs_path):
             raise Exception('Bad Visual Studio Dir')
