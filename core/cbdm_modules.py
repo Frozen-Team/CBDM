@@ -1,11 +1,10 @@
 import os
 import sys
-
+import core.common_defs as defs
+import core.cbdm_repositories as repos
 from core import sys_config
 from core.Dependencies.library_module import LibraryModule
 from core.Tasks import vcs, fs
-import core.common_defs as defs
-import core.cbdm_repositories as repos
 
 
 help_message = defs.load_message('cbdm_module_help')
@@ -42,10 +41,10 @@ def exec_command():
                    os.path.isdir(os.path.join(modules_dir, o))]
         print(" , ".join(modules))
         sys.exit(0)
-    elif command == 'is_builded':
+    elif command == 'is_built':
         for module_name in modules:
             module = LibraryModule(module_name, {'rebuild': False})
-            print(module_name + " - " + ("Not builded" if str(module.module_need_rebuild()) else "Builded"))
+            print(module_name + " - " + ("Not built" if str(module.module_need_rebuild()) else "Built"))
             sys.exit(1)
     elif command == 'build':
         params = sys.argv[4::]

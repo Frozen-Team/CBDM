@@ -47,5 +47,6 @@ cleanup_extensions = {
             '.cbproj', '.groupproj', '.xcconfig', '.pbxproj', '.X', '.tcc', '.dd', '.SKIP', '.types', '.gni',
             '.isolate', '.patch', '.guess', '.sub', '.sed', '.mak', '.res', '.nrm', '.icu', '.ucm', '.dsp', '.dsw',
             '.GDI', '.Gnome', '.template', '.xlf', '.otf', '.ksh', '.scm', '.tmpl', '.flags', '.expected', '.lua',
-            '.F', '.f90', '.vsmacros', '.dsptemplate', '.pfx']
+            '.F', '.f90', '.vsmacros', '.dsptemplate', '.pfx'],
+    'obj_files': ['.obj']
 }
