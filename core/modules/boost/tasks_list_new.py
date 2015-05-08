@@ -11,8 +11,8 @@ origin_dir = os.path.abspath('Origin')
 boost_url = 'http://sourceforge.net/projects/boost/files/boost/{0}/boost_{1}.7z/download'
 build_directory = os.path.abspath(os.path.join(directories['buildDir'], 'boost'))
 boost_archive = 'boost.7z'
-lib_directory = os.path.join(build_directory, 'lib')
-headers_dir = os.path.join(build_directory, 'include')
+lib_directory = os.path.join(build_directory, 'stage', 'lib')
+headers_dir = build_directory
 
 
 def build(module_params):
@@ -40,3 +40,4 @@ def build(module_params):
 
 def integration(module_params):
     cmake.add_location(headers_dir)
+    cmake.add_libs_directory(False, lib_directory)
