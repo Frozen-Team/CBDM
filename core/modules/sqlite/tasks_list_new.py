@@ -46,8 +46,12 @@ def integration(module_params):
     cmake.add_location(headers_dir)
     if is_windows():
         # x86
-        cmake.add_library(('windows', 'x86', 'release'), os.path.join(lib_directory + '/Release/Win32/glew32s.lib'))
-        cmake.add_library(('windows', 'x86', 'debug'), os.path.join(lib_directory + '/Debug/Win32/glew32sd.lib'))
+        cmake.add_library(('windows', 'x86', 'release'),
+                          os.path.join(lib_directory, 'Release', 'Win32', 'sqlite_x86.lib'))
+        cmake.add_library(('windows', 'x86', 'debug'),
+                          os.path.join(lib_directory, 'Debug', 'Win32', 'sqlite_x86.lib'))
         # x64
-        cmake.add_library(('windows', 'x64', 'release'), os.path.join(lib_directory + '/Release/x64/glew32s.lib'))
-        cmake.add_library(('windows', 'x64', 'debug'), os.path.join(lib_directory + '/Debug/x64/glew32sd.lib'))
+        cmake.add_library(('windows', 'x64', 'release'),
+                          os.path.join(lib_directory, 'Release', 'x64', 'sqlite_x64.lib'))
+        cmake.add_library(('windows', 'x64', 'debug'),
+                          os.path.join(lib_directory, 'Debug', 'x64', 'sqlite_x64.lib'))
