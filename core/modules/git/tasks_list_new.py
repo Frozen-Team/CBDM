@@ -2,7 +2,7 @@ import os
 from shutil import which
 
 from core.Dependencies.library_module import LibraryModule
-from core.Tasks import net, archives, check_dependencies, assembly
+from core.Tasks import net, archives, check_dependencies, assembly, fs
 from core.common_defs import is_linux, is_windows
 import core.sys_config as s_config
 
@@ -19,6 +19,7 @@ def build(module_params):
     elif is_windows():
         net.download_file("https://dl.dropboxusercontent.com/u/92011034/git.zip", git_archive)
         archives.extract_7_zip(git_archive, git_path)
+        fs.remove(git_archive)
 
 
 def integration(module_params):

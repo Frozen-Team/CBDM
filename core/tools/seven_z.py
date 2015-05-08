@@ -17,7 +17,7 @@ class SevenZ:
     def extract(self, destination):
 
         if not os.path.isfile(self.archive_name):
-            raise Exception("Archive is not exist")
+            raise Exception('Archive is not exists')
 
         if not os.path.isdir(destination):
             os.makedirs(destination)
@@ -26,8 +26,8 @@ class SevenZ:
                                                                                location=self.archive_name,
                                                                                destination=destination)
         log_filename = os.path.join(sys_config.log_folder, '7z.log')
-        fs.create_path_to(log_filename)
-        with open(log_filename, 'w+') as log_file:
+        fs.require_full_path(log_filename)
+        with open(log_filename, 'a+') as log_file:
             process = subprocess.Popen(exec_command, shell=True, stdout=log_file, stderr=log_file)
             process.communicate()
             result_code = process.returncode

@@ -20,7 +20,7 @@ class Cmake:
     def __init__(self, project_directory, project_type='executable'):
         self.cmake_path = Cmake.install_cmake()
         self._sourcesDir = project_directory
-        self._buildDir = config.directories["buildDir"]
+        self._buildDir = config.directories['buildDir']
         self._cmakeVersion = config.cmakeVersion
         self._additionalFlags = {}
         self.project_name = config.projectName
@@ -55,30 +55,30 @@ class Cmake:
             extensions = [extensions]
         files = []
         for ext in extensions:
-            files.extend(glob.glob(sources_dir + "/*." + ext))
+            files.extend(glob.glob(sources_dir + '/*.' + ext))
         full_path_files = [os.path.relpath(file_name, relative_path) for file_name in files]
         return full_path_files
 
     @staticmethod
     def set(var_name, var_value, file_handler):
-        file_handler.writelines("set({0} {1}){2}".format(var_name, var_value, os.linesep))
+        file_handler.writelines('set({0} {1}){2}'.format(var_name, var_value, os.linesep))
 
-    def add_static_library(self, file_handler, lib_location, modificator=""):
+    def add_static_library(self, file_handler, lib_location, modificator=''):
         file_handler.writelines(
-            "target_link_libraries({3} {2} \"{0}\"){1}".format(lib_location, os.linesep, modificator,
+            'target_link_libraries({3} {2} \"{0}\"){1}'.format(lib_location, os.linesep, modificator,
                                                                self.project_name))
 
     @staticmethod
     def add_headers_location(file_handler, location):
         location = os.path.abspath(location).replace('\\', '/')
-        file_handler.writelines("include_directories(\"{0}\"){1}".format(location, os.linesep))
+        file_handler.writelines('include_directories("{0}"){1}'.format(location, os.linesep))
 
     def set_flag(self, flag_name, flag_value):
         self._additionalFlags[flag_name] = flag_value
 
     def get_customs_flags_string(self):
-        format_flag = lambda f_name, f_val: "-{0} {1}".format(f_name, f_val)
-        return " ".join([format_flag(flag, value) for flag, value in self._additionalFlags.items()])
+        format_flag = lambda f_name, f_val: '-{0} {1}'.format(f_name, f_val)
+        return ' '.join([format_flag(flag, value) for flag, value in self._additionalFlags.items()])
 
     @staticmethod
     def join_if_list(var, symbol=os.linesep):
@@ -114,7 +114,7 @@ class Cmake:
             if isinstance(debug_libs, list):
                 for lib in debug_libs:
                     self.add_static_library(file_handler, lib, 'debug')
-            elif debug_libs is not "":
+            elif debug_libs is not '':
                 self.add_static_library(file_handler, debug_libs, 'debug')
 
             release_libs = dep_config['libs'][proj_platform][config.buildArchitecture]['release']
@@ -123,14 +123,14 @@ class Cmake:
             if isinstance(release_libs, list):
                 for lib in release_libs:
                     self.add_static_library(file_handler, lib, 'optimized ')
-            elif release_libs is not "":
+            elif release_libs is not '':
                 self.add_static_library(file_handler, release_libs, 'optimized ')
 
             # INSERT HEADERS LIBS
             if isinstance(dep_config['headers'], list):
                 for location in dep_config['headers']:
                     self.add_headers_location(file_handler, location)
-            elif dep_config['headers'] is not "":
+            elif dep_config['headers'] is not '':
                 self.add_headers_location(file_handler, dep_config['headers'])
 
             # INSERT CMAKE AFTER
@@ -140,15 +140,15 @@ class Cmake:
             self.file_new_line(file_handler)
 
     def save(self):
-        cmake_file = open(self._sourcesDir + '/CMakeLists.txt', 'a')
-        cmake_file.writelines("cmake_minimum_required(VERSION {0}){1}".format(self._cmakeVersion, os.linesep))
+        cmake_file = open(self._sourcesDir + '/CMakeLists.txt', 'a+')
+        cmake_file.writelines('cmake_minimum_required(VERSION {0}){1}'.format(self._cmakeVersion, os.linesep))
         cmake_file.writelines('project({0}){1}'.format(self.project_name, os.linesep))
-        self.set("CMAKE_RUNTIME_OUTPUT_DIRECTORY", "bin", cmake_file)
+        self.set('CMAKE_RUNTIME_OUTPUT_DIRECTORY', 'bin', cmake_file)
         main_project_files = self.find_sources(self._sourcesDir)
         if len(main_project_files) > 0:
-            self.set("SOURCES_FILES", " ".join(main_project_files), cmake_file)
+            self.set('SOURCES_FILES', ' '.join(main_project_files), cmake_file)
             cmake_file.writelines(
-                "add_" + self.project_type + "(" + self.project_name + " ${SOURCES_FILES})" + os.linesep)
+                'add_' + self.project_type + '(' + self.project_name + ' ${SOURCES_FILES})' + os.linesep)
         cmake_file.close()
 
     def get_exec_flags(self):
@@ -160,8 +160,8 @@ class Cmake:
 
     def run(self):
         log_filename = os.path.join(sys_config.log_folder, 'cmake.log')
-        fs.create_path_to(log_filename)
-        with open(log_filename, "a") as cmake_log:
+        fs.require_full_path(log_filename)
+        with open(log_filename, 'a+') as cmake_log:
 
             if os.path.isfile('CMakeCache.txt'):
                 os.remove('CMakeCache.txt')
@@ -172,7 +172,7 @@ class Cmake:
             if bool(self.build_directory):
                 os.makedirs(self.build_directory)
 
-            process = subprocess.Popen(" ".join(command), stdin=subprocess.PIPE, shell=True, stderr=cmake_log,
+            process = subprocess.Popen(' '.join(command), stdin=subprocess.PIPE, shell=True, stderr=cmake_log,
                                        stdout=cmake_log)
 
             process.communicate()

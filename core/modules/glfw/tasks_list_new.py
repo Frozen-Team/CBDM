@@ -1,7 +1,6 @@
 import os
-
-from config import directories
 import config
+from config import directories
 from core.common_defs import is_windows
 from core.default_structures import cleanup_extensions
 from core.Tasks import check_dependencies, fs, cmake, assembly, vcs

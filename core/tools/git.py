@@ -15,8 +15,8 @@ class Repo:
         self.git_path = Repo.install_git()
         self.directory = os.path.abspath(directory)
         self.rel_dir = directory
-        fs.create_path_to(log_file)
-        self.log_std = open(log_file, 'w') if log_file else open(os.devnull)
+        fs.require_full_path(log_file)
+        self.log_std = open(log_file, 'a+') if log_file else open(os.devnull)
 
     @staticmethod
     def install_git():
@@ -28,20 +28,20 @@ class Repo:
         return Repo.program_path
 
     def is_repo(self):
-        return os.path.isdir(self.directory + os.path.sep + ".git")
+        return os.path.isdir(self.directory + os.path.sep + '.git')
 
     def get_branches(self):
         if not self.is_repo():
-            raise Exception("Not a repository(" + os.path.abspath(self.directory) + ")")
+            raise Exception('Not a repository(' + os.path.abspath(self.directory) + ')')
             sys.exit(1)
-        get_branches_command = " ".join([self.git_path, 'branch'])
+        get_branches_command = ' '.join([self.git_path, 'branch'])
         process = subprocess.Popen(get_branches_command, cwd=self.directory, shell=True, stdout=subprocess.PIPE)
         out, err = process.communicate()
         result = re.findall('([a-zA-Z0-9./=-]+?)\\n', out.decode())
-        get_tags_command = " ".join([self.git_path, 'tag'])
+        get_tags_command = ' '.join([self.git_path, 'tag'])
         process = subprocess.Popen(get_tags_command, cwd=self.directory, shell=True, stdout=subprocess.PIPE)
         out, err = process.communicate()
-        result.extend(re.findall("([a-zA-Z0-9./=-]+?)\\n", out.decode()))
+        result.extend(re.findall('([a-zA-Z0-9./=-]+?)\\n', out.decode()))
         return result
 
     def branch_exists(self, branch_name):
@@ -49,9 +49,9 @@ class Repo:
 
     def clone(self, repository):
         if os.path.exists(self.rel_dir):
-            print("Repository folder already exists({0})".format(self.directory))
+            print('Repository folder already exists({0})'.format(self.directory))
             return
-        clone_command = " ".join([self.git_path, 'clone', repository, self.rel_dir])
+        clone_command = ' '.join([self.git_path, 'clone', repository, self.rel_dir])
         process = subprocess.Popen(clone_command, stderr=self.log_std, stdout=self.log_std, shell=True)
         process.communicate()
 

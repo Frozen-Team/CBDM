@@ -10,7 +10,7 @@ import core.Tasks.fs as fs
 
 
 def extract_zip(archive, destination=''):
-    fs.create_path_to(destination)
+    fs.require_full_path(destination)
     print('Extract by zip: %s -> %s' % (archive, destination))
     with ZipFile(archive, 'r') as archive:
         archive.extractall(destination,)
@@ -33,10 +33,10 @@ def extract_tar(archive, destination=False):
         sys.exit(1)
     exec_command = [archiver_loc, '-xzvf', archive]
     log_filename = os.path.join(sys_config.log_folder, 'untar.log')
-    fs.create_path_to(log_filename)
+    fs.require_full_path(log_filename)
     if destination:
         exec_command.append('-C "{}"'.format(destination))
-    with open(log_filename, 'w+') as log_file:
+    with open(log_filename, 'a+') as log_file:
         process = subprocess.Popen(" ".join(exec_command), shell=True, stdout=log_file, stderr=log_file)
         process.communicate()
         if process.returncode:

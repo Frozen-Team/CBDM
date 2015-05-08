@@ -43,8 +43,8 @@ def make(path_to_makefile, params=False, dependencies=False):
         sys.exit(1)
 
     login_file_name = os.path.join(sys_config.log_folder, 'make.txt')
-    fs.create_path_to(login_file_name)
-    with open(login_file_name, 'w+') as log_file:
+    fs.require_full_path(login_file_name)
+    with open(login_file_name, 'a+') as log_file:
         TemporaryDir.enter(os.path.abspath(path_to_makefile))
         process = subprocess.Popen(['make ' + params_str], stderr=log_file, stdout=log_file, stdin=subprocess.PIPE,
                                    shell=True)
@@ -106,6 +106,6 @@ def install_distro_dependencies(dependencies):
     package_manager = {"Ubuntu": 'apt-get'}
     command = 'gksudo -S "{tool} install -y ' + " ".join(dependencies) + '"'
     command = command.format(tool=package_manager[distro])
-    with open('install_deps.log', 'w+') as log:
+    with open('install_deps.log', 'a+') as log:
         dep_process = subprocess.Popen(command, shell=True, stderr=log, stdout=log)
         dep_process.communicate()

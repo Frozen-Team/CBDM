@@ -5,8 +5,8 @@ import os
 from core import sys_config
 
 
-def create_path_to(file):
-    new_file_dir = os.path.dirname(file)
+def require_full_path(path):
+    new_file_dir = os.path.dirname(path)
     if new_file_dir != '':
         if not os.path.isdir(new_file_dir):
             os.makedirs(new_file_dir)
@@ -29,7 +29,7 @@ def move_files_to_dir_by_mask(mask, destination, overwrite=False):
             if overwrite:
                 os.remove(new_filename)
             else:
-                raise Exception("File already in directory " + new_filename)
+                raise Exception('File already in directory ' + new_filename)
         os.rename(file, new_filename)
 
 
@@ -58,7 +58,7 @@ def rename(mask, new_name, overwrite=False):
         else:
             raise Exception('Destination file "%s" exists' % new_name)
 
-    create_path_to(new_name)
+    require_full_path(new_name)
 
     if os.path.isdir(file):
         move(file, new_name)
@@ -69,21 +69,21 @@ def rename(mask, new_name, overwrite=False):
 def move_files(from_path, to_path):
     files_list = os.listdir(from_path)
     for f in files_list:
-        full_from_path = from_path + "/" + f
+        full_from_path = from_path + '/' + f
         move(full_from_path, to_path)
 
 
 def clear(directory, extensions=[], except_extensions=[]):
     print('Cleaning up trash')
     log_filename = os.path.join(sys_config.log_folder, 'clear.log')
-    create_path_to(log_filename)
-    with open(log_filename, "a") as log_file:
+    require_full_path(log_filename)
+    with open(log_filename, 'a+') as log_file:
         for root, dirnames, filenames in os.walk(directory):
             for filename in filenames:
                 file_name, file_extension = os.path.splitext(filename)
                 if bool(extensions):
                     if not isinstance(extensions, list):
-                        raise Exception("Extensions should be array")
+                        raise Exception('Extensions should be array')
                         sys.exit(1)
                     if file_extension in extensions:
                         try:
@@ -123,10 +123,10 @@ def remove_empty_folders(from_directory):
 
         files = os.listdir(path)
         if len(files) == 0:
-            log_file.write(str("rm empty folder:" + path + '\n'))
+            log_file.write(str('rm empty folder:' + path + '\n'))
             os.rmdir(path)
 
     log_filename = os.path.join(sys_config.log_folder, 'rm_empty_folders.log')
-    create_path_to(log_filename)
-    with open(log_filename, "a") as log_file:
+    require_full_path(log_filename)
+    with open(log_filename, 'a+') as log_file:
         remove_empty_folders_system(from_directory, log_file)
