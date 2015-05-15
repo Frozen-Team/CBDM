@@ -1,6 +1,7 @@
 import os
 
 from config import directories
+
 import config
 from core.Tasks import check_dependencies, vcs, cmake, assembly, fs
 from core.common_defs import is_linux, is_windows
