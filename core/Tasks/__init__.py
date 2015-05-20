@@ -11,7 +11,7 @@ def require_module(module_name, conf=False):
 
     dependend_module = LibraryModule(module_name, conf)
     dependend_module.prepare()
-    results = dependend_module.get_results()
+    results = dependend_module.write_results()
     LibraryModule.flush_results()
     return results
 

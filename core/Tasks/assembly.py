@@ -3,6 +3,7 @@ import platform
 from shutil import which
 import subprocess
 import sys
+
 from core import sys_config
 from core.Tasks import fs
 from core.TemporaryDir import TemporaryDir
@@ -100,6 +101,9 @@ def set_vcxproj_platform_toolset(path_to_vcxproj, platform_toolset):
     debug_conf.set_platform_toolset(platform_toolset)
     debug_conf.save()
 
+def set_vcxproj_platform_toolset_and_rl(path_to_vcxproj, platform_toolset, runtime_library):
+    set_vcxproj_platform_toolset(path_to_vcxproj, platform_toolset)
+    set_vcxproj_runtime_library(path_to_vcxproj, runtime_library)
 
 def install_distro_dependencies(dependencies):
     distro = platform.dist()[0]

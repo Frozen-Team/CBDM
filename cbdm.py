@@ -1,12 +1,11 @@
-# encoding: utf8
-import time
 import sys
 
+import config
+from core.CmakeGenerator import CmakeGeneratorFromDeps as CMakeGenerator
 import core.cbdm_repositories as repos
 import core.cbdm_modules as modules
 import core.common_defs as defs
 from core.Dependencies.dependencies import Dependencies
-
 
 help_message = defs.load_message('help')
 if len(sys.argv) > 1:
@@ -17,19 +16,20 @@ if len(sys.argv) > 1:
     elif command == 'repos':
         repos.exec_command()
         sys.exit(0)
+    elif command == 'build':
+        pass
     else:
         print(help_message)
         sys.exit(0)
 
-starts = int(time.time())
 dependencies = Dependencies()
 dependencies.build_dependencies()
-ends = time.time()
-total = ends - starts
-print("""
-===== ALL TASKS COMPLETED SUCCESSFULLY =====
+
+cmakeBuilder = CMakeGenerator(config.directories['solutionDir'], config.projectName,
+                              dependencies.get_results())
+cmakeBuilder.set_target_name('test_project')
+cmakeBuilder.is_executable()
+cmakeBuilder.set_files_masks(['*.cpp'])
+cmakeBuilder.generate()
 
 
-Starts on {}.
-Ends on {}.
-Total: {}""".format(time.ctime(starts), time.ctime(ends), time.strftime('%H:%M:%S', time.gmtime(total))))

@@ -1,4 +1,4 @@
-from shutil import rmtree, move
+from shutil import rmtree, move, copytree, copyfile
 from glob import glob
 import os
 
@@ -129,3 +129,20 @@ def remove_empty_folders(from_directory):
     create_path_to(log_filename)
     with open(log_filename, "w+") as log_file:
         remove_empty_folders_system(from_directory, log_file)
+
+
+def copy(path_to_file_or_dir, destination, overwrite):
+    file = path_to_file_or_dir
+
+    if os.path.exists(destination):
+        if overwrite:
+            remove(destination)
+        else:
+            raise Exception('Destination file "%s" exists' % destination)
+
+    create_path_to(destination)
+
+    if os.path.isdir(file):
+        copytree(file, destination)
+    elif os.path.isfile(file):
+        copyfile(file, destination)

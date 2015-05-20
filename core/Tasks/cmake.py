@@ -14,28 +14,42 @@ def run_cmake(sources_dir, architecture, output_dir=False, build_type='executabl
     cmake_file.run()
 
 
+def cmake_before(code):
+    results = LibraryModule.results
+    results['cmake_before'] += code
+
+
+def add_subdir(dir):
+    results = LibraryModule.results
+    results['subdirectories'].append(dir)
+
+
+def cmake_after(code):
+    results = LibraryModule.results
+    results['cmake_after'] += code
+
+
+def link_directory(path_to_dir):
+    results = LibraryModule.results
+    results['link_directories'].append(path_to_dir)
+
+
 def add_library(config, library_location):
-    results = LibraryModule.current_working_module_results
-    abs_lib_location = os.path.abspath(library_location)
-    library_dir = os.path.dirname(abs_lib_location)
-    library_name, library_extension = os.path.splitext(os.path.basename(library_location))
-    if library_dir not in results['link_directories']:
-        if config not in results['link_directories']:
-            results['link_directories'][config] = []
-        results['link_directories'][config].append(library_dir)
+    results = LibraryModule.results
+
     if config not in results['libs']:
         results['libs'][config] = []
-    results['libs'][config].append(library_name)
+    results['libs'][config].append(library_location)
 
 
 def add_location(location):
-    results = LibraryModule.current_working_module_results
+    results = LibraryModule.results
     abs_location = os.path.abspath(location)
     results['headers'].append(abs_location)
 
 
 def add_libs_directory(config, directory):
-    results = LibraryModule.current_working_module_results
+    results = LibraryModule.results
     if config not in results['link_directories']:
         results['link_directories'][config] = []
     results['link_directories'][config].append(directory)

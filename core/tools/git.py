@@ -24,7 +24,7 @@ class Repo:
             install_module = l_m.LibraryModule('git', {'rebuild': False})
             install_module.prepare()
             Repo.program_built = True
-            Repo.program_path = install_module.get_results()['path']
+            Repo.program_path = install_module.write_results()['path']
         return Repo.program_path
 
     def is_repo(self):

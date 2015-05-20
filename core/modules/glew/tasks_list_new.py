@@ -38,11 +38,14 @@ def build(module_params):
 
 def integration(module_params):
     cmake.add_location(headers_dir)
-
+    cmake.add_libs_directory(('windows', 'x86', 'release'), lib_directory + '/Release/Win32/')
+    cmake.add_libs_directory(('windows', 'x86', 'debug'), lib_directory + '/Debug/Win32/')
+    cmake.add_libs_directory(('windows', 'x64', 'release'), lib_directory + '/Release/x64/')
+    cmake.add_libs_directory(('windows', 'x64', 'debug'), lib_directory + '/Debug/x64/')
     # x86
-    cmake.add_library(('windows', 'x86', 'release'), os.path.join(build_directory + '/Release/Win32/glew32s.lib'))
-    cmake.add_library(('windows', 'x86', 'debug'), os.path.join(build_directory + '/Debug/Win32/glew32sd.lib'))
+    cmake.add_library(('windows', 'x86', 'release'), 'glew32s')
+    cmake.add_library(('windows', 'x86', 'debug'), 'glew32sd')
     # x64
-    cmake.add_library(('windows', 'x64', 'release'), os.path.join(build_directory + '/Release/x64/glew32s.lib'))
-    cmake.add_library(('windows', 'x64', 'debug'), os.path.join(build_directory + '/Debug/x64/glew32sd.lib'))
+    cmake.add_library(('windows', 'x64', 'release'), 'glew32s.lib')
+    cmake.add_library(('windows', 'x64', 'debug'), 'glew32sd.lib')
 
