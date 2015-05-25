@@ -16,7 +16,7 @@ headers_dir = os.path.join(build_directory, 'include')
 def create_and_run_cmake_file(sources_dir, arch):
     cmake_file = Cmake(sources_dir, 'library')
     cmake_file.set_project_name('sqlite_' + arch)
-    cmake_file.set_build_dir('sqlite_' + arch)
+    cmake_file.set_build_dir(os.path.join(origin_dir, 'sqlite_' + arch))
     cmake_file.set_architecture(arch)
     cmake_file.save()
     cmake_file.run()

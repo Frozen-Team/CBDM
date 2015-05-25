@@ -3,10 +3,6 @@ import os
 from core.Dependencies.library_module import LibraryModule
 from core.tools.cmake import Cmake
 
-
-__author__ = 'saturn4er'
-
-
 def run_cmake(sources_dir, architecture, output_dir=False, build_type='executable'):
     cmake_file = Cmake(sources_dir, build_type)
     cmake_file.set_architecture(architecture)

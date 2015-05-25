@@ -16,7 +16,7 @@ glfw_vcxproj_x64 = os.path.join(origin_dir, 'x64', 'src', 'glfw.vcxproj')
 
 
 def build_arch(arch):
-    cmake.run_cmake(origin_dir, arch, arch)
+    cmake.run_cmake(origin_dir, arch, os.path.join(origin_dir, arch))
     vcxproj_path = os.path.join(origin_dir, arch, 'src', 'glfw.vcxproj')
     if is_windows():
         assembly.set_vcxproj_platform_toolset(vcxproj_path, config.visual_studio_toolset)

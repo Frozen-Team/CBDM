@@ -29,9 +29,9 @@ def build(module_params):
     fs.remove(origin_dir)
     vcs.git_clone('https://github.com/cppformat/cppformat.git', origin_dir, True)
     vcs.git_checkout(origin_dir, module_params['version'])
-    cmake.run_cmake(origin_dir, 'x86',  'cppformat_x86')
+    cmake.run_cmake(origin_dir, 'x86',  os.path.join(origin_dir, 'cppformat_x86'))
     build_lib('x86')
-    cmake.run_cmake(origin_dir, 'x64',  'cppformat_x64')
+    cmake.run_cmake(origin_dir, 'x64',  os.path.join(origin_dir, 'cppformat_x64'))
     build_lib('x64')
     fs.move_files_to_dir_by_mask(os.path.join(origin_dir, '*.h'), headers_dir, True)
 

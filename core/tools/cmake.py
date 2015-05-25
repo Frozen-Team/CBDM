@@ -9,7 +9,6 @@ from core.Dependencies.library_module import LibraryModule
 from core.Tasks import fs
 from core.TemporaryDir import TemporaryDir
 
-
 cmake_program = ''
 
 
@@ -35,6 +34,9 @@ class Cmake:
 
     def set_build_dir(self, directory):
         self.build_directory = directory
+
+    def set_sources_dir(self, directory):
+        self._sourcesDir = directory
 
     @staticmethod
     def install_cmake():
@@ -152,11 +154,10 @@ class Cmake:
         cmake_file.close()
 
     def get_exec_flags(self):
-        build_dir_flag = '-B"{}"'.format(self.build_directory) if bool(self.build_directory) else ''
-        generator_flag = '-G"{}"'.format(self.get_generator_name())
-        sources_dir_flag = '-H"./"'
-        custom_flags = self.get_customs_flags_string()
-        return [generator_flag, build_dir_flag, custom_flags, sources_dir_flag]
+        build_dir_flag = '-B{}'.format(os.path.abspath(self.build_directory)) if bool(self.build_directory) else ''
+        generator_flag = '-G{}'.format(self.get_generator_name())
+        sources_dir_flag = '-H{}'.format(os.path.abspath(self._sourcesDir))
+        return [self.get_customs_flags_string(), generator_flag, build_dir_flag, sources_dir_flag]
 
     def run(self):
         log_filename = os.path.join(sys_config.log_folder, 'cmake.log')
@@ -166,17 +167,13 @@ class Cmake:
             if os.path.isfile('CMakeCache.txt'):
                 os.remove('CMakeCache.txt')
 
-            TemporaryDir.enter(self._sourcesDir)
             command = [self.cmake_path]
+
             command.extend(self.get_exec_flags())
             if bool(self.build_directory):
                 os.makedirs(self.build_directory)
 
-            process = subprocess.Popen(' '.join(command), stdin=subprocess.PIPE, shell=True, stderr=cmake_log,
-                                       stdout=cmake_log)
-
-            process.communicate()
-            if process.returncode:
-                raise Exception('"CMAKE RUN" finished with result code ' + str(process.returncode))
+            ret_code = subprocess.call(command, shell=True, stderr=cmake_log, stdout=cmake_log)
+            if ret_code:
+                raise Exception('"CMAKE RUN" finished with result code ' + str(ret_code))
                 sys.exit(1)
-            TemporaryDir.leave()

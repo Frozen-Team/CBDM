@@ -19,11 +19,12 @@ def build(module_params):
         check_dependencies(False, ['version'])
         version = module_params['version']
         cmake_url = "http://www.cmake.org/files/v{0}/" \
-                    "cmake-{1}-win32-x86.zip".format(re.search('\.[0-9]+$', version).group(1), version)
+                    "cmake-{1}-win32-x86.zip".format(re.search('^[0-9]+\.[0-9]+', version).group(0), version)
         net.download_file(cmake_url, cmake_path)
         archives.extract_7_zip(cmake_path, s_config.tools_directory + os.path.sep)
         fs.remove(cmake_path)
-        fs.rename(os.path.join(s_config.tools_directory, 'cmake-*'), os.path.join(s_config.tools_directory, 'cmake'))
+        fs.rename(os.path.join(s_config.tools_directory, 'cmake-*'), os.path.join(s_config.tools_directory, 'cmake'),
+                  True)
 
 
 def integration(module_params):

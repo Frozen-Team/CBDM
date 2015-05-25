@@ -28,16 +28,15 @@ def build(module_params):
     set_system_variable('BOOST_ROOT', build_directory)
     set_system_variable('BOOST_HOME', build_directory)
 
-    TemporaryDir.enter(build_directory)
     bootstrap_exec = 'bootstrap'
     b2_exec = 'b2'
     logs_dir = os.path.join(os.getcwd(), s_config.log_folder)
     require_full_path(logs_dir)
     with open(os.path.join(logs_dir, 'build_boost.log'), 'a+') as log_file:
+        TemporaryDir.enter(build_directory)
         subprocess.call([bootstrap_exec], stdout=log_file, stderr=log_file, shell=True)
         subprocess.call([b2_exec], stdout=log_file, stderr=log_file, shell=True)
-
-    TemporaryDir.leave()
+        TemporaryDir.leave()
 
     fs.remove(boost_archive)
     fs.clear(build_directory, cleanup_extensions['obj_files'],)
@@ -45,4 +44,8 @@ def build(module_params):
 
 def integration(module_params):
     cmake.add_location(headers_dir)
-    cmake.add_libs_directory(False, lib_directory)
+    cmake.add_libs_directory(('windows', 'x86', 'release'), lib_directory)
+    cmake.add_libs_directory(('windows', 'x86', 'debug'), lib_directory)
+    cmake.add_libs_directory(('windows', 'x64', 'release'), lib_directory)
+    cmake.add_libs_directory(('windows', 'x64', 'debug'), lib_directory)
+

@@ -1,14 +1,13 @@
 import os
 import subprocess
 import sys
-from core.Tasks import check_dependencies, fs, assembly, vcs
+from core.Tasks import check_dependencies, fs, assembly, vcs, cmake
 from core.Tasks.fs import require_full_path
 from core.TemporaryDir import TemporaryDir
 from core.common_defs import is_windows
 from config import directories
 from core.default_structures import cleanup_extensions
 import core.sys_config as s_config
-from core.tools import cmake
 
 origin_dir = 'Origin'
 build_directory = os.path.abspath(os.path.join(directories['buildDir'], 'v8'))
@@ -80,14 +79,14 @@ def build(module_params):
 
 def integration(module_params):
     cmake.add_location(headers_dir)
-    if is_windows():
+    # if is_windows():
         # x86
-        cmake.add_library(('windows', 'x86', 'release'),
-                          os.path.join(lib_directory, 'Release', 'Win32', 'lib', 'TODO'))
-        cmake.add_library(('windows', 'x86', 'debug'),
-                          os.path.join(lib_directory, 'Debug', 'Win32', 'lib', 'TODO'))
-        # x64
-        cmake.add_library(('windows', 'x64', 'release'),
-                          os.path.join(lib_directory, 'Release', 'x64', 'lib', 'TODO'))
-        cmake.add_library(('windows', 'x64', 'debug'),
-                          os.path.join(lib_directory, 'Debug', 'x64', 'lib', 'TODO'))
+        # cmake.add_library(('windows', 'x86', 'release'),
+        #                   os.path.join(lib_directory, 'Release', 'Win32', 'lib', 'TODO'))
+        # cmake.add_library(('windows', 'x86', 'debug'),
+        #                   os.path.join(lib_directory, 'Debug', 'Win32', 'lib', 'TODO'))
+        # # x64
+        # cmake.add_library(('windows', 'x64', 'release'),
+        #                   os.path.join(lib_directory, 'Release', 'x64', 'lib', 'TODO'))
+        # cmake.add_library(('windows', 'x64', 'debug'),
+        #                   os.path.join(lib_directory, 'Debug', 'x64', 'lib', 'TODO'))
