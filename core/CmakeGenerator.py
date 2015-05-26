@@ -78,8 +78,9 @@ class CmakeGeneratorFromDeps:
                 if dep_config[1] != config.buildArchitecture:
                     continue
                 modificator = 'general' if dep_config[2] == 'release' else 'debug'
-                for libname in lib_names:
-                    self.builder.link_library(self.target_name, libname, modificator)
+                for lib_params in lib_names:
+                    self.builder.link_library(self.target_name, lib_params['path'], modificator,
+                                              is_libname=lib_params['is_libname'])
 
         if is_windows():
             add_platform('windows')

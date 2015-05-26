@@ -3,7 +3,6 @@ import os
 from core.Dependencies.library_module import LibraryModule
 from core.tools.cmake import Cmake
 
-
 __author__ = 'saturn4er'
 
 
@@ -19,7 +18,7 @@ def cmake_before(code):
     results['cmake_before'] += code
 
 
-def add_subdir(dir):
+def add_subdir(dir, exclude_from_all=False):
     results = LibraryModule.results
     results['subdirectories'].append(dir)
 
@@ -34,12 +33,12 @@ def link_directory(path_to_dir):
     results['link_directories'].append(path_to_dir)
 
 
-def add_library(config, library_location):
+def add_library(config, library_location, is_libname=False):
     results = LibraryModule.results
 
     if config not in results['libs']:
         results['libs'][config] = []
-    results['libs'][config].append(library_location)
+    results['libs'][config].append({"path": library_location, "is_libname": is_libname})
 
 
 def add_location(location):

@@ -19,7 +19,6 @@ class CmakeBuilder:
         if bool(project_name):
             self.set_project_name(project_name)
 
-
     def set_runtime_output_dir(self, directory):
         add_str = 'SET( RUNTIME_OUTPUT_DIRECTORY {} )'.format(directory)
         self.result += add_str
@@ -95,8 +94,11 @@ class CmakeBuilder:
     def new_line(self):
         self.result += os.linesep
 
-    def link_library(self, target_name, lib_name, modificator=''):
-        path = os.path.relpath(lib_name, self.project_dir).replace('\\', '/')
+    def link_library(self, target_name, lib_name, modificator='', is_libname=False):
+        if is_libname:
+            path = lib_name
+        else:
+            path = os.path.relpath(lib_name, self.project_dir).replace('\\', '/')
         add_str = 'TARGET_LINK_LIBRARIES({project} {mod} {path})'
         link_str = add_str.format(project=target_name, mod=modificator, path=path)
         self.result += link_str
@@ -133,7 +135,6 @@ class Cmake:
         self.architecture = config.buildArchitecture
         self.build_directory = ''
         self.project_extensions = ['cpp', 'h']
-
 
     def set_project_extensions(self, extensions):
         self.project_extensions = extensions
@@ -192,9 +193,9 @@ class Cmake:
     def run(self):
         log_filename = os.path.join(sys_config.log_folder, 'cmake.log')
         fs.create_path_to(log_filename)
-        with open(log_filename, "a") as cmake_log:
-            self.remove_cache()
+        with open(log_filename, "a+") as cmake_log:
             TemporaryDir.enter(self._sourcesDir)
+            self.remove_cache()
             command = [self.cmake_path]
             command.extend(self.get_exec_flags())
             if bool(self.build_directory):

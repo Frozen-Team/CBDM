@@ -31,5 +31,6 @@ cmakeBuilder.set_target_name('test_project')
 cmakeBuilder.is_executable()
 cmakeBuilder.set_files_masks(['*.cpp'])
 cmakeBuilder.generate()
+cmakeBuilder.cmake_file.run()
 
 
