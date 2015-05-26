@@ -1,4 +1,3 @@
-# encoding: utf8
 import time
 import sys
 
@@ -6,7 +5,7 @@ import core.cbdm_repositories as repos
 import core.cbdm_modules as modules
 import core.common_defs as defs
 from core.Dependencies.dependencies import Dependencies
-
+from core.env_project_install import project_install_to_env
 
 help_message = defs.load_message('help')
 
@@ -25,6 +24,7 @@ if len(sys.argv) > 1:
 starts = int(time.time())
 dependencies = Dependencies()
 dependencies.build_dependencies()
+project_install_to_env()
 ends = time.time()
 total = ends - starts
 print("""
