@@ -20,7 +20,7 @@ def is_linux():
 
 
 def load_message(name):
-    message_filename = os.path.join('core', 'messages', name)
+    message_filename = os.path.join('core', 'help_messages', name)
     if os.path.isfile(message_filename):
         with open(message_filename, 'r') as message_file:
             return message_file.read()

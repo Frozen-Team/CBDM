@@ -3,8 +3,8 @@ import subprocess
 import re
 import sys
 
-import core.Dependencies.library_module as l_m
-from core.Tasks import fs
+import core.dependencies.library_module as l_m
+from core.tasks import fs
 
 
 class Repo:

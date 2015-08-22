@@ -1,9 +1,9 @@
 import os
 import subprocess
-from core.Tasks.fs import require_full_path
+from core.tasks.fs import require_full_path
 import core.sys_config as s_config
 from core.TemporaryDir import TemporaryDir
-from core.Tasks import check_dependencies, fs, net, archives, assembly, cmake
+from core.tasks import check_dependencies, fs, net, archives, assembly, cmake
 from config import directories
 from core.common_defs import set_system_variable
 from core.default_structures import cleanup_extensions

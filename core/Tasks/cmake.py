@@ -1,6 +1,6 @@
 import os
 
-from core.Dependencies.library_module import LibraryModule
+from core.dependencies.library_module import LibraryModule
 from core.tools.cmake import Cmake
 
 def run_cmake(sources_dir, architecture, output_dir=False, build_type='executable'):

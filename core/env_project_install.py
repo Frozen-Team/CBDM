@@ -1,6 +1,6 @@
 import os
 from config import projectName
-from core.Dependencies.library_module import LibraryModule
+from core.dependencies.library_module import LibraryModule
 from core.common_defs import set_system_variable
 
 

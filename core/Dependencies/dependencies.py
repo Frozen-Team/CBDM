@@ -1,6 +1,6 @@
 import time
 
-from core.Dependencies.library_module import LibraryModule
+from core.dependencies.library_module import LibraryModule
 import config
 import core.sys_config as s_config
 

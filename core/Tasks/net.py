@@ -1,7 +1,4 @@
 from urllib.request import urlretrieve
-
-__author__ = 'saturn4er'
-
 import core.Tasks.fs as fs
 
 

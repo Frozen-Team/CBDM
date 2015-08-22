@@ -5,7 +5,7 @@ import subprocess
 import sys
 
 from core import sys_config
-from core.Tasks import fs
+from core.tasks import fs
 from core.TemporaryDir import TemporaryDir
 from core.tools.vcxproj import Builder
 
