@@ -9,37 +9,46 @@ from core.common_defs import set_system_variable
 from core.default_structures import cleanup_extensions
 
 
-origin_dir = os.path.abspath('Origin')
+origin_dir = 'Origin'
 boost_url = 'http://sourceforge.net/projects/boost/files/boost/{0}/boost_{1}.7z/download'
 build_directory = os.path.abspath(os.path.join(directories['buildDir'], 'boost'))
 # logs_dir = logs_dir = os.path.join(build_directory, os.path.abspath(s_config.log_folder))
 boost_archive = 'boost.7z'
-lib_directory = os.path.join(build_directory, 'stage', 'lib')
-headers_dir = build_directory
-
+lib_directory = os.path.join(build_directory, 'lib')
+lib_directory_x86 = os.path.join(build_directory, 'stage', 'lib_x86')
+lib_directory_x64 = os.path.join(build_directory, 'stage', 'lib_x64')
+headers_dir = os.path.join(build_directory, 'include')
 
 def build(module_params):
     check_dependencies(False, ['version'], module_params)
     version = module_params['version']
-    fs.remove(build_directory)
-    net.download_file(boost_url.format(version, str(version).replace('.', '_')), boost_archive)
-    archives.extract_7_zip(boost_archive, origin_dir)
-    fs.rename(os.path.join(origin_dir, 'boost_*'), build_directory, False)
-    set_system_variable('BOOST_ROOT', build_directory)
-    set_system_variable('BOOST_HOME', build_directory)
+    # fs.remove(origin_dir)
+    # net.download_file(boost_url.format(version, str(version).replace('.', '_')), boost_archive)
+    # archives.extract_7_zip(boost_archive, os.getcwd())
+    # fs.rename(os.path.join('boost_*'), origin_dir, True)
+    set_system_variable('BOOST_ROOT', origin_dir)
+    set_system_variable('BOOST_HOME', origin_dir)
 
     bootstrap_exec = 'bootstrap'
     b2_exec = 'b2'
     logs_dir = os.path.join(os.getcwd(), s_config.log_folder)
     require_full_path(logs_dir)
     with open(os.path.join(logs_dir, 'build_boost.log'), 'a+') as log_file:
-        TemporaryDir.enter(build_directory)
+        TemporaryDir.enter(origin_dir)
         subprocess.call([bootstrap_exec], stdout=log_file, stderr=log_file, shell=True)
-        subprocess.call([b2_exec], stdout=log_file, stderr=log_file, shell=True)
+        # x86
+        subprocess.call([b2_exec, '--libdir={}'.format(lib_directory), '--includedir={}'.format(headers_dir),
+                         '--address-model=32', '--stagedir={}'.format(lib_directory_x86), '--build-type=complete',
+                         '--link=static'], stdout=log_file, stderr=log_file, shell=True)
+
+        subprocess.call([b2_exec, '--libdir={}'.format(lib_directory), '--includedir={}'.format(headers_dir),
+                         '--address-model=64', '--stagedir={}'.format(lib_directory_x64), '--build-type=complete',
+                         '--link=static'], stdout=log_file, stderr=log_file, shell=True)
+
         TemporaryDir.leave()
 
-    fs.remove(boost_archive)
-    fs.clear(build_directory, cleanup_extensions['obj_files'],)
+    # fs.remove(boost_archive)
+    # fs.clear(build_directory, cleanup_extensions['obj_files'],)
 
 
 def integration(module_params):

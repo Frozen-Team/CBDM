@@ -9,9 +9,9 @@ def require_module(module_name, conf=False):
     if not conf:
         conf = config.dependencies[module_name] if module_name in config.dependencies else {}
 
-    depended_module = LibraryModule(module_name, conf)
-    depended_module.prepare()
-    results = depended_module.get_results()
+    dependend_module = LibraryModule(module_name, conf)
+    dependend_module.prepare()
+    results = dependend_module.write_results()
     LibraryModule.flush_results()
     return results
 

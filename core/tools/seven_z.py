@@ -40,5 +40,5 @@ class SevenZ:
             install_module = LibraryModule('7z', {'rebuild': True})
             install_module.prepare()
             SevenZ.seven_z_build = True
-            SevenZ.seven_z_path = install_module.get_results()['path']
+            SevenZ.seven_z_path = install_module.write_results()['path']
         return SevenZ.seven_z_path

@@ -14,7 +14,7 @@ def build(module_params):
 
 
 def integration(module_params):
-    results = LibraryModule.current_working_module_results
+    results = LibraryModule.results
     if is_linux():
         results['path'] = which('7z')
     elif is_windows():

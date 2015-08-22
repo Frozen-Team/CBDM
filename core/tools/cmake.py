@@ -1,15 +1,172 @@
 import os
 import glob
 import subprocess
-import platform
 
 import config
 from core import sys_config
 from core.Dependencies.library_module import LibraryModule
 from core.Tasks import fs
+from core.Tasks.fs import require_full_path
 from core.TemporaryDir import TemporaryDir
 
 cmake_program = ''
+
+
+class CmakeBuilder:
+    def __init__(self, project_dir, project_name=False):
+        self.result = ''
+        self.build_directory = os.getcwd()
+        self.cmake_path = Cmake.install_cmake()
+        self.project_dir = os.path.abspath(project_dir)
+        self.generator_name = config.cmakeGenerator
+        self.architecture = 'x86'
+        self.create_project_path()
+        if bool(project_name):
+            self.set_project_name(project_name)
+
+    def set_architecture(self, arch):
+        self.architecture = arch
+
+    def set_runtime_output_dir(self, directory):
+        add_str = 'SET( RUNTIME_OUTPUT_DIRECTORY {} )'.format(directory)
+        self.result += add_str
+        self.new_line()
+
+    def set_library_output_dir(self, directory):
+        add_str = 'SET( LIBRARY_OUTPUT_PATH {} )'.format(directory)
+        self.result += add_str
+        self.new_line()
+
+    def create_project_path(self):
+        require_full_path(self.project_dir)
+
+    def include_directories(self, directory):
+        rel_dir = os.path.relpath(directory, self.project_dir).replace('\\', '/')
+        add_str = 'INCLUDE_DIRECTORIES ({})'.format(rel_dir)
+        self.result += add_str
+        self.new_line()
+
+    # Cmake version
+    def cmake_version(self, version):
+        add_str = 'CMAKE_MINIMUM_REQUIRED(VERSION {v})'.format(v=version)
+        self.result += add_str
+        self.new_line()
+
+    def add_subdirectory(self, path):
+        rel_dir = os.path.relpath(path, self.project_dir).replace('\\', '/')
+        add_str = 'ADD_SUBDIRECTORY({path})'.format(path=rel_dir)
+        self.result += add_str
+        self.new_line()
+
+    def set_project_name(self, project_name):
+        self.result += 'project({name})'.format(name=project_name)
+        self.new_line()
+
+    def get_generator_name(self):
+        if not self.generator_name.startswith('Visual'):
+            return self.generator_name
+        gen_arch = ' Win64' if self.architecture == 'x64' else ''
+        return self.generator_name + gen_arch
+
+    def add_executable(self, target_name, files_masks):
+        executable_files = self.find_files_by_masks(files_masks)
+        executable_files = ' '.join(executable_files)
+        self.result += 'ADD_EXECUTABLE({name} {files})'.format(name=target_name, files=executable_files)
+        self.new_line()
+
+    def add_library(self, target_name, files_masks, abs_paths=False, lib_type='STATIC'):
+        library_files = ' '.join(self.find_files_by_masks(files_masks, abs_paths))
+        add_str = 'ADD_LIBRARY({name} {type} {paths})'
+        add_str = add_str.format(name=target_name, type=lib_type, paths=library_files)
+        self.result += add_str
+        self.new_line()
+
+    def find_files_by_masks(self, masks, abs_paths=False):
+        result = []
+        TemporaryDir.enter(self.project_dir)
+
+        def make_abs_paths(paths):
+            return [os.path.abspath(path) for path in paths]
+
+        def find_files_by_mask(search_mask):
+            files = glob.glob(search_mask)
+            if abs_paths:
+                files = make_abs_paths(files)
+            return files
+
+        if isinstance(masks, list):
+            for mask in masks:
+                result.extend(find_files_by_mask(mask))
+
+        elif isinstance(masks, str):
+            result.extend(find_files_by_mask(masks))
+
+        TemporaryDir.leave()
+        return result
+
+    def new_line(self):
+        self.result += os.linesep
+
+    def link_library(self, target_name, lib_name, modificator='', is_libname=False):
+        if is_libname:
+            path = lib_name
+        else:
+            path = os.path.relpath(lib_name, self.project_dir).replace('\\', '/')
+        add_str = 'TARGET_LINK_LIBRARIES({project} {mod} {path})'
+        link_str = add_str.format(project=target_name, mod=modificator, path=path)
+        self.result += link_str
+        self.new_line()
+
+    def link_dir(self, directory):
+        rel_dir = os.path.relpath(directory, self.project_dir).replace('\\', '/')
+        self.result += 'LINK_DIRECTORIES({path})'.format(path=rel_dir)
+        self.new_line()
+
+    def get_result(self):
+        return self.result
+
+    def write(self, code):
+        self.result += str(code)
+        self.new_line()
+
+    def set_build_dir(self, directory):
+        self.build_directory = directory
+
+    def save(self):
+        with open(self.project_dir + '/CMakeLists.txt', 'w+') as cmake_file:
+            cmake_file.writelines(self.get_result())
+
+    def get_exec_flags(self):
+        build_dir_flag = '-B{}'.format(os.path.abspath(self.build_directory)) if bool(self.build_directory) else ''
+        generator_flag = '-G{}'.format(self.get_generator_name())
+        sources_dir_flag = '-H{}'.format(os.path.abspath(self.project_dir))
+        ret_value = [generator_flag, build_dir_flag, sources_dir_flag]
+        # custom_flags = self.get_customs_flags_string()
+        # if custom_flags != '':
+        #    ret_value.append(custom_flags)
+        return ret_value
+
+    def remove_cache(self):
+        TemporaryDir.enter(self.project_dir)
+        if os.path.isfile('CMakeCache.txt'):
+            os.remove('CMakeCache.txt')
+        TemporaryDir.leave()
+
+    def run(self):
+        log_filename = os.path.join(sys_config.log_folder, 'cmake.log')
+
+        fs.require_full_path(log_filename)
+        with open(log_filename, "a+") as cmake_log:
+            self.remove_cache()
+            command = [self.cmake_path]
+
+            command.extend(self.get_exec_flags())
+            if bool(self.build_directory):
+                os.makedirs(self.build_directory)
+            ret_code = subprocess.call(command, shell=True, stderr=cmake_log, stdout=cmake_log)
+            if ret_code:
+                raise Exception('"CMAKE RUN" finished with result code ' + str(ret_code))
+                sys.exit(1)
 
 
 class Cmake:
@@ -17,6 +174,7 @@ class Cmake:
     cmake_path = ''
 
     def __init__(self, project_directory, project_type='executable'):
+        self.builder = CmakeBuilder(project_directory)
         self.cmake_path = Cmake.install_cmake()
         self._sourcesDir = project_directory
         self._buildDir = config.directories['buildDir']
@@ -28,9 +186,16 @@ class Cmake:
         self.generator_name = config.cmakeGenerator
         self.architecture = config.buildArchitecture
         self.build_directory = ''
+        self.project_extensions = ['cpp', 'h']
 
-    def set_project_name(self, name):
-        self.project_name = name
+    def set_project_name(self, project_name):
+        self.project_name = project_name
+
+    def set_project_extensions(self, extensions):
+        self.project_extensions = extensions
+
+    def add_project_extension(self, extension):
+        self.project_extensions.append(extension)
 
     def set_build_dir(self, directory):
         self.build_directory = directory
@@ -44,7 +209,7 @@ class Cmake:
             install_module = LibraryModule('cmake', {'rebuild': False, 'version': config.cmakeVersion})
             install_module.prepare()
             Cmake.cmake_built = True
-            Cmake.cmake_path = install_module.get_results()['path']
+            Cmake.cmake_path = install_module.write_results()['path']
         return Cmake.cmake_path
 
     @staticmethod
@@ -82,14 +247,6 @@ class Cmake:
         format_flag = lambda f_name, f_val: '-{0} {1}'.format(f_name, f_val)
         return ' '.join([format_flag(flag, value) for flag, value in self._additionalFlags.items()])
 
-    @staticmethod
-    def join_if_list(var, symbol=os.linesep):
-        return symbol.join(var) if isinstance(var, list) else var
-
-    @staticmethod
-    def file_new_line(file_handler):
-        file_handler.writelines(os.linesep)
-
     def set_generator_name(self, generator_name):
         self.generator_name = generator_name
 
@@ -102,77 +259,38 @@ class Cmake:
         gen_arch = ' Win64' if self.architecture == 'x64' else ''
         return self.generator_name + gen_arch
 
-    def build_deps(self, file_handler):
-        for dep_name, dep_config in self.dependencies.items():
-            # INSERT CMAKE BEFORE
-            cmake_before_string = self.join_if_list(dep_config['cmake_before'])
-            cmake_before_string = cmake_before_string.format(project_name=self.project_name)
-            file_handler.writelines(cmake_before_string)
-            self.file_new_line(file_handler)
-
-            proj_platform = platform.system().lower()
-            # INSERT DEBUG LIBS
-            debug_libs = dep_config['libs'][proj_platform][config.buildArchitecture]['debug']
-            if isinstance(debug_libs, list):
-                for lib in debug_libs:
-                    self.add_static_library(file_handler, lib, 'debug')
-            elif debug_libs is not '':
-                self.add_static_library(file_handler, debug_libs, 'debug')
-
-            release_libs = dep_config['libs'][proj_platform][config.buildArchitecture]['release']
-
-            # INSERT RELEASE LIBS
-            if isinstance(release_libs, list):
-                for lib in release_libs:
-                    self.add_static_library(file_handler, lib, 'optimized ')
-            elif release_libs is not '':
-                self.add_static_library(file_handler, release_libs, 'optimized ')
-
-            # INSERT HEADERS LIBS
-            if isinstance(dep_config['headers'], list):
-                for location in dep_config['headers']:
-                    self.add_headers_location(file_handler, location)
-            elif dep_config['headers'] is not '':
-                self.add_headers_location(file_handler, dep_config['headers'])
-
-            # INSERT CMAKE AFTER
-            cmake_after_string = self.join_if_list(dep_config['cmake_after'])
-            cmake_after_string = cmake_after_string.format(project_name=self.project_name)
-            file_handler.writelines(cmake_after_string)
-            self.file_new_line(file_handler)
-
     def save(self):
-        cmake_file = open(self._sourcesDir + '/CMakeLists.txt', 'a+')
-        cmake_file.writelines('cmake_minimum_required(VERSION {0}){1}'.format(self._cmakeVersion, os.linesep))
-        cmake_file.writelines('project({0}){1}'.format(self.project_name, os.linesep))
-        self.set('CMAKE_RUNTIME_OUTPUT_DIRECTORY', 'bin', cmake_file)
-        main_project_files = self.find_sources(self._sourcesDir)
-        if len(main_project_files) > 0:
-            self.set('SOURCES_FILES', ' '.join(main_project_files), cmake_file)
-            cmake_file.writelines(
-                'add_' + self.project_type + '(' + self.project_name + ' ${SOURCES_FILES})' + os.linesep)
-        cmake_file.close()
+        with open(self._sourcesDir + '/CMakeLists.txt', 'w+') as cmake_file:
+            cmake_file.writelines(self.builder.get_result())
 
     def get_exec_flags(self):
         build_dir_flag = '-B{}'.format(os.path.abspath(self.build_directory)) if bool(self.build_directory) else ''
         generator_flag = '-G{}'.format(self.get_generator_name())
         sources_dir_flag = '-H{}'.format(os.path.abspath(self._sourcesDir))
-        return [self.get_customs_flags_string(), generator_flag, build_dir_flag, sources_dir_flag]
+        ret_value = [generator_flag, build_dir_flag, sources_dir_flag]
+        custom_flags = self.get_customs_flags_string()
+        if custom_flags != '':
+            ret_value.append(custom_flags)
+        return ret_value
+
+    def remove_cache(self):
+        TemporaryDir.enter(self._sourcesDir)
+        if os.path.isfile('CMakeCache.txt'):
+            os.remove('CMakeCache.txt')
+        TemporaryDir.leave()
 
     def run(self):
         log_filename = os.path.join(sys_config.log_folder, 'cmake.log')
+
         fs.require_full_path(log_filename)
-        with open(log_filename, 'a+') as cmake_log:
-
-            if os.path.isfile('CMakeCache.txt'):
-                os.remove('CMakeCache.txt')
-
+        with open(log_filename, "a+") as cmake_log:
+            self.remove_cache()
             command = [self.cmake_path]
 
             command.extend(self.get_exec_flags())
             if bool(self.build_directory):
                 os.makedirs(self.build_directory)
-
+            print(command)
             ret_code = subprocess.call(command, shell=True, stderr=cmake_log, stdout=cmake_log)
             if ret_code:
                 raise Exception('"CMAKE RUN" finished with result code ' + str(ret_code))

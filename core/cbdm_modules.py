@@ -6,7 +6,6 @@ from core import sys_config
 from core.Dependencies.library_module import LibraryModule
 from core.Tasks import vcs, fs
 
-
 help_message = defs.load_message('cbdm_module_help')
 
 
@@ -63,7 +62,7 @@ def exec_command():
         module_name = modules[0]
         module = LibraryModule(module_name, {'rebuild': False})
         module.prepare()
-        print(module.get_results())
+        print(module.write_results())
     elif command == 'exists':
         for module_name in modules:
             print(module_name + " - " + ("Exists" if LibraryModule.module_exists(module_name) else "No module"))

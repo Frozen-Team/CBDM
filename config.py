@@ -14,7 +14,6 @@ projectName = 'FrozenEngine'
 cmakeVersion = '3.2.2'
 cmakeGenerator = 'Visual Studio 12'
 buildArchitecture = 'x64'  # x86 | x32
-
 visual_studio_toolset = 'v120'
 visual_studio_runtime_library = 'MD'
 
@@ -39,20 +38,10 @@ dependencies = {
         'rebuild': False
     },
 
-    # 'glfw': {
-    #     'version': '3.1.1',
-    #     'rebuild': False
-    # },
-
     'cppformat': {
         'version': '1.1.0',
         'rebuild': False
     },
-
-    # 'spdlog': {
-    #     'version': 'master',
-    #     'rebuild': False
-    # },
 
     'easyloggingpp': {
         'version': 'v9.80',
@@ -69,19 +58,20 @@ dependencies = {
         'rebuild': False
     },
 
-    # 'glm': {
-    #     'version': '0.9.6.3',
-    #     'rebuild': False
-    # },
-
     # 'fbxsdk': {
     #     'version': '20151',
     #     'rebuild': False
     # },
 
+    'sdl': {
+        'version': '2.0.3',
+        'major_version': 2,
+        'rebuild': False
+    },
+
     'boost': {
         'version': '1.58.0',
-        'rebuild': False
+        'rebuild': True
     },
 
     # 'v8': {

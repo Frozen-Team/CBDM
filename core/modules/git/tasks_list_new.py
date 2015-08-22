@@ -6,7 +6,6 @@ from core.Tasks import net, archives, check_dependencies, assembly, fs
 from core.common_defs import is_linux, is_windows
 import core.sys_config as s_config
 
-
 git_archive = 'git.zip'
 git_path = os.path.join(s_config.tools_directory, 'git')
 git_exe_path = os.path.join(git_path, 'bin', 'git.exe')
@@ -23,7 +22,7 @@ def build(module_params):
 
 
 def integration(module_params):
-    results = LibraryModule.current_working_module_results
+    results = LibraryModule.results
     if is_linux():
         results['path'] = which('git')
     elif is_windows():

@@ -6,12 +6,11 @@ from core.TemporaryDir import TemporaryDir
 import core.sys_config as s_config
 import core.default_structures as structs
 
-
 project_location = os.getcwd() + os.path.sep
 
 
 class LibraryModule:
-    current_working_module_results = {}
+    results = structs.default_dependency_struct.copy()
 
     def __init__(self, module_name, configs):
         self.module_name = module_name
@@ -22,7 +21,6 @@ class LibraryModule:
         self.tasks_list = self.__load_module_file(s_config.tasks_list_file, True)
 
         self.module_configs = configs
-        LibraryModule.flush_results()
 
     def __check_if_module_exists(self):
         if not os.path.exists(self.module_location):
@@ -105,16 +103,12 @@ class LibraryModule:
         attr_is_func = hasattr(attr, '__call__')
         return attr if attr_is_func else False
 
-    def get_results(self):
-        LibraryModule.current_working_module_results = structs.default_dependency_struct.copy()
+    def write_results(self):
+        LibraryModule.results = structs.default_dependency_struct.copy()
         TemporaryDir.enter(self.full_module_location)
         fnc = self.function_in_tasks_exist(s_config.module_integration_function)
         if bool(fnc):
             fnc(self.module_configs)
 
         TemporaryDir.leave()
-        return LibraryModule.current_working_module_results
-
-    @staticmethod
-    def flush_results():
-        LibraryModule.current_working_module_results = structs.default_dependency_struct.copy()
+        return LibraryModule.results

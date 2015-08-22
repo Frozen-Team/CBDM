@@ -1,4 +1,4 @@
-from shutil import rmtree, move
+from shutil import rmtree, move, copytree, copyfile
 from glob import glob
 import os
 
@@ -44,6 +44,7 @@ def remove(mask):
 
 
 def rename(mask, new_name, overwrite=False):
+    # TODO: bug if specifying subfolder rename to folder. Example: mask == folder/sub, new_name == folder
     file = glob(mask)
     files_count = len(file)
     if files_count < 1:
@@ -126,7 +127,24 @@ def remove_empty_folders(from_directory):
             log_file.write(str('rm empty folder:' + path + '\n'))
             os.rmdir(path)
 
-    log_filename = os.path.join(sys_config.log_folder, 'rm_empty_folders.log')
+    log_filename = os.path.join(sys_config.log_folder, 'rm_empty_folders')
     require_full_path(log_filename)
-    with open(log_filename, 'a+') as log_file:
+    with open(log_filename, "w+") as log_file:
         remove_empty_folders_system(from_directory, log_file)
+
+
+def copy(path_to_file_or_dir, destination, overwrite):
+    file = path_to_file_or_dir
+
+    if os.path.exists(destination):
+        if overwrite:
+            remove(destination)
+        else:
+            raise Exception('Destination file "%s" exists' % destination)
+
+    require_full_path(destination)
+
+    if os.path.isdir(file):
+        copytree(file, destination)
+    elif os.path.isfile(file):
+        copyfile(file, destination)

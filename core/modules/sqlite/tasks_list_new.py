@@ -4,20 +4,21 @@ from config import directories
 from core.common_defs import is_windows
 from core.default_structures import cleanup_extensions
 from core.Tasks import check_dependencies, fs, net, archives, assembly, cmake
-from core.tools.cmake import Cmake
+from core.tools.cmake import Cmake, CmakeBuilder
 
 origin_dir = 'Origin'
 archive_path = 'sqlite.zip'
-build_directory = os.path.join(directories['buildDir'], 'sqlite')
+build_directory = os.path.abspath(os.path.join(directories['buildDir'], 'sqlite'))
 lib_directory = os.path.join(build_directory, 'lib')
 headers_dir = os.path.join(build_directory, 'include')
 
 
 def create_and_run_cmake_file(sources_dir, arch):
-    cmake_file = Cmake(sources_dir, 'library')
+    cmake_file = CmakeBuilder(sources_dir, 'library')
     cmake_file.set_project_name('sqlite_' + arch)
     cmake_file.set_build_dir(os.path.join(origin_dir, 'sqlite_' + arch))
     cmake_file.set_architecture(arch)
+    cmake_file.add_library('sqlite_' + arch, 'sqlite3.c')
     cmake_file.save()
     cmake_file.run()
 
@@ -33,10 +34,10 @@ def build(module_params):
     create_and_run_cmake_file(origin_dir, 'x86')
     create_and_run_cmake_file(origin_dir, 'x64')
     if is_windows():
-        assembly.build_vcxproj(os.path.join(origin_dir, 'sqlite_x86', 'sqlite_x86.vcxproj'), lib_directory,
-                               ('Debug', 'Release'))
-        assembly.build_vcxproj(os.path.join(origin_dir, 'sqlite_x64', 'sqlite_x64.vcxproj'), lib_directory,
-                               ('Debug', 'Release'))
+        assembly.build_vcxproj(os.path.abspath(os.path.join(origin_dir, 'sqlite_x86', 'sqlite_x86.vcxproj')),
+                               lib_directory, ('Debug', 'Release'))
+        assembly.build_vcxproj(os.path.abspath(os.path.join(origin_dir, 'sqlite_x64', 'sqlite_x64.vcxproj')),
+                               lib_directory, ('Debug', 'Release'))
 
     fs.move_files_to_dir_by_mask(os.path.join(origin_dir, '*.h'), headers_dir, True)
     fs.clear(origin_dir, cleanup_extensions['c++'])

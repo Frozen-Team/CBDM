@@ -1,13 +1,10 @@
-import core.sys_config as cconfig
-import os
-
-
 default_dependency_struct = {
     "link_directories": {},
     "libs": {},
     "headers": [],
     "cmake_before": "",
-    "cmake_after": ""
+    "cmake_after": "",
+    'subdirectories': []
 }
 cleanup_extensions = {
     'c++': ['', '.hgeol', '.hgignore', '.hgtags', '.py', '.pyc', '.sample', '.idx', '.pack', '.iml', '.xml', '.ini',
