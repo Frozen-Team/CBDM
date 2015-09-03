@@ -49,17 +49,22 @@ class Repo:
 
     def clone(self, repository):
         if os.path.exists(self.rel_dir):
-            print('Repository folder already exists({0})'.format(self.directory))
+            print('Repository folder already exists ({0})'.format(self.directory))
             return
         clone_command = ' '.join([self.git_path, 'clone', repository, self.rel_dir])
         process = subprocess.Popen(clone_command, stderr=self.log_std, stdout=self.log_std, shell=True)
         process.communicate()
+        if process.returncode != 0:
+            print('Failed to clone repository: ' + repository, file=sys.stderr)
+            sys.exit(-1)
 
     def checkout(self, branch):
         if not self.branch_exists(branch):
-            raise Exception('Trying to checkout to not existing branch({0})'.format(branch))
-            sys.exit(1)
+            print('Trying to checkout to not existing branch({0})'.format(branch), file=sys.stderr)
+            sys.exit(-1)
         command = ''.join([self.git_path, 'checkout', branch])
-        subprocess.Popen(command, stdout=self.log_std, stderr=self.log_std,
-                        cwd=self.directory, shell=True)
-
+        process = subprocess.Popen(command, stdout=self.log_std, stderr=self.log_std, cwd=self.directory, shell=True)
+        process.communicate()
+        if process.returncode != 0:
+            print('Failed checkout to branch: ' + branch, file=sys.stderr)
+            sys.exit(-1)
