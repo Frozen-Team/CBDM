@@ -1,5 +1,5 @@
 from urllib.request import urlretrieve
-import core.Tasks.fs as fs
+import core.tasks.fs as fs
 
 
 def download_file(url, destination=''):

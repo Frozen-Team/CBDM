@@ -1,8 +1,8 @@
 import os
 from shutil import which
 
-from core.Dependencies.library_module import LibraryModule
-from core.Tasks import net, archives, check_dependencies, assembly, fs
+from core.dependencies.library_module import LibraryModule
+from core.tasks import net, archives, check_dependencies, assembly, fs
 from core.common_defs import is_linux, is_windows
 import core.sys_config as s_config
 

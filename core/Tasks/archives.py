@@ -5,8 +5,7 @@ import subprocess
 from core import sys_config
 from core.tools.seven_z import SevenZ
 
-__author__ = 'saturn4er'
-import core.Tasks.fs as fs
+import core.tasks.fs as fs
 
 
 def extract_zip(archive, destination=''):
