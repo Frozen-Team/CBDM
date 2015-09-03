@@ -1,0 +1,10 @@
+usage:
+cbdm tools <command> [<args>]
+
+There are CBDM commands for managing tools modules:
+    add         <url>    Add a tool module to local repository
+    remove      <name>   Remove a tool module from local repository
+    install     <name>   Install a tool module
+    uninstall   <name>   Uninstall a tool module
+    update      <name>   Update a tool module
+    version     <name>   Show a tool module version
